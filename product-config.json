@@ -1,0 +1,160 @@
+{
+  "products": {
+    "08_social_intelligence_dashboard": {
+      "name": "Social Intelligence Dashboard",
+      "type": "PRODUCT",
+      "pricing": {
+        "base_price": "TBD based on scope and markets",
+        "options": [
+          {
+            "name": "Per market analysis",
+            "price": "£[X]"
+          },
+          {
+            "name": "Multi-market package (3+ markets)",
+            "price": "£[X]"
+          },
+          {
+            "name": "Full implementation + dashboard setup",
+            "price": "£[X]"
+          },
+          {
+            "name": "Training and documentation package",
+            "price": "£[X]"
+          }
+        ]
+      },
+      "deliverables": [
+        "Market Research Reports (PDF format for each target market)",
+        "Weighted Resonance Index (WRI) Analysis",
+        "Interactive React Dashboard with visualizations",
+        "PDF Report Integration with searchable viewer",
+        "Executive Summary Reports"
+      ],
+      "target_audience": {
+        "company_size": "Mid to large-size",
+        "revenue_requirement": "€50M+ annual revenue",
+        "decision_makers": [
+          "Chief Strategy Officers",
+          "Marketing Directors", 
+          "Product Managers",
+          "Business Development Heads"
+        ]
+      },
+      "stages": {
+        "foundation": {
+          "manifesto": {
+            "file": "08_social_intelligence_dashboard_01_big_idea_product_manifesto.md",
+            "generated_date": "2025-06-10 13:02:07",
+            "model": "GPT-4o (creative)",
+            "status": "approved",
+            "visibility": "public"
+          },
+          "functional_spec": {
+            "file": "08_social_intelligence_dashboard_02_idea_exploration_functional_spec.md",
+            "status": "review",
+            "visibility": "internal"
+          },
+          "audience_icps": {
+            "file": "08_social_intelligence_dashboard_03_idea_exploration_audience_icps.md",
+            "status": "review",
+            "visibility": "internal"
+          }
+        },
+        "planning": {
+          "user_stories": {
+            "file": "08_social_intelligence_dashboard_04_idea_exploration_user_stories.md",
+            "status": "draft",
+            "visibility": "internal"
+          },
+          "competitor_sweep": {
+            "file": "08_social_intelligence_dashboard_05_plan_competitor_sweep.md",
+            "status": "draft",
+            "visibility": "internal"
+          },
+          "tam_sizing": {
+            "file": "08_social_intelligence_dashboard_06_plan_tam_sizing.md",
+            "status": "draft",
+            "visibility": "internal"
+          }
+        },
+        "research": {
+          "prd_skeleton": {
+            "file": "08_social_intelligence_dashboard_07_research_prd_skeleton.md",
+            "status": "draft",
+            "visibility": "internal"
+          },
+          "ui_prompt": {
+            "file": "08_social_intelligence_dashboard_08_research_prd_ui_prompt.md",
+            "status": "draft",
+            "visibility": "internal"
+          }
+        },
+        "build": {
+          "generate_screens": {
+            "file": "08_social_intelligence_dashboard_09_build_generate_screens.md",
+            "status": "draft",
+            "visibility": "internal"
+          },
+          "landing_page_copy": {
+            "file": "08_social_intelligence_dashboard_10_build_ui_landing_page_copy.md",
+            "status": "draft",
+            "visibility": "public"
+          },
+          "key_messages": {
+            "file": "08_social_intelligence_dashboard_11_build_ui_key_messages.md",
+            "status": "draft",
+            "visibility": "public"
+          }
+        },
+        "demo": {
+          "investor_deck": {
+            "file": "08_social_intelligence_dashboard_12_demo_investor_deck.md",
+            "status": "draft",
+            "visibility": "internal"
+          },
+          "demo_script": {
+            "file": "08_social_intelligence_dashboard_13_demo_demo_script.md",
+            "status": "draft",
+            "visibility": "internal"
+          },
+          "slide_headlines": {
+            "file": "08_social_intelligence_dashboard_14_demo_slide_headlines.md",
+            "status": "draft",
+            "visibility": "internal"
+          },
+          "qa_prep": {
+            "file": "08_social_intelligence_dashboard_15_demo_qa_prep.md",
+            "status": "draft",
+            "visibility": "internal"
+          }
+        }
+      },
+      "metadata": {
+        "generated_date": "2025-06-10",
+        "model": "GPT-4o",
+        "visibility": {
+          "public": [
+            "manifesto",
+            "landing_page_copy",
+            "key_messages"
+          ],
+          "internal": [
+            "functional_spec",
+            "audience_icps",
+            "user_stories",
+            "competitor_sweep",
+            "tam_sizing",
+            "prd_skeleton",
+            "ui_prompt",
+            "generate_screens",
+            "investor_deck",
+            "demo_script",
+            "slide_headlines",
+            "qa_prep"
+          ]
+        }
+      }
+    }
+  }
+} 

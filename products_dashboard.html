@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BN Products Dashboard 2025</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #000;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 8px;
+            color: #000;
+            letter-spacing: -0.02em;
+        }
+
+        .header p {
+            font-size: 1rem;
+            color: #64748b;
+            font-weight: 400;
+        }
+
+        .filters {
+            background: rgba(7, 0, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(7, 0, 255, 0.1);
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            display: flex;
+            gap: 32px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .filter-group label {
+            font-weight: 500;
+            color: #000;
+            font-size: 0.9rem;
+        }
+
+        select, input {
+            padding: 8px 16px;
+            border: 1px solid rgba(7, 0, 255, 0.2);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.8);
+            color: #000;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #0700FF;
+            box-shadow: 0 0 0 3px rgba(7, 0, 255, 0.1);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(7, 0, 255, 0.1);
+            padding: 24px;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(7, 0, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #0700FF;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 24px;
+        }
+
+        .product-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(7, 0, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(7, 0, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(7, 0, 255, 0.1);
+        }
+
+        .product-header {
+            padding: 32px 32px 24px;
+            border-bottom: 1px solid rgba(7, 0, 255, 0.1);
+        }
+
+        .product-type {
+            display: inline-block;
+            background: rgba(7, 0, 255, 0.1);
+            color: #0700FF;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .product-name {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #000;
+            line-height: 1.3;
+        }
+
+        .product-price {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #0700FF;
+            line-height: 1.4;
+        }
+
+        .product-body {
+            padding: 32px;
+        }
+
+        .product-section {
+            margin-bottom: 24px;
+        }
+
+        .product-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .product-section h4 {
+            color: #000;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(7, 0, 255, 0.1);
+        }
+
+        .product-section p, .product-section ul {
+            color: #374151;
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }
+
+        .product-section ul {
+            padding-left: 20px;
+        }
+
+        .product-section li {
+            margin-bottom: 6px;
+        }
+
+        .expandable {
+            max-height: 80px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            position: relative;
+        }
+
+        .expandable.expanded {
+            max-height: none;
+        }
+
+        .expand-btn {
+            background: #0700FF;
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-top: 12px;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .expand-btn:hover {
+            background: #0500CC;
+            transform: translateY(-1px);
+        }
+
+        .no-results {
+            text-align: center;
+            color: #64748b;
+            font-size: 1.1rem;
+            margin-top: 60px;
+            font-weight: 400;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 16px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 20px;
+            }
+            
+            .filter-group {
+                justify-content: space-between;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-header {
+                padding: 24px 24px 20px;
+            }
+
+            .product-body {
+                padding: 24px;
+            }
+        }
+
+        /* Subtle animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .product-card {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .product-card:nth-child(1) { animation-delay: 0.1s; }
+        .product-card:nth-child(2) { animation-delay: 0.2s; }
+        .product-card:nth-child(3) { animation-delay: 0.3s; }
+        .product-card:nth-child(4) { animation-delay: 0.4s; }
+        .product-card:nth-child(5) { animation-delay: 0.5s; }
+        .product-card:nth-child(6) { animation-delay: 0.6s; }
+        .product-card:nth-child(7) { animation-delay: 0.7s; }
+        .product-card:nth-child(8) { animation-delay: 0.8s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>BN Products Dashboard</h1>
+            <p>Comprehensive AI Solutions & Services Portfolio 2025</p>
+        </div>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label for="typeFilter">Type</label>
+                <select id="typeFilter">
+                    <option value="">All Types</option>
+                    <option value="PRODUCT">Products</option>
+                    <option value="SERVICE">Services</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="searchFilter">Search</label>
+                <input type="text" id="searchFilter" placeholder="Search products...">
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalProducts">0</div>
+                <div class="stat-label">Total Offerings</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="productCount">0</div>
+                <div class="stat-label">Products</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="serviceCount">0</div>
+                <div class="stat-label">Services</div>
+            </div>
+        </div>
+
+        <div class="products-grid" id="productsGrid">
+            <!-- Products will be dynamically inserted here -->
+        </div>
+
+        <div class="no-results" id="noResults" style="display: none;">
+            No products found matching your criteria.
+        </div>
+    </div>
+
+    <script>
+        const products = [
+            {
+                type: "PRODUCT",
+                name: "AI Power Hour",
+                price: "£300",
+                deliverables: "A one hour session + follow-up materials",
+                description: "A one hour deep dive into one specific task/challenge + learning resources and further reading",
+                perfectFor: "High-level execs who want to get hands on with AI systems",
+                clientBuying: "A one on one coaching session + tailored follow-up materials",
+                idealClient: "- Anyone who wants to discover what AI can do for them\n- Senior leaders, functional heads, or team leads responsible for transformation, innovation, marketing, customer experience, or operations.",
+                keyFeatures: "- Personalised guidance\n- Real-world solutions\n- Builds your AI literacy",
+                benefits: "- Accelerated AI Literacy and Confidence\n- Practical Problem-Solving and Use-Case Development\n- Immediate Strategic Value\n- Tailored Follow-Ups for Lasting Impact"
+            },
+            {
+                type: "PRODUCT",
+                name: "AI-B-C™",
+                price: "£2,000 for a 90-minute Executive Briefing\n£8,800 for a one day AI Acceleration team day\n£17,500 for team-wide Sprint Packages",
+                deliverables: "Workshops, webinars and hands-on capability",
+                description: "Comprehensive AI capability-building workshops to fast-track organisation-wide AI adoption. Fast-track organisation-wide AI adoption and build in-house AI expertise across all levels.",
+                perfectFor: "Ideal for Small, Medium & Large enterprises eager to embrace AI. Workshops happen in groups up to 20",
+                clientBuying: "- Expert-led workshops and seminars\n- Custom learning plan\n- Hands-on learning and discovery",
+                idealClient: "• Size: Medium to large enterprises (Medium circa 150+ employees. Large circa 500+ employees)\n• Attitude: Enthusiastic about AI but lacking in-house expertise\n• AI Maturity: Low\n• Needs: Widespread AI literacy across departments\n• Other: Values employee development; has training budget",
+                keyFeatures: "• Modular curriculum\n• Role-specific learning paths\n• Hands-on workshops\n• Real-world project work\n• Progress assessments",
+                benefits: "- Quickly and easily kick start your AI strategy\n- Increased productivity and efficiency\n- Identify AI use-cases\n- Boost employee retention and motivation by building AI skills"
+            },
+            {
+                type: "SERVICE",
+                name: "AI Innovation Programme",
+                price: "Bespoke",
+                deliverables: "Workshops, consultancy + prototype build package",
+                description: "Framework for continuous AI experimentation and process, product or service improvement. Systematise AI-driven innovation and turn AI experimentation into tangible business results.",
+                perfectFor: "Ideal for R&D-focused companies ready to leverage AI for product development",
+                clientBuying: "• Consulting on setting up an innovation process\n• Facilitation of ideation workshops\n• Support in prototyping and testing AI solutions\n• Guidance on integrating AI into existing products/services\n• Metrics and evaluation frameworks for AI initiatives",
+                idealClient: "• Size: Medium to large companies with R&D budgets\n• Attitude: Innovation-focused; willing to experiment\n• AI Maturity: Medium\n• Needs: New product development, process improvement\n• Other: Likely in tech, PR, agency landscape, finance, or AI-amenable industries",
+                keyFeatures: "• Customised innovation process\n• AI ideation workshops\n• Rapid prototyping\n• Integration with R&D\n• Innovation metrics tracking",
+                benefits: "- Increased opportunity for breakthrough innovation\n- Rapid solutions available for a fraction of investment compared to even a year ago\n- Deliver major projects and increase innovation capability and pace\n- Simplify AI challenges with advice from industry-leading experts"
+            },
+            {
+                type: "SERVICE",
+                name: "AI Leadership Partner (Fractional CAIO)",
+                price: "Bespoke",
+                deliverables: "One on one consultancy + hands-on team innovation workshops",
+                description: "Long-term collaboration for strategic AI leadership and capability development.",
+                perfectFor: "Ideal for organisations viewing AI as a strategic imperative",
+                clientBuying: "• Regular strategy sessions with AI experts\n• Ongoing advisory services at the executive/Board level\n• Support in AI-related decision making\n• Assistance with AI talent acquisition and development\n• Regular AI capability assessments and roadmap updates",
+                idealClient: "• Size: Large enterprises or fast-growing scale-ups\n• Attitude: Views AI as a strategic imperative\n• AI Maturity: Low to Medium\n• Needs: Executive-level AI strategy\n• Other: Facing industry disruption or seeking to disrupt",
+                keyFeatures: "• Executive-level AI guidance\n• Ongoing strategy development\n• Skills assessment\n• Recruitment support\n• Regular strategy reviews",
+                benefits: "- Get strategic advice on the impact of AI without big-tech bias\n- Fractional CAIO access with no delay or risk\n- Cut learning time for teams that need to grasp AI opportunities now"
+            },
+            {
+                type: "PRODUCT",
+                name: "AI-Powered Research and Insight Sprint",
+                price: "£10,000",
+                deliverables: "A 5 day sprint producing a creative direction, human truths and insights to inform a campaign",
+                description: "Accelerate decision-making with AI-driven market intelligence to gain deeper insights faster.",
+                perfectFor: "Ideal for Any size organisation in fast-moving markets",
+                clientBuying: "• Faster insights for smart decisions\n• Access to AI-powered research tools and platforms\n• Expert analysis and interpretation of AI-generated insights\n• Custom research reports and dashboards\n• Strategy recommendations based on AI-driven insights",
+                idealClient: "• Size: Any size\n• Attitude: Data-driven decision-making culture\n• AI Maturity: Any level\n• Needs: Rapid market insights, competitive intelligence\n• Other: Operates in fast-moving markets; values innovation",
+                keyFeatures: "• AI-driven data analysis\n• Sentiment analysis\n• Predictive modeling\n• Competitor analysis\n• Interactive dashboards",
+                benefits: "- Affordable research insights for every campaign – big or small\n- Faster, more confident decision-making with research-based insights\n- Increased access to data and insights for all skill levels"
+            },
+            {
+                type: "SERVICE",
+                name: "AI Consultancy Retainer",
+                price: "Bespoke",
+                deliverables: "A series of one-to-one consultancy calls, meetings and briefings, plus optional workshop packages for the senior executive team.",
+                description: "An ongoing, partnership-led service designed to accelerate and embed AI skills, strategy, and innovation across your organisation, providing expert advice, hands-on capability building, and continuous support.",
+                perfectFor: "Organisations wanting to move confidently and quickly from AI pilots to organisation-wide, measurable impact—without internal knowledge bottlenecks or wasted effort.",
+                clientBuying: "Access to senior AI strategists and practitioners on retainer\nCustomised coaching/advisory sessions (including 1:1 leader support and group clinics)\nOngoing AI literacy programmes and upskilling workshops\nInnovation sprints, pilot support, and prompt libraries\nProactive recommendations, reporting, and roadmap guidance",
+                idealClient: "- Ambitious, established businesses (often global brands) seeking to build sustainable AI capability, accelerate adoption, and maintain a competitive edge\n- Leadership teams ready to invest in long-term transformation, not just 'AI tools'",
+                keyFeatures: "- Fractional (on-call) Chief AI Officer or senior advisor\n- 1:1 'AI Sherpa' and ad hoc coaching sessions\n- Bespoke workshops and training modules\n- AI knowledge hub and resource sharing\n- Innovation frameworks and pilot delivery\n- Regular check-ins and progress reports",
+                benefits: "- Fast-tracked, organisation-wide AI literacy and confidence\n- Measurable productivity and innovation gains\n- Resilient, up-to-date strategy in a fast-moving field\n- Internal capability to experiment, scale, and adapt AI solutions\n- Partnership model for flexible, long-term value and pace"
+            },
+            {
+                type: "PRODUCT",
+                name: "AI Innovation Day",
+                price: "£8,800",
+                deliverables: "A one-day facilitated workshop",
+                description: "A fast-paced, immersive one-day sprint designed to take a multidisciplinary team from raw idea to working concept — culminating in the launch of a live website or prototype. The day blends AI-assisted ideation, brand development, copywriting, prototyping, and web deployment to demonstrate what's possible when you combine creativity with AI-powered acceleration.",
+                perfectFor: "- Innovation teams looking to rapidly test ideas\n- Marketing and digital teams exploring AI's practical application\n- Senior leaders wanting a 'show, not tell' AI experience\n- Organisations under pressure to move faster from insight to output",
+                clientBuying: "- A facilitated one-day workshop, led by strategists and AI experts\n- Full-day, end-to-end prototyping support using AI tools (e.g. ChatGPT, Gamma, Framer, Webflow)\n- A ready-to-share digital output (e.g. landing page, microsite, prototype)\n- Customised prompts, tools, templates and optional follow-up coaching\n- Expert reflection and recommendations on embedding AI in product and content development",
+                idealClient: "- Medium to large organisations actively investing in innovation\n- Teams with a strategic mandate to explore AI capability\n- Brands with internal pressure to launch and learn faster\n- Leaders who want to prove value through doing, not decks",
+                keyFeatures: "Idea generation sprint using AI-enhanced brainstorming\nNo-code tools and AI assistants to build prototypes\nLive collaboration across creative, technical and strategy\nCoaching and reflection on how to deploy and next steps\nDelivered in-person or remotely with pre- and post-support options",
+                benefits: "- Proves what's possible — tangibly and fast\n- Accelerates team understanding and belief in AI's potential\n- Turns passive interest into active experimentation\n- Breaks through silos with hands-on co-creation\n- Delivers something useful — not just theoretical learning\n- Creates a replicable blueprint for future rapid innovation sprints"
+            },
+            {
+                type: "PRODUCT",
+                name: "Social Intelligence Dashboard",
+                price: "[To be determined based on scope and markets]\nPer market analysis: £[X]\nMulti-market package (3+ markets): £[X]\nFull implementation + dashboard setup: £[X]\nTraining and documentation package: £[X]",
+                deliverables: "• Market Research Reports (PDF format for each target market)\n• Weighted Resonance Index (WRI) Analysis with 20 key attributes scored and ranked\n• Interactive React Dashboard with visualizations and competitor analysis\n• PDF Report Integration with searchable, interactive viewer\n• Executive Summary Reports with strategic recommendations",
+                description: "A comprehensive AI-powered market intelligence solution that transforms consumer conversations, competitive data, and market insights into actionable strategic intelligence for clients. The system combines advanced AI research tools (ChatGPT, Gemini, Claude) with a custom React dashboard to deliver deep market understanding across multiple segments and regions.",
+                perfectFor: "• Automotive OEMs planning market entry or product launches\n• Motorcycle manufacturers seeking competitive intelligence\n• Strategic planning teams requiring data-driven market insights\n• Marketing agencies serving automotive/motorcycle clients\n• Business development teams evaluating new market opportunities\n• Product managers needing consumer preference validation",
+                clientBuying: "Strategic Market Intelligence as a Service\n\nClients receive not just data, but a complete intelligence system that provides:\n• Competitive Advantage: Deep understanding of consumer preferences and competitor positioning\n• Risk Mitigation: Data-driven insights to avoid costly market miscalculations\n• Speed to Market: Accelerated research process using AI automation\n• Ongoing Capability: Reusable methodology and tools for future analysis\n• Executive Confidence: Professional dashboards and reports for stakeholder presentations",
+                idealClient: "Profile:\nMid to large-size companies in automotive/motorcycle industry with:\n• €50M+ annual revenue\n• Active in multiple markets or planning expansion\n• Strategic planning or product development functions\n• Need for regular competitive intelligence\n• Budget for professional market research (€25K+ projects)\n• Appreciation for data-driven decision making\n\nDecision Makers: Chief Strategy Officers, Marketing Directors, Product Managers, Business Development Heads",
+                keyFeatures: "• AI-Powered Research: Automated data collection using ChatGPT, Gemini, and Claude\n• Weighted Resonance Index: Proprietary scoring system for 20 key product attributes\n• Multi-Market Analysis: Consistent methodology across unlimited target markets\n• Interactive Dashboard: Data visualization with competitor analysis\n• Source Validation: 50+ verified online resources per market\n• PDF Integration: Seamless report viewing within dashboard interface\n• Reusable Templates: Structured system for ongoing market analysis\n• Quality Assurance: Built-in validation checkpoints and consistency controls",
+                benefits: "Strategic Benefits:\n• Faster Decision Making: Reduce market research time from months to weeks\n• Competitive Intelligence: Deep insights into competitor strengths/weaknesses\n• Consumer Understanding: Clear picture of what drives purchase decisions\n• Market Positioning: Data-backed recommendations for optimal positioning\n\nOperational Benefits:\n• Cost Efficiency: AI automation reduces traditional research costs by 94%\n• Scalability: Analyze multiple markets simultaneously with consistent quality\n• Repeatability: Documented process enables ongoing market monitoring\n• Professional Presentation: Executive-ready dashboards and reports\n\nRisk Management Benefits:\n• Validated Sources: 50+ credible sources reduce research bias\n• Quantified Insights: WRI scoring provides measurable attribute importance\n• Comprehensive Coverage: Social, sales, survey, and expert data integration\n• Quality Controls: Multiple validation checkpoints ensure accuracy\n\nLong-term Value:\n• Internal Capability Building: Team learns methodology for future independence\n• Competitive Monitoring: Dashboard enables ongoing market surveillance\n• Strategic Planning: Data foundation for product development and marketing\n• Stakeholder Confidence: Professional reporting builds leadership trust"
+            }
+        ];
+
+        let filteredProducts = [...products];
+
+        function formatText(text) {
+            if (!text) return '';
+            return text.split('\n').map(line => {
+                line = line.trim();
+                if (line.startsWith('•') || line.startsWith('-')) {
+                    return `<li>${line.substring(1).trim()}</li>`;
+                }
+                return line ? `<p>${line}</p>` : '';
+            }).join('');
+        }
+
+        function createProductCard(product) {
+            return `
+                <div class="product-card" data-type="${product.type}">
+                    <div class="product-header">
+                        <div class="product-type">${product.type}</div>
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-price">${product.price}</div>
+                    </div>
+                    <div class="product-body">
+                        <div class="product-section">
+                            <h4>Primary Deliverables</h4>
+                            <div>${formatText(product.deliverables)}</div>
+                        </div>
+                        <div class="product-section">
+                            <h4>Description</h4>
+                            <div class="expandable" id="desc-${product.name.replace(/\s+/g, '-')}">
+                                ${formatText(product.description)}
+                            </div>
+                            <button class="expand-btn" onclick="toggleExpand('desc-${product.name.replace(/\s+/g, '-')}')">Show More</button>
+                        </div>
+                        <div class="product-section">
+                            <h4>Perfect For</h4>
+                            <div class="expandable" id="perfect-${product.name.replace(/\s+/g, '-')}">
+                                ${formatText(product.perfectFor)}
+                            </div>
+                            <button class="expand-btn" onclick="toggleExpand('perfect-${product.name.replace(/\s+/g, '-')}')">Show More</button>
+                        </div>
+                        <div class="product-section">
+                            <h4>Key Features</h4>
+                            <div class="expandable" id="features-${product.name.replace(/\s+/g, '-')}">
+                                <ul>${formatText(product.keyFeatures)}</ul>
+                            </div>
+                            <button class="expand-btn" onclick="toggleExpand('features-${product.name.replace(/\s+/g, '-')}')">Show More</button>
+                        </div>
+                        <div class="product-section">
+                            <h4>Benefits</h4>
+                            <div class="expandable" id="benefits-${product.name.replace(/\s+/g, '-')}">
+                                <ul>${formatText(product.benefits)}</ul>
+                            </div>
+                            <button class="expand-btn" onclick="toggleExpand('benefits-${product.name.replace(/\s+/g, '-')}')">Show More</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleExpand(id) {
+            const element = document.getElementById(id);
+            const button = element.nextElementSibling;
+            
+            if (element.classList.contains('expanded')) {
+                element.classList.remove('expanded');
+                button.textContent = 'Show Less';
+            } else {
+                element.classList.add('expanded');
+                button.textContent = 'Show More';
+            }
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            const noResults = document.getElementById('noResults');
+            
+            if (filteredProducts.length === 0) {
+                grid.style.display = 'none';
+                noResults.style.display = 'block';
+            } else {
+                grid.style.display = 'grid';
+                noResults.style.display = 'none';
+                grid.innerHTML = filteredProducts.map(createProductCard).join('');
+            }
+        }
+
+        function updateStats() {
+            const totalProducts = filteredProducts.length;
+            const productCount = filteredProducts.filter(p => p.type === 'PRODUCT').length;
+            const serviceCount = filteredProducts.filter(p => p.type === 'SERVICE').length;
+            
+            document.getElementById('totalProducts').textContent = totalProducts;
+            document.getElementById('productCount').textContent = productCount;
+            document.getElementById('serviceCount').textContent = serviceCount;
+        }
+
+        function filterProducts() {
+            const typeFilter = document.getElementById('typeFilter').value;
+            const searchFilter = document.getElementById('searchFilter').value.toLowerCase();
+            
+            filteredProducts = products.filter(product => {
+                const matchesType = !typeFilter || product.type === typeFilter;
+                const matchesSearch = !searchFilter || 
+                    product.name.toLowerCase().includes(searchFilter) ||
+                    product.description.toLowerCase().includes(searchFilter) ||
+                    product.perfectFor.toLowerCase().includes(searchFilter);
+                
+                return matchesType && matchesSearch;
+            });
+            
+            updateStats();
+            renderProducts();
+        }
+
+        // Event listeners
+        document.getElementById('typeFilter').addEventListener('change', filterProducts);
+        document.getElementById('searchFilter').addEventListener('input', filterProducts);
+
+        // Initial render
+        updateStats();
+        renderProducts();
+    </script>
+</body>
+</html> 

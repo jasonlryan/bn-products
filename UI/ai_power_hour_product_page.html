@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Power Hour - Product Overview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            color: #000;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .product-type {
+            display: inline-block;
+            background: rgba(7, 0, 255, 0.1);
+            color: #0700FF;
+            padding: 6px 16px;
+            border-radius: 25px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+        }
+
+        .product-title {
+            font-size: 3rem;
+            font-weight: 300;
+            margin-bottom: 16px;
+            color: #000;
+            letter-spacing: -0.02em;
+        }
+
+        .product-price {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #0700FF;
+            margin-bottom: 16px;
+        }
+
+        .product-tagline {
+            font-size: 1.2rem;
+            color: #64748b;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .content-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(7, 0, 255, 0.1);
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.3s ease;
+        }
+
+        .content-card:hover {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(7, 0, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(7, 0, 255, 0.1);
+        }
+
+        .card-content {
+            color: #374151;
+            font-size: 0.95rem;
+        }
+
+        .card-content ul {
+            padding-left: 20px;
+        }
+
+        .card-content li {
+            margin-bottom: 8px;
+        }
+
+        .full-width-card {
+            grid-column: 1 / -1;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 60px;
+        }
+
+        .feature-item {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(7, 0, 255, 0.1);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(7, 0, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #0700FF, #0500CC);
+            border-radius: 12px;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .feature-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 8px;
+        }
+
+        .feature-description {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .cta-section {
+            background: rgba(7, 0, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(7, 0, 255, 0.1);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 16px;
+        }
+
+        .cta-description {
+            font-size: 1.1rem;
+            color: #64748b;
+            margin-bottom: 32px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            background: #0700FF;
+            color: white;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            background: #0500CC;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(7, 0, 255, 0.3);
+        }
+
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 12px;
+            border: 1px solid rgba(7, 0, 255, 0.1);
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0700FF;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .product-title {
+                font-size: 2.2rem;
+            }
+
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .container {
+                padding: 20px 16px;
+            }
+
+            .content-card {
+                padding: 24px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .content-card {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .content-card:nth-child(1) { animation-delay: 0.1s; }
+        .content-card:nth-child(2) { animation-delay: 0.2s; }
+        .content-card:nth-child(3) { animation-delay: 0.3s; }
+        .content-card:nth-child(4) { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <div class="product-type">Product</div>
+            <h1 class="product-title">AI Power Hour</h1>
+            <div class="product-price">£300</div>
+            <p class="product-tagline">A one hour deep dive into one specific task/challenge + learning resources and further reading</p>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-number">60</span>
+                <span class="stat-label">Minutes</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">1:1</span>
+                <span class="stat-label">Coaching</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">Expert</span>
+                <span class="stat-label">Led</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">Follow-up</span>
+                <span class="stat-label">Materials</span>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="main-content">
+            <!-- Description -->
+            <div class="content-card">
+                <h2 class="card-title">What You Get</h2>
+                <div class="card-content">
+                    <p>A one hour deep dive into one specific task/challenge + learning resources and further reading. This is a one on one coaching session + tailored follow-up materials designed for high-level executives who want to get hands on with AI systems.</p>
+                </div>
+            </div>
+
+            <!-- Perfect For -->
+            <div class="content-card">
+                <h2 class="card-title">Perfect For</h2>
+                <div class="card-content">
+                    <ul>
+                        <li>Anyone who wants to discover what AI can do for them</li>
+                        <li>Senior leaders, functional heads, or team leads</li>
+                        <li>Those responsible for transformation, innovation, marketing</li>
+                        <li>Customer experience or operations professionals</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Key Features -->
+            <div class="content-card">
+                <h2 class="card-title">Key Features</h2>
+                <div class="card-content">
+                    <ul>
+                        <li>Personalised guidance tailored to your specific needs</li>
+                        <li>Real-world solutions you can implement immediately</li>
+                        <li>Builds your AI literacy and confidence</li>
+                        <li>Expert-led session with industry practitioners</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Benefits -->
+            <div class="content-card">
+                <h2 class="card-title">Benefits</h2>
+                <div class="card-content">
+                    <ul>
+                        <li>Accelerated AI Literacy and Confidence</li>
+                        <li>Practical Problem-Solving and Use-Case Development</li>
+                        <li>Immediate Strategic Value</li>
+                        <li>Tailored Follow-Ups for Lasting Impact</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Grid -->
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon">⚡</div>
+                <div class="feature-title">Time-Efficient</div>
+                <div class="feature-description">Just 60 minutes to transform your AI understanding</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🎯</div>
+                <div class="feature-title">Personalized</div>
+                <div class="feature-description">Tailored to your specific challenge and context</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🚀</div>
+                <div class="feature-title">Practical</div>
+                <div class="feature-description">Real-world solutions you can implement immediately</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">📚</div>
+                <div class="feature-title">Supported</div>
+                <div class="feature-description">Follow-up materials ensure lasting impact</div>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="cta-section">
+            <h2 class="cta-title">Ready to Accelerate Your AI Journey?</h2>
+            <p class="cta-description">
+                Transform confusion into clarity with a personalized AI Power Hour session. 
+                Get the practical guidance you need to make confident AI decisions for your organization.
+            </p>
+            <a href="#contact" class="cta-button">Book Your AI Power Hour - £300</a>
+        </div>
+    </div>
+
+    <script>
+        // Add some interactive behavior
+        document.addEventListener('DOMContentLoaded', function() {
+            // Smooth scroll for CTA button
+            document.querySelector('.cta-button').addEventListener('click', function(e) {
+                e.preventDefault();
+                // In a real implementation, this would open a booking form or contact modal
+                alert('Booking system would open here. Contact us to schedule your AI Power Hour session!');
+            });
+
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.content-card, .feature-item');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.boxShadow = '0 20px 40px rgba(7, 0, 255, 0.1)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.boxShadow = '';
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

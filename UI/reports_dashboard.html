@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Development Reports Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: #1a202c;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0700FF;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #64748b;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0700FF;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tabs {
+            display: flex;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background: #0700FF;
+            color: white;
+        }
+
+        .tab:not(.active):hover {
+            background: rgba(7, 0, 255, 0.1);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .report-section {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #0700FF;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid rgba(7, 0, 255, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th {
+            background: #0700FF;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+
+        tr:hover {
+            background: rgba(7, 0, 255, 0.02);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-complete {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-progress {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .priority-high {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .priority-medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .priority-low {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .priority-critical {
+            background: #fce7f3;
+            color: #be185d;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #0700FF;
+            transition: width 0.3s ease;
+        }
+
+        .insight-card {
+            background: rgba(7, 0, 255, 0.05);
+            border-left: 4px solid #0700FF;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .insight-title {
+            font-weight: 600;
+            color: #0700FF;
+            margin-bottom: 0.5rem;
+        }
+
+        .insight-text {
+            color: #4a5568;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .load-data-btn {
+            background: #0700FF;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 2rem;
+        }
+
+        .load-data-btn:hover {
+            background: #0600cc;
+            transform: translateY(-1px);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #64748b;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Product Development Reports</h1>
+            <p>Internal team dashboard for AI-generated product content analysis</p>
+        </div>
+
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalProducts">-</div>
+                <div class="stat-label">Total Products</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalFiles">-</div>
+                <div class="stat-label">Generated Files</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalErrors">-</div>
+                <div class="stat-label">Issues Found</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="highValueFiles">-</div>
+                <div class="stat-label">High Value Files</div>
+            </div>
+        </div>
+
+        <button class="load-data-btn" onclick="document.getElementById('fileInput').click()">
+            📊 Load Analysis Report
+        </button>
+        <input type="file" id="fileInput" class="file-input" accept=".json" onchange="loadReport(event)">
+
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('overview')">📋 Overview</div>
+            <div class="tab" onclick="showTab('insights')">💡 Key Insights</div>
+            <div class="tab" onclick="showTab('issues')">⚠️ Issues</div>
+            <div class="tab" onclick="showTab('highvalue')">🎯 High Value</div>
+        </div>
+
+        <div id="overview" class="tab-content active">
+            <div class="report-section">
+                <h2 class="section-title">📊 Master Index</h2>
+                <div class="table-container">
+                    <table id="masterIndexTable">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Progress</th>
+                                <th>Files</th>
+                                <th>Errors</th>
+                                <th>High Value</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="masterIndexBody">
+                            <tr>
+                                <td colspan="7" class="empty-state">
+                                    <h3>No data loaded</h3>
+                                    <p>Please load an analysis report to view the master index</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="insights" class="tab-content">
+            <div class="report-section">
+                <h2 class="section-title">💡 Product Manifestos Summary</h2>
+                <div id="insightsContainer">
+                    <div class="empty-state">
+                        <h3>No insights loaded</h3>
+                        <p>Please load an analysis report to view key insights from product manifestos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="issues" class="tab-content">
+            <div class="report-section">
+                <h2 class="section-title">⚠️ Issues Requiring Attention</h2>
+                <div class="table-container">
+                    <table id="issuesTable">
+                        <thead>
+                            <tr>
+                                <th>Priority</th>
+                                <th>Product</th>
+                                <th>Issue Type</th>
+                                <th>Stage</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody id="issuesBody">
+                            <tr>
+                                <td colspan="5" class="empty-state">
+                                    <h3>No issues data loaded</h3>
+                                    <p>Please load an analysis report to view issues</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="highvalue" class="tab-content">
+            <div class="report-section">
+                <h2 class="section-title">🎯 High Value Content for Review</h2>
+                <div class="table-container">
+                    <table id="highValueTable">
+                        <thead>
+                            <tr>
+                                <th>Priority</th>
+                                <th>Product</th>
+                                <th>Type</th>
+                                <th>Stage</th>
+                                <th>Size</th>
+                                <th>File</th>
+                            </tr>
+                        </thead>
+                        <tbody id="highValueBody">
+                            <tr>
+                                <td colspan="6" class="empty-state">
+                                    <h3>No high value content loaded</h3>
+                                    <p>Please load an analysis report to view high value files</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let reportData = null;
+
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        function loadReport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    reportData = JSON.parse(e.target.result);
+                    updateDashboard();
+                } catch (error) {
+                    alert('Error loading report: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function updateDashboard() {
+            if (!reportData) return;
+
+            // Update stats
+            document.getElementById('totalProducts').textContent = reportData.total_products || 0;
+            document.getElementById('totalFiles').textContent = reportData.total_files || 0;
+            document.getElementById('totalErrors').textContent = reportData.total_errors || 0;
+            document.getElementById('highValueFiles').textContent = reportData.high_value?.length || 0;
+
+            // Update master index
+            updateMasterIndex();
+            
+            // Update insights
+            updateInsights();
+            
+            // Update issues
+            updateIssues();
+            
+            // Update high value content
+            updateHighValue();
+        }
+
+        function updateMasterIndex() {
+            const tbody = document.getElementById('masterIndexBody');
+            tbody.innerHTML = '';
+
+            if (!reportData.master_index || reportData.master_index.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No master index data available</td></tr>';
+                return;
+            }
+
+            reportData.master_index.forEach(product => {
+                const row = document.createElement('tr');
+                
+                const completionPercent = parseFloat(product['Completion %'].replace('%', ''));
+                const statusClass = getStatusClass(product.Status);
+                
+                row.innerHTML = `
+                    <td><strong>${product.Product}</strong></td>
+                    <td>${product.Price}</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${completionPercent}%"></div>
+                        </div>
+                        <small>${product['Completion %']}</small>
+                    </td>
+                    <td>${product.Completed}/${product['Total Files']}</td>
+                    <td>${product.Errors}</td>
+                    <td>${product['High Value Files']}</td>
+                    <td><span class="status-badge ${statusClass}">${product.Status}</span></td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        function updateInsights() {
+            const container = document.getElementById('insightsContainer');
+            container.innerHTML = '';
+
+            if (!reportData.insights || reportData.insights.length === 0) {
+                container.innerHTML = '<div class="empty-state">No insights data available</div>';
+                return;
+            }
+
+            reportData.insights.forEach(insight => {
+                const card = document.createElement('div');
+                card.className = 'insight-card';
+                
+                card.innerHTML = `
+                    <div class="insight-title">${insight.Product} (${insight.Price})</div>
+                    <div class="insight-text">
+                        <strong>Problem:</strong> ${insight.Problem}<br><br>
+                        <strong>Solution:</strong> ${insight.Solution}<br><br>
+                        <strong>Magic Moment:</strong> ${insight['Magic Moment']}
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        function updateIssues() {
+            const tbody = document.getElementById('issuesBody');
+            tbody.innerHTML = '';
+
+            if (!reportData.issues || reportData.issues.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No issues found</td></tr>';
+                return;
+            }
+
+            reportData.issues.forEach(issue => {
+                const row = document.createElement('tr');
+                const priorityClass = getPriorityClass(issue.Priority);
+                
+                row.innerHTML = `
+                    <td><span class="status-badge ${priorityClass}">${issue.Priority}</span></td>
+                    <td>${issue.Product}</td>
+                    <td>${issue['Issue Type']}</td>
+                    <td>${issue.Stage}</td>
+                    <td>${issue.Description}</td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        function updateHighValue() {
+            const tbody = document.getElementById('highValueBody');
+            tbody.innerHTML = '';
+
+            if (!reportData.high_value || reportData.high_value.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No high value content found</td></tr>';
+                return;
+            }
+
+            reportData.high_value.forEach(item => {
+                const row = document.createElement('tr');
+                const priorityClass = getPriorityClass(item.Priority);
+                
+                row.innerHTML = `
+                    <td><span class="status-badge ${priorityClass}">${item.Priority}</span></td>
+                    <td>${item.Product}</td>
+                    <td>${item.Type}</td>
+                    <td>${item.Stage}</td>
+                    <td>${item['Size (KB)']}KB</td>
+                    <td><code>${item.File}</code></td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        function getStatusClass(status) {
+            if (status.includes('Complete')) return 'status-complete';
+            if (status.includes('Error')) return 'status-error';
+            return 'status-progress';
+        }
+
+        function getPriorityClass(priority) {
+            switch (priority.toLowerCase()) {
+                case 'critical': return 'priority-critical';
+                case 'high': return 'priority-high';
+                case 'medium': return 'priority-medium';
+                case 'low': return 'priority-low';
+                default: return 'priority-medium';
+            }
+        }
+
+        // Auto-load if there's a summary file in the URL params
+        window.addEventListener('load', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const reportFile = urlParams.get('report');
+            if (reportFile) {
+                fetch(reportFile)
+                    .then(response => response.json())
+                    .then(data => {
+                        reportData = data;
+                        updateDashboard();
+                    })
+                    .catch(error => console.error('Error loading report:', error));
+            }
+        });
+    </script>
+</body>
+</html> 
