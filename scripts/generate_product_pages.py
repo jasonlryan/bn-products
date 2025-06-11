@@ -545,8 +545,8 @@ def generate_product_page(product, all_products):
 
 def main():
     # Configuration
-    csv_path = 'data/BN Products List   - 2025.csv'
-    output_dir = 'UI'
+    csv_path = '../data/BN Products List   - 2025.csv'
+    output_dir = '../UI'
     
     # Create output directory if it doesn't exist
     Path(output_dir).mkdir(exist_ok=True)

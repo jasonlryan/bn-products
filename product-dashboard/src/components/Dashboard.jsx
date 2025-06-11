@@ -1,23 +1,24 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { parseCSVToProducts, csvData } from '../utils/csvParser'
 
 function Dashboard() {
   const [products, setProducts] = useState({})
+  const [services, setServices] = useState({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [activeTab, setActiveTab] = useState('products')
 
   useEffect(() => {
-    fetchProducts()
+    loadData()
   }, [])
 
-  const fetchProducts = async () => {
+  const loadData = async () => {
     try {
-      const response = await fetch('/marketing-content.json')
-      if (!response.ok) {
-        throw new Error('Failed to fetch marketing content')
-      }
-      const data = await response.json()
-      setProducts(data.products)
+      // Parse CSV data
+      const { products: parsedProducts, services: parsedServices } = parseCSVToProducts(csvData)
+      setProducts(parsedProducts)
+      setServices(parsedServices)
       setLoading(false)
     } catch (err) {
       setError(err.message)
@@ -26,12 +27,15 @@ function Dashboard() {
   }
 
   if (loading) {
-    return <div className="loading">Loading products...</div>
+    return <div className="loading">Loading products and services...</div>
   }
 
   if (error) {
     return <div className="error">Error: {error}</div>
   }
+
+  const currentItems = activeTab === 'products' ? products : services
+  const totalCount = Object.keys(products).length + Object.keys(services).length
 
   return (
     <div>
@@ -40,7 +44,7 @@ function Dashboard() {
         <div className="hero-content">
           <h1>AI-Powered Business Solutions</h1>
           <p className="hero-subtitle">
-            Transform your business with our suite of 8 cutting-edge AI products. 
+            Transform your business with our comprehensive suite of AI products and services. 
             From strategic consulting to intelligent dashboards, we've got everything you need to stay ahead.
           </p>
           <div className="hero-stats">
@@ -49,8 +53,8 @@ function Dashboard() {
               <span className="stat-label">AI Products</span>
             </div>
             <div className="stat">
-              <span className="stat-number">500+</span>
-              <span className="stat-label">Companies Served</span>
+              <span className="stat-number">{Object.keys(services).length}</span>
+              <span className="stat-label">AI Services</span>
             </div>
             <div className="stat">
               <span className="stat-number">95%</span>
@@ -60,48 +64,83 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* Products Grid */}
+      {/* Tab Navigation */}
+      <div className="tab-navigation">
+        <div className="tab-container">
+          <button 
+            className={`tab ${activeTab === 'products' ? 'active' : ''}`}
+            onClick={() => setActiveTab('products')}
+          >
+            Products ({Object.keys(products).length})
+          </button>
+          <button 
+            className={`tab ${activeTab === 'services' ? 'active' : ''}`}
+            onClick={() => setActiveTab('services')}
+          >
+            Services ({Object.keys(services).length})
+          </button>
+        </div>
+      </div>
+
+      {/* Products/Services Grid */}
       <div className="products-section">
-        <h2>Our Product Suite</h2>
+        <h2>Our {activeTab === 'products' ? 'Product' : 'Service'} Suite</h2>
         <p className="section-subtitle">
-          Choose the perfect AI solution for your business needs
+          Choose the perfect AI {activeTab === 'products' ? 'product' : 'service'} for your business needs
         </p>
 
         <div className="grid grid-2">
-          {Object.entries(products).map(([productId, product]) => (
-            <Link key={productId} to={`/product/${productId}`} className="product-card">
+          {Object.entries(currentItems).map(([itemId, item]) => (
+            <Link key={itemId} to={`/product/${itemId}`} className="product-card">
               <div className="product-header">
-                <h3>{product.name}</h3>
-                <span className="product-type">{product.type}</span>
+                <h3>{item.name}</h3>
+                <div className="product-badges">
+                  <span className={`product-type ${item.type.toLowerCase()}`}>{item.type}</span>
+                  {item.price && (
+                    <span className="product-price">{item.price.split('\n')[0]}</span>
+                  )}
+                </div>
               </div>
               
               <div className="product-description">
-                <p>{product.hero?.description || product.hero?.value_proposition || 'Innovative AI solution for modern businesses'}</p>
+                <p>{item.description || item.hero?.description || item.hero?.value_proposition || 'Innovative AI solution for modern businesses'}</p>
               </div>
 
-              {/* Key Benefits */}
-              {product.benefits && product.benefits.length > 0 && (
-                <div className="product-benefits">
-                  <h4>Key Benefits:</h4>
-                  <ul>
-                    {product.benefits.slice(0, 3).map((benefit, index) => (
-                      <li key={index}>{benefit}</li>
-                    ))}
-                  </ul>
+              {/* Perfect For */}
+              {item.perfectFor && (
+                <div className="product-perfect-for">
+                  <h4>Perfect For:</h4>
+                  <p>{item.perfectFor}</p>
                 </div>
               )}
 
-              {/* Features Preview */}
-              {product.features && product.features.length > 0 && (
+              {/* Key Features */}
+              {item.features && item.features.length > 0 && (
                 <div className="product-features">
+                  <h4>Key Features:</h4>
                   <div className="features-preview">
-                    {product.features.slice(0, 2).map((feature, index) => (
+                    {item.features.slice(0, 3).map((feature, index) => (
                       <span key={index} className="feature-tag">{feature}</span>
                     ))}
-                    {product.features.length > 2 && (
-                      <span className="feature-tag more">+{product.features.length - 2} more</span>
+                    {item.features.length > 3 && (
+                      <span className="feature-tag more">+{item.features.length - 3} more</span>
                     )}
                   </div>
+                </div>
+              )}
+
+              {/* Benefits Preview */}
+              {item.benefits && item.benefits.length > 0 && (
+                <div className="product-benefits">
+                  <h4>Key Benefits:</h4>
+                  <ul>
+                    {item.benefits.slice(0, 2).map((benefit, index) => (
+                      <li key={index}>{benefit}</li>
+                    ))}
+                    {item.benefits.length > 2 && (
+                      <li className="more-benefits">+{item.benefits.length - 2} more benefits</li>
+                    )}
+                  </ul>
                 </div>
               )}
 

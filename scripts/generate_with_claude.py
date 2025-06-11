@@ -122,8 +122,8 @@ def format_previous_outputs(previous_outputs):
 
 def create_processing_queue():
     """Create a JSON file with all the prompts to be processed"""
-    csv_path = 'data/BN Products List   - 2025.csv'
-    prompts_dir = 'prompts'
+    csv_path = '../data/BN Products List   - 2025.csv'
+    prompts_dir = '../prompts'
     
     products = read_products_from_csv(csv_path)
     prompts = read_prompts_from_directory(prompts_dir)
@@ -153,7 +153,7 @@ def create_processing_queue():
             })
     
     # Save queue to JSON file
-    with open('processing_queue.json', 'w', encoding='utf-8') as f:
+    with open('../processing_queue.json', 'w', encoding='utf-8') as f:
         json.dump(queue, f, indent=2, ensure_ascii=False)
     
     return queue
@@ -161,7 +161,7 @@ def create_processing_queue():
 def get_next_unprocessed():
     """Get the next unprocessed item from the queue"""
     try:
-        with open('processing_queue.json', 'r', encoding='utf-8') as f:
+        with open('../processing_queue.json', 'r', encoding='utf-8') as f:
             queue = json.load(f)
         
         for item in queue:
@@ -175,7 +175,7 @@ def get_next_unprocessed():
 def mark_as_processed(filename):
     """Mark an item as processed in the queue"""
     try:
-        with open('processing_queue.json', 'r', encoding='utf-8') as f:
+        with open('../processing_queue.json', 'r', encoding='utf-8') as f:
             queue = json.load(f)
         
         for item in queue:
@@ -183,7 +183,7 @@ def mark_as_processed(filename):
                 item['processed'] = True
                 break
         
-        with open('processing_queue.json', 'w', encoding='utf-8') as f:
+        with open('../processing_queue.json', 'w', encoding='utf-8') as f:
             json.dump(queue, f, indent=2, ensure_ascii=False)
         
         return True
@@ -193,7 +193,7 @@ def mark_as_processed(filename):
 def get_previous_outputs_for_product(product_idx):
     """Get all previous outputs for a specific product"""
     try:
-        with open('processing_queue.json', 'r', encoding='utf-8') as f:
+        with open('../processing_queue.json', 'r', encoding='utf-8') as f:
             queue = json.load(f)
         
         previous_outputs = []
@@ -213,7 +213,7 @@ def get_previous_outputs_for_product(product_idx):
 def save_generated_content(filename, content):
     """Save generated content to the queue and create the markdown file"""
     try:
-        with open('processing_queue.json', 'r', encoding='utf-8') as f:
+        with open('../processing_queue.json', 'r', encoding='utf-8') as f:
             queue = json.load(f)
         
         for item in queue:
@@ -225,7 +225,7 @@ def save_generated_content(filename, content):
                 create_markdown_file(item, content)
                 break
         
-        with open('processing_queue.json', 'w', encoding='utf-8') as f:
+        with open('../processing_queue.json', 'w', encoding='utf-8') as f:
             json.dump(queue, f, indent=2, ensure_ascii=False)
         
         return True
@@ -269,7 +269,7 @@ def create_markdown_file(item, generated_content):
 """
 
     # Write to products directory
-    filepath = os.path.join('products', item['filename'])
+    filepath = os.path.join('../products', item['filename'])
     with open(filepath, 'w', encoding='utf-8') as f:
         f.write(content)
 
@@ -314,7 +314,7 @@ def main():
         
         # Show summary
         try:
-            with open('processing_queue.json', 'r', encoding='utf-8') as f:
+            with open('../processing_queue.json', 'r', encoding='utf-8') as f:
                 queue = json.load(f)
             
             processed = sum(1 for item in queue if item['processed'])

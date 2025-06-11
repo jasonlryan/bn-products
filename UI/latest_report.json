@@ -1,5 +1,5 @@
 {
-  "generated_at": "2025-06-10T13:53:19.085758",
+  "generated_at": "2025-06-11T16:04:54.040114",
   "total_products": 8,
   "total_files": 120,
   "total_errors": 0,
@@ -8,7 +8,7 @@
       "name": "ai_powered_research_and_insight_sprint",
       "files": {
         "14_demo_slide_headlines": {
-          "filepath": "products/05_ai_powered_research_and_insight_sprint_14_demo_slide_headlines.md",
+          "filepath": "../products/05_ai_powered_research_and_insight_sprint_14_demo_slide_headlines.md",
           "filename": "05_ai_powered_research_and_insight_sprint_14_demo_slide_headlines.md",
           "size_kb": 4.4,
           "lines": 90,
@@ -23,7 +23,7 @@
           "is_high_value": false
         },
         "03_idea_exploration_audience_icps": {
-          "filepath": "products/05_ai_powered_research_and_insight_sprint_03_idea_exploration_audience_icps.md",
+          "filepath": "../products/05_ai_powered_research_and_insight_sprint_03_idea_exploration_audience_icps.md",
           "filename": "05_ai_powered_research_and_insight_sprint_03_idea_exploration_audience_icps.md",
           "size_kb": 4.8,
           "lines": 105,
@@ -38,7 +38,7 @@
           "is_high_value": false
         },
         "04_idea_exploration_user_stories": {
-          "filepath": "products/05_ai_powered_research_and_insight_sprint_04_idea_exploration_user_stories.md",
+          "filepath": "../products/05_ai_powered_research_and_insight_sprint_04_idea_exploration_user_stories.md",
           "filename": "05_ai_powered_research_and_insight_sprint_04_idea_exploration_user_stories.md",
           "size_kb": 5.1,
           "lines": 103,
@@ -53,7 +53,7 @@
           "is_high_value": true
         },
         "10_build_ui_landing_page_copy": {
-          "filepath": "products/05_ai_powered_research_and_insight_sprint_10_build_ui_landing_page_copy.md",
+          "filepath": "../products/05_ai_powered_research_and_insight_sprint_10_build_ui_landing_page_copy.md",
           "filename": "05_ai_powered_research_and_insight_sprint_10_build_ui_landing_page_copy.md",
           "size_kb": 2.7,
           "lines": 82,
@@ -68,7 +68,7 @@
           "is_high_value": false
         },
         "12_demo_investor_deck": {
-          "filepath": "products/05_ai_powered_research_and_insight_sprint_12_demo_investor_deck.md",
+          "filepath": "../products/05_ai_powered_research_and_insight_sprint_12_demo_investor_deck.md",
           "filename": "05_ai_powered_research_and_insight_sprint_12_demo_investor_deck.md",
           "size_kb": 6.3,
           "lines": 118,
@@ -83,7 +83,7 @@
           "is_high_value": true
         },
         "11_build_ui_key_messages": {
-          "filepath": "products/05_ai_powered_research_and_insight_sprint_11_build_ui_key_messages.md",
+          "filepath": "../products/05_ai_powered_research_and_insight_sprint_11_build_ui_key_messages.md",
           "filename": "05_ai_powered_research_and_insight_sprint_11_build_ui_key_messages.md",
           "size_kb": 2.9,
           "lines": 81,
@@ -98,7 +98,7 @@
           "is_high_value": false
         },
         "13_demo_demo_script": {
-          "filepath": "products/05_ai_powered_research_and_insight_sprint_13_demo_demo_script.md",
+          "filepath": "../products/05_ai_powered_research_and_insight_sprint_13_demo_demo_script.md",
           "filename": "05_ai_powered_research_and_insight_sprint_13_demo_demo_script.md",
           "size_kb": 5.2,
           "lines": 121,
@@ -113,7 +113,7 @@
           "is_high_value": true
         },
         "05_plan_competitor_sweep": {
-          "filepath": "products/05_ai_powered_research_and_insight_sprint_05_plan_competitor_sweep.md",
+          "filepath": "../products/05_ai_powered_research_and_insight_sprint_05_plan_competitor_sweep.md",
           "filename": "05_ai_powered_research_and_insight_sprint_05_plan_competitor_sweep.md",
           "size_kb": 6.7,
           "lines": 133,
@@ -128,7 +128,7 @@
           "is_high_value": true
         },
         "15_demo_qa_prep": {
-          "filepath": "products/05_ai_powered_research_and_insight_sprint_15_demo_qa_prep.md",
+          "filepath": "../products/05_ai_powered_research_and_insight_sprint_15_demo_qa_prep.md",
           "filename": "05_ai_powered_research_and_insight_sprint_15_demo_qa_prep.md",
           "size_kb": 6.4,
           "lines": 117,
@@ -143,7 +143,7 @@
           "is_high_value": true
         },
         "01_big_idea_product_manifesto": {
-          "filepath": "products/05_ai_powered_research_and_insight_sprint_01_big_idea_product_manifesto.md",
+          "filepath": "../products/05_ai_powered_research_and_insight_sprint_01_big_idea_product_manifesto.md",
           "filename": "05_ai_powered_research_and_insight_sprint_01_big_idea_product_manifesto.md",
           "size_kb": 3.9,
           "lines": 82,
@@ -163,7 +163,7 @@
           "is_high_value": true
         },
         "06_plan_tam_sizing": {
-          "filepath": "products/05_ai_powered_research_and_insight_sprint_06_plan_tam_sizing.md",
+          "filepath": "../products/05_ai_powered_research_and_insight_sprint_06_plan_tam_sizing.md",
           "filename": "05_ai_powered_research_and_insight_sprint_06_plan_tam_sizing.md",
           "size_kb": 4.0,
           "lines": 87,
@@ -178,7 +178,7 @@
           "is_high_value": true
         },
         "08_research_prd_ui_prompt": {
-          "filepath": "products/05_ai_powered_research_and_insight_sprint_08_research_prd_ui_prompt.md",
+          "filepath": "../products/05_ai_powered_research_and_insight_sprint_08_research_prd_ui_prompt.md",
           "filename": "05_ai_powered_research_and_insight_sprint_08_research_prd_ui_prompt.md",
           "size_kb": 5.1,
           "lines": 133,
@@ -193,7 +193,7 @@
           "is_high_value": true
         },
         "07_research_prd_skeleton": {
-          "filepath": "products/05_ai_powered_research_and_insight_sprint_07_research_prd_skeleton.md",
+          "filepath": "../products/05_ai_powered_research_and_insight_sprint_07_research_prd_skeleton.md",
           "filename": "05_ai_powered_research_and_insight_sprint_07_research_prd_skeleton.md",
           "size_kb": 6.0,
           "lines": 139,
@@ -208,7 +208,7 @@
           "is_high_value": true
         },
         "09_build_generate_screens": {
-          "filepath": "products/05_ai_powered_research_and_insight_sprint_09_build_generate_screens.md",
+          "filepath": "../products/05_ai_powered_research_and_insight_sprint_09_build_generate_screens.md",
           "filename": "05_ai_powered_research_and_insight_sprint_09_build_generate_screens.md",
           "size_kb": 4.8,
           "lines": 104,
@@ -223,7 +223,7 @@
           "is_high_value": false
         },
         "02_idea_exploration_functional_spec": {
-          "filepath": "products/05_ai_powered_research_and_insight_sprint_02_idea_exploration_functional_spec.md",
+          "filepath": "../products/05_ai_powered_research_and_insight_sprint_02_idea_exploration_functional_spec.md",
           "filename": "05_ai_powered_research_and_insight_sprint_02_idea_exploration_functional_spec.md",
           "size_kb": 4.9,
           "lines": 123,
@@ -242,7 +242,7 @@
       "errors": [],
       "high_value_files": [
         {
-          "filepath": "products/05_ai_powered_research_and_insight_sprint_04_idea_exploration_user_stories.md",
+          "filepath": "../products/05_ai_powered_research_and_insight_sprint_04_idea_exploration_user_stories.md",
           "filename": "05_ai_powered_research_and_insight_sprint_04_idea_exploration_user_stories.md",
           "size_kb": 5.1,
           "lines": 103,
@@ -257,7 +257,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/05_ai_powered_research_and_insight_sprint_12_demo_investor_deck.md",
+          "filepath": "../products/05_ai_powered_research_and_insight_sprint_12_demo_investor_deck.md",
           "filename": "05_ai_powered_research_and_insight_sprint_12_demo_investor_deck.md",
           "size_kb": 6.3,
           "lines": 118,
@@ -272,7 +272,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/05_ai_powered_research_and_insight_sprint_13_demo_demo_script.md",
+          "filepath": "../products/05_ai_powered_research_and_insight_sprint_13_demo_demo_script.md",
           "filename": "05_ai_powered_research_and_insight_sprint_13_demo_demo_script.md",
           "size_kb": 5.2,
           "lines": 121,
@@ -287,7 +287,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/05_ai_powered_research_and_insight_sprint_05_plan_competitor_sweep.md",
+          "filepath": "../products/05_ai_powered_research_and_insight_sprint_05_plan_competitor_sweep.md",
           "filename": "05_ai_powered_research_and_insight_sprint_05_plan_competitor_sweep.md",
           "size_kb": 6.7,
           "lines": 133,
@@ -302,7 +302,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/05_ai_powered_research_and_insight_sprint_15_demo_qa_prep.md",
+          "filepath": "../products/05_ai_powered_research_and_insight_sprint_15_demo_qa_prep.md",
           "filename": "05_ai_powered_research_and_insight_sprint_15_demo_qa_prep.md",
           "size_kb": 6.4,
           "lines": 117,
@@ -317,7 +317,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/05_ai_powered_research_and_insight_sprint_01_big_idea_product_manifesto.md",
+          "filepath": "../products/05_ai_powered_research_and_insight_sprint_01_big_idea_product_manifesto.md",
           "filename": "05_ai_powered_research_and_insight_sprint_01_big_idea_product_manifesto.md",
           "size_kb": 3.9,
           "lines": 82,
@@ -337,7 +337,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/05_ai_powered_research_and_insight_sprint_06_plan_tam_sizing.md",
+          "filepath": "../products/05_ai_powered_research_and_insight_sprint_06_plan_tam_sizing.md",
           "filename": "05_ai_powered_research_and_insight_sprint_06_plan_tam_sizing.md",
           "size_kb": 4.0,
           "lines": 87,
@@ -352,7 +352,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/05_ai_powered_research_and_insight_sprint_08_research_prd_ui_prompt.md",
+          "filepath": "../products/05_ai_powered_research_and_insight_sprint_08_research_prd_ui_prompt.md",
           "filename": "05_ai_powered_research_and_insight_sprint_08_research_prd_ui_prompt.md",
           "size_kb": 5.1,
           "lines": 133,
@@ -367,7 +367,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/05_ai_powered_research_and_insight_sprint_07_research_prd_skeleton.md",
+          "filepath": "../products/05_ai_powered_research_and_insight_sprint_07_research_prd_skeleton.md",
           "filename": "05_ai_powered_research_and_insight_sprint_07_research_prd_skeleton.md",
           "size_kb": 6.0,
           "lines": 139,
@@ -390,7 +390,7 @@
       "name": "ai_innovation_day",
       "files": {
         "15_demo_qa_prep": {
-          "filepath": "products/07_ai_innovation_day_15_demo_qa_prep.md",
+          "filepath": "../products/07_ai_innovation_day_15_demo_qa_prep.md",
           "filename": "07_ai_innovation_day_15_demo_qa_prep.md",
           "size_kb": 7.8,
           "lines": 127,
@@ -405,7 +405,7 @@
           "is_high_value": true
         },
         "09_build_generate_screens": {
-          "filepath": "products/07_ai_innovation_day_09_build_generate_screens.md",
+          "filepath": "../products/07_ai_innovation_day_09_build_generate_screens.md",
           "filename": "07_ai_innovation_day_09_build_generate_screens.md",
           "size_kb": 5.1,
           "lines": 123,
@@ -420,7 +420,7 @@
           "is_high_value": true
         },
         "05_plan_competitor_sweep": {
-          "filepath": "products/07_ai_innovation_day_05_plan_competitor_sweep.md",
+          "filepath": "../products/07_ai_innovation_day_05_plan_competitor_sweep.md",
           "filename": "07_ai_innovation_day_05_plan_competitor_sweep.md",
           "size_kb": 7.5,
           "lines": 149,
@@ -435,7 +435,7 @@
           "is_high_value": true
         },
         "02_idea_exploration_functional_spec": {
-          "filepath": "products/07_ai_innovation_day_02_idea_exploration_functional_spec.md",
+          "filepath": "../products/07_ai_innovation_day_02_idea_exploration_functional_spec.md",
           "filename": "07_ai_innovation_day_02_idea_exploration_functional_spec.md",
           "size_kb": 5.3,
           "lines": 133,
@@ -450,7 +450,7 @@
           "is_high_value": true
         },
         "12_demo_investor_deck": {
-          "filepath": "products/07_ai_innovation_day_12_demo_investor_deck.md",
+          "filepath": "../products/07_ai_innovation_day_12_demo_investor_deck.md",
           "filename": "07_ai_innovation_day_12_demo_investor_deck.md",
           "size_kb": 7.3,
           "lines": 185,
@@ -465,7 +465,7 @@
           "is_high_value": true
         },
         "01_big_idea_product_manifesto": {
-          "filepath": "products/07_ai_innovation_day_01_big_idea_product_manifesto.md",
+          "filepath": "../products/07_ai_innovation_day_01_big_idea_product_manifesto.md",
           "filename": "07_ai_innovation_day_01_big_idea_product_manifesto.md",
           "size_kb": 5.1,
           "lines": 111,
@@ -485,7 +485,7 @@
           "is_high_value": true
         },
         "07_research_prd_skeleton": {
-          "filepath": "products/07_ai_innovation_day_07_research_prd_skeleton.md",
+          "filepath": "../products/07_ai_innovation_day_07_research_prd_skeleton.md",
           "filename": "07_ai_innovation_day_07_research_prd_skeleton.md",
           "size_kb": 5.7,
           "lines": 136,
@@ -500,7 +500,7 @@
           "is_high_value": true
         },
         "08_research_prd_ui_prompt": {
-          "filepath": "products/07_ai_innovation_day_08_research_prd_ui_prompt.md",
+          "filepath": "../products/07_ai_innovation_day_08_research_prd_ui_prompt.md",
           "filename": "07_ai_innovation_day_08_research_prd_ui_prompt.md",
           "size_kb": 5.5,
           "lines": 123,
@@ -515,7 +515,7 @@
           "is_high_value": true
         },
         "06_plan_tam_sizing": {
-          "filepath": "products/07_ai_innovation_day_06_plan_tam_sizing.md",
+          "filepath": "../products/07_ai_innovation_day_06_plan_tam_sizing.md",
           "filename": "07_ai_innovation_day_06_plan_tam_sizing.md",
           "size_kb": 5.3,
           "lines": 118,
@@ -530,7 +530,7 @@
           "is_high_value": true
         },
         "14_demo_slide_headlines": {
-          "filepath": "products/07_ai_innovation_day_14_demo_slide_headlines.md",
+          "filepath": "../products/07_ai_innovation_day_14_demo_slide_headlines.md",
           "filename": "07_ai_innovation_day_14_demo_slide_headlines.md",
           "size_kb": 5.4,
           "lines": 133,
@@ -545,7 +545,7 @@
           "is_high_value": true
         },
         "11_build_ui_key_messages": {
-          "filepath": "products/07_ai_innovation_day_11_build_ui_key_messages.md",
+          "filepath": "../products/07_ai_innovation_day_11_build_ui_key_messages.md",
           "filename": "07_ai_innovation_day_11_build_ui_key_messages.md",
           "size_kb": 4.0,
           "lines": 108,
@@ -560,7 +560,7 @@
           "is_high_value": false
         },
         "10_build_ui_landing_page_copy": {
-          "filepath": "products/07_ai_innovation_day_10_build_ui_landing_page_copy.md",
+          "filepath": "../products/07_ai_innovation_day_10_build_ui_landing_page_copy.md",
           "filename": "07_ai_innovation_day_10_build_ui_landing_page_copy.md",
           "size_kb": 3.8,
           "lines": 102,
@@ -575,7 +575,7 @@
           "is_high_value": false
         },
         "03_idea_exploration_audience_icps": {
-          "filepath": "products/07_ai_innovation_day_03_idea_exploration_audience_icps.md",
+          "filepath": "../products/07_ai_innovation_day_03_idea_exploration_audience_icps.md",
           "filename": "07_ai_innovation_day_03_idea_exploration_audience_icps.md",
           "size_kb": 6.3,
           "lines": 140,
@@ -590,7 +590,7 @@
           "is_high_value": true
         },
         "04_idea_exploration_user_stories": {
-          "filepath": "products/07_ai_innovation_day_04_idea_exploration_user_stories.md",
+          "filepath": "../products/07_ai_innovation_day_04_idea_exploration_user_stories.md",
           "filename": "07_ai_innovation_day_04_idea_exploration_user_stories.md",
           "size_kb": 5.2,
           "lines": 117,
@@ -605,7 +605,7 @@
           "is_high_value": true
         },
         "13_demo_demo_script": {
-          "filepath": "products/07_ai_innovation_day_13_demo_demo_script.md",
+          "filepath": "../products/07_ai_innovation_day_13_demo_demo_script.md",
           "filename": "07_ai_innovation_day_13_demo_demo_script.md",
           "size_kb": 5.7,
           "lines": 141,
@@ -624,7 +624,7 @@
       "errors": [],
       "high_value_files": [
         {
-          "filepath": "products/07_ai_innovation_day_15_demo_qa_prep.md",
+          "filepath": "../products/07_ai_innovation_day_15_demo_qa_prep.md",
           "filename": "07_ai_innovation_day_15_demo_qa_prep.md",
           "size_kb": 7.8,
           "lines": 127,
@@ -639,7 +639,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/07_ai_innovation_day_09_build_generate_screens.md",
+          "filepath": "../products/07_ai_innovation_day_09_build_generate_screens.md",
           "filename": "07_ai_innovation_day_09_build_generate_screens.md",
           "size_kb": 5.1,
           "lines": 123,
@@ -654,7 +654,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/07_ai_innovation_day_05_plan_competitor_sweep.md",
+          "filepath": "../products/07_ai_innovation_day_05_plan_competitor_sweep.md",
           "filename": "07_ai_innovation_day_05_plan_competitor_sweep.md",
           "size_kb": 7.5,
           "lines": 149,
@@ -669,7 +669,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/07_ai_innovation_day_02_idea_exploration_functional_spec.md",
+          "filepath": "../products/07_ai_innovation_day_02_idea_exploration_functional_spec.md",
           "filename": "07_ai_innovation_day_02_idea_exploration_functional_spec.md",
           "size_kb": 5.3,
           "lines": 133,
@@ -684,7 +684,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/07_ai_innovation_day_12_demo_investor_deck.md",
+          "filepath": "../products/07_ai_innovation_day_12_demo_investor_deck.md",
           "filename": "07_ai_innovation_day_12_demo_investor_deck.md",
           "size_kb": 7.3,
           "lines": 185,
@@ -699,7 +699,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/07_ai_innovation_day_01_big_idea_product_manifesto.md",
+          "filepath": "../products/07_ai_innovation_day_01_big_idea_product_manifesto.md",
           "filename": "07_ai_innovation_day_01_big_idea_product_manifesto.md",
           "size_kb": 5.1,
           "lines": 111,
@@ -719,7 +719,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/07_ai_innovation_day_07_research_prd_skeleton.md",
+          "filepath": "../products/07_ai_innovation_day_07_research_prd_skeleton.md",
           "filename": "07_ai_innovation_day_07_research_prd_skeleton.md",
           "size_kb": 5.7,
           "lines": 136,
@@ -734,7 +734,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/07_ai_innovation_day_08_research_prd_ui_prompt.md",
+          "filepath": "../products/07_ai_innovation_day_08_research_prd_ui_prompt.md",
           "filename": "07_ai_innovation_day_08_research_prd_ui_prompt.md",
           "size_kb": 5.5,
           "lines": 123,
@@ -749,7 +749,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/07_ai_innovation_day_06_plan_tam_sizing.md",
+          "filepath": "../products/07_ai_innovation_day_06_plan_tam_sizing.md",
           "filename": "07_ai_innovation_day_06_plan_tam_sizing.md",
           "size_kb": 5.3,
           "lines": 118,
@@ -764,7 +764,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/07_ai_innovation_day_14_demo_slide_headlines.md",
+          "filepath": "../products/07_ai_innovation_day_14_demo_slide_headlines.md",
           "filename": "07_ai_innovation_day_14_demo_slide_headlines.md",
           "size_kb": 5.4,
           "lines": 133,
@@ -779,7 +779,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/07_ai_innovation_day_03_idea_exploration_audience_icps.md",
+          "filepath": "../products/07_ai_innovation_day_03_idea_exploration_audience_icps.md",
           "filename": "07_ai_innovation_day_03_idea_exploration_audience_icps.md",
           "size_kb": 6.3,
           "lines": 140,
@@ -794,7 +794,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/07_ai_innovation_day_04_idea_exploration_user_stories.md",
+          "filepath": "../products/07_ai_innovation_day_04_idea_exploration_user_stories.md",
           "filename": "07_ai_innovation_day_04_idea_exploration_user_stories.md",
           "size_kb": 5.2,
           "lines": 117,
@@ -809,7 +809,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/07_ai_innovation_day_13_demo_demo_script.md",
+          "filepath": "../products/07_ai_innovation_day_13_demo_demo_script.md",
           "filename": "07_ai_innovation_day_13_demo_demo_script.md",
           "size_kb": 5.7,
           "lines": 141,
@@ -832,7 +832,7 @@
       "name": "social_intelligence_dashboard",
       "files": {
         "15_demo_qa_prep": {
-          "filepath": "products/08_social_intelligence_dashboard_15_demo_qa_prep.md",
+          "filepath": "../products/08_social_intelligence_dashboard_15_demo_qa_prep.md",
           "filename": "08_social_intelligence_dashboard_15_demo_qa_prep.md",
           "size_kb": 10.3,
           "lines": 197,
@@ -847,7 +847,7 @@
           "is_high_value": true
         },
         "01_big_idea_product_manifesto": {
-          "filepath": "products/08_social_intelligence_dashboard_01_big_idea_product_manifesto.md",
+          "filepath": "../products/08_social_intelligence_dashboard_01_big_idea_product_manifesto.md",
           "filename": "08_social_intelligence_dashboard_01_big_idea_product_manifesto.md",
           "size_kb": 8.0,
           "lines": 176,
@@ -867,7 +867,7 @@
           "is_high_value": true
         },
         "14_demo_slide_headlines": {
-          "filepath": "products/08_social_intelligence_dashboard_14_demo_slide_headlines.md",
+          "filepath": "../products/08_social_intelligence_dashboard_14_demo_slide_headlines.md",
           "filename": "08_social_intelligence_dashboard_14_demo_slide_headlines.md",
           "size_kb": 7.9,
           "lines": 184,
@@ -882,7 +882,7 @@
           "is_high_value": true
         },
         "04_idea_exploration_user_stories": {
-          "filepath": "products/08_social_intelligence_dashboard_04_idea_exploration_user_stories.md",
+          "filepath": "../products/08_social_intelligence_dashboard_04_idea_exploration_user_stories.md",
           "filename": "08_social_intelligence_dashboard_04_idea_exploration_user_stories.md",
           "size_kb": 7.9,
           "lines": 199,
@@ -897,7 +897,7 @@
           "is_high_value": true
         },
         "08_research_prd_ui_prompt": {
-          "filepath": "products/08_social_intelligence_dashboard_08_research_prd_ui_prompt.md",
+          "filepath": "../products/08_social_intelligence_dashboard_08_research_prd_ui_prompt.md",
           "filename": "08_social_intelligence_dashboard_08_research_prd_ui_prompt.md",
           "size_kb": 7.9,
           "lines": 209,
@@ -912,7 +912,7 @@
           "is_high_value": true
         },
         "07_research_prd_skeleton": {
-          "filepath": "products/08_social_intelligence_dashboard_07_research_prd_skeleton.md",
+          "filepath": "../products/08_social_intelligence_dashboard_07_research_prd_skeleton.md",
           "filename": "08_social_intelligence_dashboard_07_research_prd_skeleton.md",
           "size_kb": 9.0,
           "lines": 215,
@@ -927,7 +927,7 @@
           "is_high_value": true
         },
         "03_idea_exploration_audience_icps": {
-          "filepath": "products/08_social_intelligence_dashboard_03_idea_exploration_audience_icps.md",
+          "filepath": "../products/08_social_intelligence_dashboard_03_idea_exploration_audience_icps.md",
           "filename": "08_social_intelligence_dashboard_03_idea_exploration_audience_icps.md",
           "size_kb": 8.8,
           "lines": 202,
@@ -942,7 +942,7 @@
           "is_high_value": true
         },
         "10_build_ui_landing_page_copy": {
-          "filepath": "products/08_social_intelligence_dashboard_10_build_ui_landing_page_copy.md",
+          "filepath": "../products/08_social_intelligence_dashboard_10_build_ui_landing_page_copy.md",
           "filename": "08_social_intelligence_dashboard_10_build_ui_landing_page_copy.md",
           "size_kb": 6.5,
           "lines": 194,
@@ -957,7 +957,7 @@
           "is_high_value": true
         },
         "05_plan_competitor_sweep": {
-          "filepath": "products/08_social_intelligence_dashboard_05_plan_competitor_sweep.md",
+          "filepath": "../products/08_social_intelligence_dashboard_05_plan_competitor_sweep.md",
           "filename": "08_social_intelligence_dashboard_05_plan_competitor_sweep.md",
           "size_kb": 9.9,
           "lines": 199,
@@ -972,7 +972,7 @@
           "is_high_value": true
         },
         "09_build_generate_screens": {
-          "filepath": "products/08_social_intelligence_dashboard_09_build_generate_screens.md",
+          "filepath": "../products/08_social_intelligence_dashboard_09_build_generate_screens.md",
           "filename": "08_social_intelligence_dashboard_09_build_generate_screens.md",
           "size_kb": 7.9,
           "lines": 201,
@@ -987,7 +987,7 @@
           "is_high_value": true
         },
         "11_build_ui_key_messages": {
-          "filepath": "products/08_social_intelligence_dashboard_11_build_ui_key_messages.md",
+          "filepath": "../products/08_social_intelligence_dashboard_11_build_ui_key_messages.md",
           "filename": "08_social_intelligence_dashboard_11_build_ui_key_messages.md",
           "size_kb": 6.4,
           "lines": 175,
@@ -1002,7 +1002,7 @@
           "is_high_value": true
         },
         "02_idea_exploration_functional_spec": {
-          "filepath": "products/08_social_intelligence_dashboard_02_idea_exploration_functional_spec.md",
+          "filepath": "../products/08_social_intelligence_dashboard_02_idea_exploration_functional_spec.md",
           "filename": "08_social_intelligence_dashboard_02_idea_exploration_functional_spec.md",
           "size_kb": 8.2,
           "lines": 192,
@@ -1017,7 +1017,7 @@
           "is_high_value": true
         },
         "12_demo_investor_deck": {
-          "filepath": "products/08_social_intelligence_dashboard_12_demo_investor_deck.md",
+          "filepath": "../products/08_social_intelligence_dashboard_12_demo_investor_deck.md",
           "filename": "08_social_intelligence_dashboard_12_demo_investor_deck.md",
           "size_kb": 10.8,
           "lines": 274,
@@ -1032,7 +1032,7 @@
           "is_high_value": true
         },
         "06_plan_tam_sizing": {
-          "filepath": "products/08_social_intelligence_dashboard_06_plan_tam_sizing.md",
+          "filepath": "../products/08_social_intelligence_dashboard_06_plan_tam_sizing.md",
           "filename": "08_social_intelligence_dashboard_06_plan_tam_sizing.md",
           "size_kb": 7.3,
           "lines": 181,
@@ -1047,7 +1047,7 @@
           "is_high_value": true
         },
         "13_demo_demo_script": {
-          "filepath": "products/08_social_intelligence_dashboard_13_demo_demo_script.md",
+          "filepath": "../products/08_social_intelligence_dashboard_13_demo_demo_script.md",
           "filename": "08_social_intelligence_dashboard_13_demo_demo_script.md",
           "size_kb": 8.5,
           "lines": 217,
@@ -1066,7 +1066,7 @@
       "errors": [],
       "high_value_files": [
         {
-          "filepath": "products/08_social_intelligence_dashboard_15_demo_qa_prep.md",
+          "filepath": "../products/08_social_intelligence_dashboard_15_demo_qa_prep.md",
           "filename": "08_social_intelligence_dashboard_15_demo_qa_prep.md",
           "size_kb": 10.3,
           "lines": 197,
@@ -1081,7 +1081,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/08_social_intelligence_dashboard_01_big_idea_product_manifesto.md",
+          "filepath": "../products/08_social_intelligence_dashboard_01_big_idea_product_manifesto.md",
           "filename": "08_social_intelligence_dashboard_01_big_idea_product_manifesto.md",
           "size_kb": 8.0,
           "lines": 176,
@@ -1101,7 +1101,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/08_social_intelligence_dashboard_14_demo_slide_headlines.md",
+          "filepath": "../products/08_social_intelligence_dashboard_14_demo_slide_headlines.md",
           "filename": "08_social_intelligence_dashboard_14_demo_slide_headlines.md",
           "size_kb": 7.9,
           "lines": 184,
@@ -1116,7 +1116,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/08_social_intelligence_dashboard_04_idea_exploration_user_stories.md",
+          "filepath": "../products/08_social_intelligence_dashboard_04_idea_exploration_user_stories.md",
           "filename": "08_social_intelligence_dashboard_04_idea_exploration_user_stories.md",
           "size_kb": 7.9,
           "lines": 199,
@@ -1131,7 +1131,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/08_social_intelligence_dashboard_08_research_prd_ui_prompt.md",
+          "filepath": "../products/08_social_intelligence_dashboard_08_research_prd_ui_prompt.md",
           "filename": "08_social_intelligence_dashboard_08_research_prd_ui_prompt.md",
           "size_kb": 7.9,
           "lines": 209,
@@ -1146,7 +1146,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/08_social_intelligence_dashboard_07_research_prd_skeleton.md",
+          "filepath": "../products/08_social_intelligence_dashboard_07_research_prd_skeleton.md",
           "filename": "08_social_intelligence_dashboard_07_research_prd_skeleton.md",
           "size_kb": 9.0,
           "lines": 215,
@@ -1161,7 +1161,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/08_social_intelligence_dashboard_03_idea_exploration_audience_icps.md",
+          "filepath": "../products/08_social_intelligence_dashboard_03_idea_exploration_audience_icps.md",
           "filename": "08_social_intelligence_dashboard_03_idea_exploration_audience_icps.md",
           "size_kb": 8.8,
           "lines": 202,
@@ -1176,7 +1176,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/08_social_intelligence_dashboard_10_build_ui_landing_page_copy.md",
+          "filepath": "../products/08_social_intelligence_dashboard_10_build_ui_landing_page_copy.md",
           "filename": "08_social_intelligence_dashboard_10_build_ui_landing_page_copy.md",
           "size_kb": 6.5,
           "lines": 194,
@@ -1191,7 +1191,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/08_social_intelligence_dashboard_05_plan_competitor_sweep.md",
+          "filepath": "../products/08_social_intelligence_dashboard_05_plan_competitor_sweep.md",
           "filename": "08_social_intelligence_dashboard_05_plan_competitor_sweep.md",
           "size_kb": 9.9,
           "lines": 199,
@@ -1206,7 +1206,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/08_social_intelligence_dashboard_09_build_generate_screens.md",
+          "filepath": "../products/08_social_intelligence_dashboard_09_build_generate_screens.md",
           "filename": "08_social_intelligence_dashboard_09_build_generate_screens.md",
           "size_kb": 7.9,
           "lines": 201,
@@ -1221,7 +1221,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/08_social_intelligence_dashboard_11_build_ui_key_messages.md",
+          "filepath": "../products/08_social_intelligence_dashboard_11_build_ui_key_messages.md",
           "filename": "08_social_intelligence_dashboard_11_build_ui_key_messages.md",
           "size_kb": 6.4,
           "lines": 175,
@@ -1236,7 +1236,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/08_social_intelligence_dashboard_02_idea_exploration_functional_spec.md",
+          "filepath": "../products/08_social_intelligence_dashboard_02_idea_exploration_functional_spec.md",
           "filename": "08_social_intelligence_dashboard_02_idea_exploration_functional_spec.md",
           "size_kb": 8.2,
           "lines": 192,
@@ -1251,7 +1251,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/08_social_intelligence_dashboard_12_demo_investor_deck.md",
+          "filepath": "../products/08_social_intelligence_dashboard_12_demo_investor_deck.md",
           "filename": "08_social_intelligence_dashboard_12_demo_investor_deck.md",
           "size_kb": 10.8,
           "lines": 274,
@@ -1266,7 +1266,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/08_social_intelligence_dashboard_06_plan_tam_sizing.md",
+          "filepath": "../products/08_social_intelligence_dashboard_06_plan_tam_sizing.md",
           "filename": "08_social_intelligence_dashboard_06_plan_tam_sizing.md",
           "size_kb": 7.3,
           "lines": 181,
@@ -1281,7 +1281,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/08_social_intelligence_dashboard_13_demo_demo_script.md",
+          "filepath": "../products/08_social_intelligence_dashboard_13_demo_demo_script.md",
           "filename": "08_social_intelligence_dashboard_13_demo_demo_script.md",
           "size_kb": 8.5,
           "lines": 217,
@@ -1304,7 +1304,7 @@
       "name": "ai_power_hour",
       "files": {
         "03_idea_exploration_audience_icps": {
-          "filepath": "products/01_ai_power_hour_03_idea_exploration_audience_icps.md",
+          "filepath": "../products/01_ai_power_hour_03_idea_exploration_audience_icps.md",
           "filename": "01_ai_power_hour_03_idea_exploration_audience_icps.md",
           "size_kb": 5.3,
           "lines": 96,
@@ -1319,7 +1319,7 @@
           "is_high_value": true
         },
         "06_plan_tam_sizing": {
-          "filepath": "products/01_ai_power_hour_06_plan_tam_sizing.md",
+          "filepath": "../products/01_ai_power_hour_06_plan_tam_sizing.md",
           "filename": "01_ai_power_hour_06_plan_tam_sizing.md",
           "size_kb": 3.7,
           "lines": 85,
@@ -1334,7 +1334,7 @@
           "is_high_value": true
         },
         "05_plan_competitor_sweep": {
-          "filepath": "products/01_ai_power_hour_05_plan_competitor_sweep.md",
+          "filepath": "../products/01_ai_power_hour_05_plan_competitor_sweep.md",
           "filename": "01_ai_power_hour_05_plan_competitor_sweep.md",
           "size_kb": 4.8,
           "lines": 97,
@@ -1349,7 +1349,7 @@
           "is_high_value": true
         },
         "07_research_prd_skeleton": {
-          "filepath": "products/01_ai_power_hour_07_research_prd_skeleton.md",
+          "filepath": "../products/01_ai_power_hour_07_research_prd_skeleton.md",
           "filename": "01_ai_power_hour_07_research_prd_skeleton.md",
           "size_kb": 4.8,
           "lines": 100,
@@ -1364,7 +1364,7 @@
           "is_high_value": false
         },
         "04_idea_exploration_user_stories": {
-          "filepath": "products/01_ai_power_hour_04_idea_exploration_user_stories.md",
+          "filepath": "../products/01_ai_power_hour_04_idea_exploration_user_stories.md",
           "filename": "01_ai_power_hour_04_idea_exploration_user_stories.md",
           "size_kb": 3.7,
           "lines": 87,
@@ -1379,7 +1379,7 @@
           "is_high_value": true
         },
         "13_demo_demo_script": {
-          "filepath": "products/01_ai_power_hour_13_demo_demo_script.md",
+          "filepath": "../products/01_ai_power_hour_13_demo_demo_script.md",
           "filename": "01_ai_power_hour_13_demo_demo_script.md",
           "size_kb": 4.2,
           "lines": 109,
@@ -1394,7 +1394,7 @@
           "is_high_value": false
         },
         "02_idea_exploration_functional_spec": {
-          "filepath": "products/01_ai_power_hour_02_idea_exploration_functional_spec.md",
+          "filepath": "../products/01_ai_power_hour_02_idea_exploration_functional_spec.md",
           "filename": "01_ai_power_hour_02_idea_exploration_functional_spec.md",
           "size_kb": 4.1,
           "lines": 84,
@@ -1409,7 +1409,7 @@
           "is_high_value": false
         },
         "10_build_ui_landing_page_copy": {
-          "filepath": "products/01_ai_power_hour_10_build_ui_landing_page_copy.md",
+          "filepath": "../products/01_ai_power_hour_10_build_ui_landing_page_copy.md",
           "filename": "01_ai_power_hour_10_build_ui_landing_page_copy.md",
           "size_kb": 2.8,
           "lines": 75,
@@ -1424,7 +1424,7 @@
           "is_high_value": false
         },
         "11_build_ui_key_messages": {
-          "filepath": "products/01_ai_power_hour_11_build_ui_key_messages.md",
+          "filepath": "../products/01_ai_power_hour_11_build_ui_key_messages.md",
           "filename": "01_ai_power_hour_11_build_ui_key_messages.md",
           "size_kb": 1.5,
           "lines": 62,
@@ -1439,7 +1439,7 @@
           "is_high_value": false
         },
         "09_build_generate_screens": {
-          "filepath": "products/01_ai_power_hour_09_build_generate_screens.md",
+          "filepath": "../products/01_ai_power_hour_09_build_generate_screens.md",
           "filename": "01_ai_power_hour_09_build_generate_screens.md",
           "size_kb": 4.4,
           "lines": 105,
@@ -1454,7 +1454,7 @@
           "is_high_value": false
         },
         "12_demo_investor_deck": {
-          "filepath": "products/01_ai_power_hour_12_demo_investor_deck.md",
+          "filepath": "../products/01_ai_power_hour_12_demo_investor_deck.md",
           "filename": "01_ai_power_hour_12_demo_investor_deck.md",
           "size_kb": 4.8,
           "lines": 88,
@@ -1469,7 +1469,7 @@
           "is_high_value": true
         },
         "08_research_prd_ui_prompt": {
-          "filepath": "products/01_ai_power_hour_08_research_prd_ui_prompt.md",
+          "filepath": "../products/01_ai_power_hour_08_research_prd_ui_prompt.md",
           "filename": "01_ai_power_hour_08_research_prd_ui_prompt.md",
           "size_kb": 4.2,
           "lines": 79,
@@ -1484,7 +1484,7 @@
           "is_high_value": false
         },
         "14_demo_slide_headlines": {
-          "filepath": "products/01_ai_power_hour_14_demo_slide_headlines.md",
+          "filepath": "../products/01_ai_power_hour_14_demo_slide_headlines.md",
           "filename": "01_ai_power_hour_14_demo_slide_headlines.md",
           "size_kb": 4.6,
           "lines": 81,
@@ -1499,7 +1499,7 @@
           "is_high_value": false
         },
         "01_big_idea_product_manifesto": {
-          "filepath": "products/01_ai_power_hour_01_big_idea_product_manifesto.md",
+          "filepath": "../products/01_ai_power_hour_01_big_idea_product_manifesto.md",
           "filename": "01_ai_power_hour_01_big_idea_product_manifesto.md",
           "size_kb": 3.9,
           "lines": 74,
@@ -1519,7 +1519,7 @@
           "is_high_value": true
         },
         "15_demo_qa_prep": {
-          "filepath": "products/01_ai_power_hour_15_demo_qa_prep.md",
+          "filepath": "../products/01_ai_power_hour_15_demo_qa_prep.md",
           "filename": "01_ai_power_hour_15_demo_qa_prep.md",
           "size_kb": 6.4,
           "lines": 109,
@@ -1538,7 +1538,7 @@
       "errors": [],
       "high_value_files": [
         {
-          "filepath": "products/01_ai_power_hour_03_idea_exploration_audience_icps.md",
+          "filepath": "../products/01_ai_power_hour_03_idea_exploration_audience_icps.md",
           "filename": "01_ai_power_hour_03_idea_exploration_audience_icps.md",
           "size_kb": 5.3,
           "lines": 96,
@@ -1553,7 +1553,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/01_ai_power_hour_06_plan_tam_sizing.md",
+          "filepath": "../products/01_ai_power_hour_06_plan_tam_sizing.md",
           "filename": "01_ai_power_hour_06_plan_tam_sizing.md",
           "size_kb": 3.7,
           "lines": 85,
@@ -1568,7 +1568,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/01_ai_power_hour_05_plan_competitor_sweep.md",
+          "filepath": "../products/01_ai_power_hour_05_plan_competitor_sweep.md",
           "filename": "01_ai_power_hour_05_plan_competitor_sweep.md",
           "size_kb": 4.8,
           "lines": 97,
@@ -1583,7 +1583,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/01_ai_power_hour_04_idea_exploration_user_stories.md",
+          "filepath": "../products/01_ai_power_hour_04_idea_exploration_user_stories.md",
           "filename": "01_ai_power_hour_04_idea_exploration_user_stories.md",
           "size_kb": 3.7,
           "lines": 87,
@@ -1598,7 +1598,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/01_ai_power_hour_12_demo_investor_deck.md",
+          "filepath": "../products/01_ai_power_hour_12_demo_investor_deck.md",
           "filename": "01_ai_power_hour_12_demo_investor_deck.md",
           "size_kb": 4.8,
           "lines": 88,
@@ -1613,7 +1613,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/01_ai_power_hour_01_big_idea_product_manifesto.md",
+          "filepath": "../products/01_ai_power_hour_01_big_idea_product_manifesto.md",
           "filename": "01_ai_power_hour_01_big_idea_product_manifesto.md",
           "size_kb": 3.9,
           "lines": 74,
@@ -1633,7 +1633,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/01_ai_power_hour_15_demo_qa_prep.md",
+          "filepath": "../products/01_ai_power_hour_15_demo_qa_prep.md",
           "filename": "01_ai_power_hour_15_demo_qa_prep.md",
           "size_kb": 6.4,
           "lines": 109,
@@ -1656,7 +1656,7 @@
       "name": "ai_leadership_partner_fractional_caio",
       "files": {
         "04_idea_exploration_user_stories": {
-          "filepath": "products/04_ai_leadership_partner_fractional_caio_04_idea_exploration_user_stories.md",
+          "filepath": "../products/04_ai_leadership_partner_fractional_caio_04_idea_exploration_user_stories.md",
           "filename": "04_ai_leadership_partner_fractional_caio_04_idea_exploration_user_stories.md",
           "size_kb": 3.8,
           "lines": 91,
@@ -1671,7 +1671,7 @@
           "is_high_value": true
         },
         "01_big_idea_product_manifesto": {
-          "filepath": "products/04_ai_leadership_partner_fractional_caio_01_big_idea_product_manifesto.md",
+          "filepath": "../products/04_ai_leadership_partner_fractional_caio_01_big_idea_product_manifesto.md",
           "filename": "04_ai_leadership_partner_fractional_caio_01_big_idea_product_manifesto.md",
           "size_kb": 4.4,
           "lines": 87,
@@ -1691,7 +1691,7 @@
           "is_high_value": true
         },
         "15_demo_qa_prep": {
-          "filepath": "products/04_ai_leadership_partner_fractional_caio_15_demo_qa_prep.md",
+          "filepath": "../products/04_ai_leadership_partner_fractional_caio_15_demo_qa_prep.md",
           "filename": "04_ai_leadership_partner_fractional_caio_15_demo_qa_prep.md",
           "size_kb": 6.7,
           "lines": 101,
@@ -1706,7 +1706,7 @@
           "is_high_value": true
         },
         "02_idea_exploration_functional_spec": {
-          "filepath": "products/04_ai_leadership_partner_fractional_caio_02_idea_exploration_functional_spec.md",
+          "filepath": "../products/04_ai_leadership_partner_fractional_caio_02_idea_exploration_functional_spec.md",
           "filename": "04_ai_leadership_partner_fractional_caio_02_idea_exploration_functional_spec.md",
           "size_kb": 5.1,
           "lines": 110,
@@ -1721,7 +1721,7 @@
           "is_high_value": true
         },
         "14_demo_slide_headlines": {
-          "filepath": "products/04_ai_leadership_partner_fractional_caio_14_demo_slide_headlines.md",
+          "filepath": "../products/04_ai_leadership_partner_fractional_caio_14_demo_slide_headlines.md",
           "filename": "04_ai_leadership_partner_fractional_caio_14_demo_slide_headlines.md",
           "size_kb": 5.6,
           "lines": 105,
@@ -1736,7 +1736,7 @@
           "is_high_value": true
         },
         "06_plan_tam_sizing": {
-          "filepath": "products/04_ai_leadership_partner_fractional_caio_06_plan_tam_sizing.md",
+          "filepath": "../products/04_ai_leadership_partner_fractional_caio_06_plan_tam_sizing.md",
           "filename": "04_ai_leadership_partner_fractional_caio_06_plan_tam_sizing.md",
           "size_kb": 4.3,
           "lines": 103,
@@ -1751,7 +1751,7 @@
           "is_high_value": true
         },
         "09_build_generate_screens": {
-          "filepath": "products/04_ai_leadership_partner_fractional_caio_09_build_generate_screens.md",
+          "filepath": "../products/04_ai_leadership_partner_fractional_caio_09_build_generate_screens.md",
           "filename": "04_ai_leadership_partner_fractional_caio_09_build_generate_screens.md",
           "size_kb": 5.0,
           "lines": 109,
@@ -1766,7 +1766,7 @@
           "is_high_value": true
         },
         "08_research_prd_ui_prompt": {
-          "filepath": "products/04_ai_leadership_partner_fractional_caio_08_research_prd_ui_prompt.md",
+          "filepath": "../products/04_ai_leadership_partner_fractional_caio_08_research_prd_ui_prompt.md",
           "filename": "04_ai_leadership_partner_fractional_caio_08_research_prd_ui_prompt.md",
           "size_kb": 4.8,
           "lines": 99,
@@ -1781,7 +1781,7 @@
           "is_high_value": false
         },
         "05_plan_competitor_sweep": {
-          "filepath": "products/04_ai_leadership_partner_fractional_caio_05_plan_competitor_sweep.md",
+          "filepath": "../products/04_ai_leadership_partner_fractional_caio_05_plan_competitor_sweep.md",
           "filename": "04_ai_leadership_partner_fractional_caio_05_plan_competitor_sweep.md",
           "size_kb": 4.8,
           "lines": 105,
@@ -1796,7 +1796,7 @@
           "is_high_value": true
         },
         "12_demo_investor_deck": {
-          "filepath": "products/04_ai_leadership_partner_fractional_caio_12_demo_investor_deck.md",
+          "filepath": "../products/04_ai_leadership_partner_fractional_caio_12_demo_investor_deck.md",
           "filename": "04_ai_leadership_partner_fractional_caio_12_demo_investor_deck.md",
           "size_kb": 5.1,
           "lines": 94,
@@ -1811,7 +1811,7 @@
           "is_high_value": true
         },
         "10_build_ui_landing_page_copy": {
-          "filepath": "products/04_ai_leadership_partner_fractional_caio_10_build_ui_landing_page_copy.md",
+          "filepath": "../products/04_ai_leadership_partner_fractional_caio_10_build_ui_landing_page_copy.md",
           "filename": "04_ai_leadership_partner_fractional_caio_10_build_ui_landing_page_copy.md",
           "size_kb": 3.0,
           "lines": 87,
@@ -1826,7 +1826,7 @@
           "is_high_value": false
         },
         "07_research_prd_skeleton": {
-          "filepath": "products/04_ai_leadership_partner_fractional_caio_07_research_prd_skeleton.md",
+          "filepath": "../products/04_ai_leadership_partner_fractional_caio_07_research_prd_skeleton.md",
           "filename": "04_ai_leadership_partner_fractional_caio_07_research_prd_skeleton.md",
           "size_kb": 5.2,
           "lines": 112,
@@ -1841,7 +1841,7 @@
           "is_high_value": true
         },
         "03_idea_exploration_audience_icps": {
-          "filepath": "products/04_ai_leadership_partner_fractional_caio_03_idea_exploration_audience_icps.md",
+          "filepath": "../products/04_ai_leadership_partner_fractional_caio_03_idea_exploration_audience_icps.md",
           "filename": "04_ai_leadership_partner_fractional_caio_03_idea_exploration_audience_icps.md",
           "size_kb": 5.3,
           "lines": 101,
@@ -1856,7 +1856,7 @@
           "is_high_value": true
         },
         "13_demo_demo_script": {
-          "filepath": "products/04_ai_leadership_partner_fractional_caio_13_demo_demo_script.md",
+          "filepath": "../products/04_ai_leadership_partner_fractional_caio_13_demo_demo_script.md",
           "filename": "04_ai_leadership_partner_fractional_caio_13_demo_demo_script.md",
           "size_kb": 5.4,
           "lines": 111,
@@ -1871,7 +1871,7 @@
           "is_high_value": true
         },
         "11_build_ui_key_messages": {
-          "filepath": "products/04_ai_leadership_partner_fractional_caio_11_build_ui_key_messages.md",
+          "filepath": "../products/04_ai_leadership_partner_fractional_caio_11_build_ui_key_messages.md",
           "filename": "04_ai_leadership_partner_fractional_caio_11_build_ui_key_messages.md",
           "size_kb": 1.9,
           "lines": 70,
@@ -1890,7 +1890,7 @@
       "errors": [],
       "high_value_files": [
         {
-          "filepath": "products/04_ai_leadership_partner_fractional_caio_04_idea_exploration_user_stories.md",
+          "filepath": "../products/04_ai_leadership_partner_fractional_caio_04_idea_exploration_user_stories.md",
           "filename": "04_ai_leadership_partner_fractional_caio_04_idea_exploration_user_stories.md",
           "size_kb": 3.8,
           "lines": 91,
@@ -1905,7 +1905,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/04_ai_leadership_partner_fractional_caio_01_big_idea_product_manifesto.md",
+          "filepath": "../products/04_ai_leadership_partner_fractional_caio_01_big_idea_product_manifesto.md",
           "filename": "04_ai_leadership_partner_fractional_caio_01_big_idea_product_manifesto.md",
           "size_kb": 4.4,
           "lines": 87,
@@ -1925,7 +1925,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/04_ai_leadership_partner_fractional_caio_15_demo_qa_prep.md",
+          "filepath": "../products/04_ai_leadership_partner_fractional_caio_15_demo_qa_prep.md",
           "filename": "04_ai_leadership_partner_fractional_caio_15_demo_qa_prep.md",
           "size_kb": 6.7,
           "lines": 101,
@@ -1940,7 +1940,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/04_ai_leadership_partner_fractional_caio_02_idea_exploration_functional_spec.md",
+          "filepath": "../products/04_ai_leadership_partner_fractional_caio_02_idea_exploration_functional_spec.md",
           "filename": "04_ai_leadership_partner_fractional_caio_02_idea_exploration_functional_spec.md",
           "size_kb": 5.1,
           "lines": 110,
@@ -1955,7 +1955,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/04_ai_leadership_partner_fractional_caio_14_demo_slide_headlines.md",
+          "filepath": "../products/04_ai_leadership_partner_fractional_caio_14_demo_slide_headlines.md",
           "filename": "04_ai_leadership_partner_fractional_caio_14_demo_slide_headlines.md",
           "size_kb": 5.6,
           "lines": 105,
@@ -1970,7 +1970,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/04_ai_leadership_partner_fractional_caio_06_plan_tam_sizing.md",
+          "filepath": "../products/04_ai_leadership_partner_fractional_caio_06_plan_tam_sizing.md",
           "filename": "04_ai_leadership_partner_fractional_caio_06_plan_tam_sizing.md",
           "size_kb": 4.3,
           "lines": 103,
@@ -1985,7 +1985,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/04_ai_leadership_partner_fractional_caio_09_build_generate_screens.md",
+          "filepath": "../products/04_ai_leadership_partner_fractional_caio_09_build_generate_screens.md",
           "filename": "04_ai_leadership_partner_fractional_caio_09_build_generate_screens.md",
           "size_kb": 5.0,
           "lines": 109,
@@ -2000,7 +2000,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/04_ai_leadership_partner_fractional_caio_05_plan_competitor_sweep.md",
+          "filepath": "../products/04_ai_leadership_partner_fractional_caio_05_plan_competitor_sweep.md",
           "filename": "04_ai_leadership_partner_fractional_caio_05_plan_competitor_sweep.md",
           "size_kb": 4.8,
           "lines": 105,
@@ -2015,7 +2015,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/04_ai_leadership_partner_fractional_caio_12_demo_investor_deck.md",
+          "filepath": "../products/04_ai_leadership_partner_fractional_caio_12_demo_investor_deck.md",
           "filename": "04_ai_leadership_partner_fractional_caio_12_demo_investor_deck.md",
           "size_kb": 5.1,
           "lines": 94,
@@ -2030,7 +2030,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/04_ai_leadership_partner_fractional_caio_07_research_prd_skeleton.md",
+          "filepath": "../products/04_ai_leadership_partner_fractional_caio_07_research_prd_skeleton.md",
           "filename": "04_ai_leadership_partner_fractional_caio_07_research_prd_skeleton.md",
           "size_kb": 5.2,
           "lines": 112,
@@ -2045,7 +2045,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/04_ai_leadership_partner_fractional_caio_03_idea_exploration_audience_icps.md",
+          "filepath": "../products/04_ai_leadership_partner_fractional_caio_03_idea_exploration_audience_icps.md",
           "filename": "04_ai_leadership_partner_fractional_caio_03_idea_exploration_audience_icps.md",
           "size_kb": 5.3,
           "lines": 101,
@@ -2060,7 +2060,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/04_ai_leadership_partner_fractional_caio_13_demo_demo_script.md",
+          "filepath": "../products/04_ai_leadership_partner_fractional_caio_13_demo_demo_script.md",
           "filename": "04_ai_leadership_partner_fractional_caio_13_demo_demo_script.md",
           "size_kb": 5.4,
           "lines": 111,
@@ -2083,7 +2083,7 @@
       "name": "ai_innovation_programme",
       "files": {
         "07_research_prd_skeleton": {
-          "filepath": "products/03_ai_innovation_programme_07_research_prd_skeleton.md",
+          "filepath": "../products/03_ai_innovation_programme_07_research_prd_skeleton.md",
           "filename": "03_ai_innovation_programme_07_research_prd_skeleton.md",
           "size_kb": 5.6,
           "lines": 114,
@@ -2098,7 +2098,7 @@
           "is_high_value": true
         },
         "01_big_idea_product_manifesto": {
-          "filepath": "products/03_ai_innovation_programme_01_big_idea_product_manifesto.md",
+          "filepath": "../products/03_ai_innovation_programme_01_big_idea_product_manifesto.md",
           "filename": "03_ai_innovation_programme_01_big_idea_product_manifesto.md",
           "size_kb": 4.2,
           "lines": 85,
@@ -2118,7 +2118,7 @@
           "is_high_value": true
         },
         "09_build_generate_screens": {
-          "filepath": "products/03_ai_innovation_programme_09_build_generate_screens.md",
+          "filepath": "../products/03_ai_innovation_programme_09_build_generate_screens.md",
           "filename": "03_ai_innovation_programme_09_build_generate_screens.md",
           "size_kb": 4.9,
           "lines": 106,
@@ -2133,7 +2133,7 @@
           "is_high_value": true
         },
         "08_research_prd_ui_prompt": {
-          "filepath": "products/03_ai_innovation_programme_08_research_prd_ui_prompt.md",
+          "filepath": "../products/03_ai_innovation_programme_08_research_prd_ui_prompt.md",
           "filename": "03_ai_innovation_programme_08_research_prd_ui_prompt.md",
           "size_kb": 5.1,
           "lines": 102,
@@ -2148,7 +2148,7 @@
           "is_high_value": true
         },
         "05_plan_competitor_sweep": {
-          "filepath": "products/03_ai_innovation_programme_05_plan_competitor_sweep.md",
+          "filepath": "../products/03_ai_innovation_programme_05_plan_competitor_sweep.md",
           "filename": "03_ai_innovation_programme_05_plan_competitor_sweep.md",
           "size_kb": 5.4,
           "lines": 116,
@@ -2163,7 +2163,7 @@
           "is_high_value": true
         },
         "02_idea_exploration_functional_spec": {
-          "filepath": "products/03_ai_innovation_programme_02_idea_exploration_functional_spec.md",
+          "filepath": "../products/03_ai_innovation_programme_02_idea_exploration_functional_spec.md",
           "filename": "03_ai_innovation_programme_02_idea_exploration_functional_spec.md",
           "size_kb": 5.1,
           "lines": 103,
@@ -2178,7 +2178,7 @@
           "is_high_value": true
         },
         "13_demo_demo_script": {
-          "filepath": "products/03_ai_innovation_programme_13_demo_demo_script.md",
+          "filepath": "../products/03_ai_innovation_programme_13_demo_demo_script.md",
           "filename": "03_ai_innovation_programme_13_demo_demo_script.md",
           "size_kb": 5.1,
           "lines": 112,
@@ -2193,7 +2193,7 @@
           "is_high_value": true
         },
         "11_build_ui_key_messages": {
-          "filepath": "products/03_ai_innovation_programme_11_build_ui_key_messages.md",
+          "filepath": "../products/03_ai_innovation_programme_11_build_ui_key_messages.md",
           "filename": "03_ai_innovation_programme_11_build_ui_key_messages.md",
           "size_kb": 2.1,
           "lines": 73,
@@ -2208,7 +2208,7 @@
           "is_high_value": false
         },
         "06_plan_tam_sizing": {
-          "filepath": "products/03_ai_innovation_programme_06_plan_tam_sizing.md",
+          "filepath": "../products/03_ai_innovation_programme_06_plan_tam_sizing.md",
           "filename": "03_ai_innovation_programme_06_plan_tam_sizing.md",
           "size_kb": 3.8,
           "lines": 88,
@@ -2223,7 +2223,7 @@
           "is_high_value": true
         },
         "14_demo_slide_headlines": {
-          "filepath": "products/03_ai_innovation_programme_14_demo_slide_headlines.md",
+          "filepath": "../products/03_ai_innovation_programme_14_demo_slide_headlines.md",
           "filename": "03_ai_innovation_programme_14_demo_slide_headlines.md",
           "size_kb": 4.8,
           "lines": 102,
@@ -2238,7 +2238,7 @@
           "is_high_value": false
         },
         "03_idea_exploration_audience_icps": {
-          "filepath": "products/03_ai_innovation_programme_03_idea_exploration_audience_icps.md",
+          "filepath": "../products/03_ai_innovation_programme_03_idea_exploration_audience_icps.md",
           "filename": "03_ai_innovation_programme_03_idea_exploration_audience_icps.md",
           "size_kb": 5.9,
           "lines": 104,
@@ -2253,7 +2253,7 @@
           "is_high_value": true
         },
         "12_demo_investor_deck": {
-          "filepath": "products/03_ai_innovation_programme_12_demo_investor_deck.md",
+          "filepath": "../products/03_ai_innovation_programme_12_demo_investor_deck.md",
           "filename": "03_ai_innovation_programme_12_demo_investor_deck.md",
           "size_kb": 5.5,
           "lines": 99,
@@ -2268,7 +2268,7 @@
           "is_high_value": true
         },
         "04_idea_exploration_user_stories": {
-          "filepath": "products/03_ai_innovation_programme_04_idea_exploration_user_stories.md",
+          "filepath": "../products/03_ai_innovation_programme_04_idea_exploration_user_stories.md",
           "filename": "03_ai_innovation_programme_04_idea_exploration_user_stories.md",
           "size_kb": 4.2,
           "lines": 87,
@@ -2283,7 +2283,7 @@
           "is_high_value": true
         },
         "10_build_ui_landing_page_copy": {
-          "filepath": "products/03_ai_innovation_programme_10_build_ui_landing_page_copy.md",
+          "filepath": "../products/03_ai_innovation_programme_10_build_ui_landing_page_copy.md",
           "filename": "03_ai_innovation_programme_10_build_ui_landing_page_copy.md",
           "size_kb": 3.1,
           "lines": 81,
@@ -2298,7 +2298,7 @@
           "is_high_value": false
         },
         "15_demo_qa_prep": {
-          "filepath": "products/03_ai_innovation_programme_15_demo_qa_prep.md",
+          "filepath": "../products/03_ai_innovation_programme_15_demo_qa_prep.md",
           "filename": "03_ai_innovation_programme_15_demo_qa_prep.md",
           "size_kb": 6.8,
           "lines": 112,
@@ -2317,7 +2317,7 @@
       "errors": [],
       "high_value_files": [
         {
-          "filepath": "products/03_ai_innovation_programme_07_research_prd_skeleton.md",
+          "filepath": "../products/03_ai_innovation_programme_07_research_prd_skeleton.md",
           "filename": "03_ai_innovation_programme_07_research_prd_skeleton.md",
           "size_kb": 5.6,
           "lines": 114,
@@ -2332,7 +2332,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/03_ai_innovation_programme_01_big_idea_product_manifesto.md",
+          "filepath": "../products/03_ai_innovation_programme_01_big_idea_product_manifesto.md",
           "filename": "03_ai_innovation_programme_01_big_idea_product_manifesto.md",
           "size_kb": 4.2,
           "lines": 85,
@@ -2352,7 +2352,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/03_ai_innovation_programme_09_build_generate_screens.md",
+          "filepath": "../products/03_ai_innovation_programme_09_build_generate_screens.md",
           "filename": "03_ai_innovation_programme_09_build_generate_screens.md",
           "size_kb": 4.9,
           "lines": 106,
@@ -2367,7 +2367,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/03_ai_innovation_programme_08_research_prd_ui_prompt.md",
+          "filepath": "../products/03_ai_innovation_programme_08_research_prd_ui_prompt.md",
           "filename": "03_ai_innovation_programme_08_research_prd_ui_prompt.md",
           "size_kb": 5.1,
           "lines": 102,
@@ -2382,7 +2382,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/03_ai_innovation_programme_05_plan_competitor_sweep.md",
+          "filepath": "../products/03_ai_innovation_programme_05_plan_competitor_sweep.md",
           "filename": "03_ai_innovation_programme_05_plan_competitor_sweep.md",
           "size_kb": 5.4,
           "lines": 116,
@@ -2397,7 +2397,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/03_ai_innovation_programme_02_idea_exploration_functional_spec.md",
+          "filepath": "../products/03_ai_innovation_programme_02_idea_exploration_functional_spec.md",
           "filename": "03_ai_innovation_programme_02_idea_exploration_functional_spec.md",
           "size_kb": 5.1,
           "lines": 103,
@@ -2412,7 +2412,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/03_ai_innovation_programme_13_demo_demo_script.md",
+          "filepath": "../products/03_ai_innovation_programme_13_demo_demo_script.md",
           "filename": "03_ai_innovation_programme_13_demo_demo_script.md",
           "size_kb": 5.1,
           "lines": 112,
@@ -2427,7 +2427,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/03_ai_innovation_programme_06_plan_tam_sizing.md",
+          "filepath": "../products/03_ai_innovation_programme_06_plan_tam_sizing.md",
           "filename": "03_ai_innovation_programme_06_plan_tam_sizing.md",
           "size_kb": 3.8,
           "lines": 88,
@@ -2442,7 +2442,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/03_ai_innovation_programme_03_idea_exploration_audience_icps.md",
+          "filepath": "../products/03_ai_innovation_programme_03_idea_exploration_audience_icps.md",
           "filename": "03_ai_innovation_programme_03_idea_exploration_audience_icps.md",
           "size_kb": 5.9,
           "lines": 104,
@@ -2457,7 +2457,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/03_ai_innovation_programme_12_demo_investor_deck.md",
+          "filepath": "../products/03_ai_innovation_programme_12_demo_investor_deck.md",
           "filename": "03_ai_innovation_programme_12_demo_investor_deck.md",
           "size_kb": 5.5,
           "lines": 99,
@@ -2472,7 +2472,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/03_ai_innovation_programme_04_idea_exploration_user_stories.md",
+          "filepath": "../products/03_ai_innovation_programme_04_idea_exploration_user_stories.md",
           "filename": "03_ai_innovation_programme_04_idea_exploration_user_stories.md",
           "size_kb": 4.2,
           "lines": 87,
@@ -2487,7 +2487,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/03_ai_innovation_programme_15_demo_qa_prep.md",
+          "filepath": "../products/03_ai_innovation_programme_15_demo_qa_prep.md",
           "filename": "03_ai_innovation_programme_15_demo_qa_prep.md",
           "size_kb": 6.8,
           "lines": 112,
@@ -2510,7 +2510,7 @@
       "name": "ai_b_c",
       "files": {
         "02_idea_exploration_functional_spec": {
-          "filepath": "products/02_ai_b_c_02_idea_exploration_functional_spec.md",
+          "filepath": "../products/02_ai_b_c_02_idea_exploration_functional_spec.md",
           "filename": "02_ai_b_c_02_idea_exploration_functional_spec.md",
           "size_kb": 4.6,
           "lines": 109,
@@ -2525,7 +2525,7 @@
           "is_high_value": false
         },
         "09_build_generate_screens": {
-          "filepath": "products/02_ai_b_c_09_build_generate_screens.md",
+          "filepath": "../products/02_ai_b_c_09_build_generate_screens.md",
           "filename": "02_ai_b_c_09_build_generate_screens.md",
           "size_kb": 4.7,
           "lines": 112,
@@ -2540,7 +2540,7 @@
           "is_high_value": false
         },
         "01_big_idea_product_manifesto": {
-          "filepath": "products/02_ai_b_c_01_big_idea_product_manifesto.md",
+          "filepath": "../products/02_ai_b_c_01_big_idea_product_manifesto.md",
           "filename": "02_ai_b_c_01_big_idea_product_manifesto.md",
           "size_kb": 4.6,
           "lines": 98,
@@ -2556,7 +2556,7 @@
           "is_high_value": true
         },
         "08_research_prd_ui_prompt": {
-          "filepath": "products/02_ai_b_c_08_research_prd_ui_prompt.md",
+          "filepath": "../products/02_ai_b_c_08_research_prd_ui_prompt.md",
           "filename": "02_ai_b_c_08_research_prd_ui_prompt.md",
           "size_kb": 5.4,
           "lines": 106,
@@ -2571,7 +2571,7 @@
           "is_high_value": true
         },
         "12_demo_investor_deck": {
-          "filepath": "products/02_ai_b_c_12_demo_investor_deck.md",
+          "filepath": "../products/02_ai_b_c_12_demo_investor_deck.md",
           "filename": "02_ai_b_c_12_demo_investor_deck.md",
           "size_kb": 5.4,
           "lines": 136,
@@ -2586,7 +2586,7 @@
           "is_high_value": true
         },
         "06_plan_tam_sizing": {
-          "filepath": "products/02_ai_b_c_06_plan_tam_sizing.md",
+          "filepath": "../products/02_ai_b_c_06_plan_tam_sizing.md",
           "filename": "02_ai_b_c_06_plan_tam_sizing.md",
           "size_kb": 4.2,
           "lines": 102,
@@ -2601,7 +2601,7 @@
           "is_high_value": true
         },
         "15_demo_qa_prep": {
-          "filepath": "products/02_ai_b_c_15_demo_qa_prep.md",
+          "filepath": "../products/02_ai_b_c_15_demo_qa_prep.md",
           "filename": "02_ai_b_c_15_demo_qa_prep.md",
           "size_kb": 7.1,
           "lines": 112,
@@ -2616,7 +2616,7 @@
           "is_high_value": true
         },
         "03_idea_exploration_audience_icps": {
-          "filepath": "products/02_ai_b_c_03_idea_exploration_audience_icps.md",
+          "filepath": "../products/02_ai_b_c_03_idea_exploration_audience_icps.md",
           "filename": "02_ai_b_c_03_idea_exploration_audience_icps.md",
           "size_kb": 6.0,
           "lines": 112,
@@ -2631,7 +2631,7 @@
           "is_high_value": true
         },
         "10_build_ui_landing_page_copy": {
-          "filepath": "products/02_ai_b_c_10_build_ui_landing_page_copy.md",
+          "filepath": "../products/02_ai_b_c_10_build_ui_landing_page_copy.md",
           "filename": "02_ai_b_c_10_build_ui_landing_page_copy.md",
           "size_kb": 3.2,
           "lines": 89,
@@ -2646,7 +2646,7 @@
           "is_high_value": false
         },
         "11_build_ui_key_messages": {
-          "filepath": "products/02_ai_b_c_11_build_ui_key_messages.md",
+          "filepath": "../products/02_ai_b_c_11_build_ui_key_messages.md",
           "filename": "02_ai_b_c_11_build_ui_key_messages.md",
           "size_kb": 2.2,
           "lines": 81,
@@ -2661,7 +2661,7 @@
           "is_high_value": false
         },
         "14_demo_slide_headlines": {
-          "filepath": "products/02_ai_b_c_14_demo_slide_headlines.md",
+          "filepath": "../products/02_ai_b_c_14_demo_slide_headlines.md",
           "filename": "02_ai_b_c_14_demo_slide_headlines.md",
           "size_kb": 4.9,
           "lines": 95,
@@ -2676,7 +2676,7 @@
           "is_high_value": false
         },
         "13_demo_demo_script": {
-          "filepath": "products/02_ai_b_c_13_demo_demo_script.md",
+          "filepath": "../products/02_ai_b_c_13_demo_demo_script.md",
           "filename": "02_ai_b_c_13_demo_demo_script.md",
           "size_kb": 4.4,
           "lines": 119,
@@ -2691,7 +2691,7 @@
           "is_high_value": false
         },
         "04_idea_exploration_user_stories": {
-          "filepath": "products/02_ai_b_c_04_idea_exploration_user_stories.md",
+          "filepath": "../products/02_ai_b_c_04_idea_exploration_user_stories.md",
           "filename": "02_ai_b_c_04_idea_exploration_user_stories.md",
           "size_kb": 4.9,
           "lines": 110,
@@ -2706,7 +2706,7 @@
           "is_high_value": true
         },
         "05_plan_competitor_sweep": {
-          "filepath": "products/02_ai_b_c_05_plan_competitor_sweep.md",
+          "filepath": "../products/02_ai_b_c_05_plan_competitor_sweep.md",
           "filename": "02_ai_b_c_05_plan_competitor_sweep.md",
           "size_kb": 5.4,
           "lines": 112,
@@ -2721,7 +2721,7 @@
           "is_high_value": true
         },
         "07_research_prd_skeleton": {
-          "filepath": "products/02_ai_b_c_07_research_prd_skeleton.md",
+          "filepath": "../products/02_ai_b_c_07_research_prd_skeleton.md",
           "filename": "02_ai_b_c_07_research_prd_skeleton.md",
           "size_kb": 5.2,
           "lines": 129,
@@ -2740,7 +2740,7 @@
       "errors": [],
       "high_value_files": [
         {
-          "filepath": "products/02_ai_b_c_01_big_idea_product_manifesto.md",
+          "filepath": "../products/02_ai_b_c_01_big_idea_product_manifesto.md",
           "filename": "02_ai_b_c_01_big_idea_product_manifesto.md",
           "size_kb": 4.6,
           "lines": 98,
@@ -2756,7 +2756,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/02_ai_b_c_08_research_prd_ui_prompt.md",
+          "filepath": "../products/02_ai_b_c_08_research_prd_ui_prompt.md",
           "filename": "02_ai_b_c_08_research_prd_ui_prompt.md",
           "size_kb": 5.4,
           "lines": 106,
@@ -2771,7 +2771,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/02_ai_b_c_12_demo_investor_deck.md",
+          "filepath": "../products/02_ai_b_c_12_demo_investor_deck.md",
           "filename": "02_ai_b_c_12_demo_investor_deck.md",
           "size_kb": 5.4,
           "lines": 136,
@@ -2786,7 +2786,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/02_ai_b_c_06_plan_tam_sizing.md",
+          "filepath": "../products/02_ai_b_c_06_plan_tam_sizing.md",
           "filename": "02_ai_b_c_06_plan_tam_sizing.md",
           "size_kb": 4.2,
           "lines": 102,
@@ -2801,7 +2801,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/02_ai_b_c_15_demo_qa_prep.md",
+          "filepath": "../products/02_ai_b_c_15_demo_qa_prep.md",
           "filename": "02_ai_b_c_15_demo_qa_prep.md",
           "size_kb": 7.1,
           "lines": 112,
@@ -2816,7 +2816,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/02_ai_b_c_03_idea_exploration_audience_icps.md",
+          "filepath": "../products/02_ai_b_c_03_idea_exploration_audience_icps.md",
           "filename": "02_ai_b_c_03_idea_exploration_audience_icps.md",
           "size_kb": 6.0,
           "lines": 112,
@@ -2831,7 +2831,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/02_ai_b_c_04_idea_exploration_user_stories.md",
+          "filepath": "../products/02_ai_b_c_04_idea_exploration_user_stories.md",
           "filename": "02_ai_b_c_04_idea_exploration_user_stories.md",
           "size_kb": 4.9,
           "lines": 110,
@@ -2846,7 +2846,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/02_ai_b_c_05_plan_competitor_sweep.md",
+          "filepath": "../products/02_ai_b_c_05_plan_competitor_sweep.md",
           "filename": "02_ai_b_c_05_plan_competitor_sweep.md",
           "size_kb": 5.4,
           "lines": 112,
@@ -2861,7 +2861,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/02_ai_b_c_07_research_prd_skeleton.md",
+          "filepath": "../products/02_ai_b_c_07_research_prd_skeleton.md",
           "filename": "02_ai_b_c_07_research_prd_skeleton.md",
           "size_kb": 5.2,
           "lines": 129,
@@ -2884,7 +2884,7 @@
       "name": "ai_consultancy_retainer",
       "files": {
         "04_idea_exploration_user_stories": {
-          "filepath": "products/06_ai_consultancy_retainer_04_idea_exploration_user_stories.md",
+          "filepath": "../products/06_ai_consultancy_retainer_04_idea_exploration_user_stories.md",
           "filename": "06_ai_consultancy_retainer_04_idea_exploration_user_stories.md",
           "size_kb": 4.4,
           "lines": 92,
@@ -2899,7 +2899,7 @@
           "is_high_value": true
         },
         "03_idea_exploration_audience_icps": {
-          "filepath": "products/06_ai_consultancy_retainer_03_idea_exploration_audience_icps.md",
+          "filepath": "../products/06_ai_consultancy_retainer_03_idea_exploration_audience_icps.md",
           "filename": "06_ai_consultancy_retainer_03_idea_exploration_audience_icps.md",
           "size_kb": 5.3,
           "lines": 117,
@@ -2914,7 +2914,7 @@
           "is_high_value": true
         },
         "02_idea_exploration_functional_spec": {
-          "filepath": "products/06_ai_consultancy_retainer_02_idea_exploration_functional_spec.md",
+          "filepath": "../products/06_ai_consultancy_retainer_02_idea_exploration_functional_spec.md",
           "filename": "06_ai_consultancy_retainer_02_idea_exploration_functional_spec.md",
           "size_kb": 5.5,
           "lines": 105,
@@ -2929,7 +2929,7 @@
           "is_high_value": true
         },
         "13_demo_demo_script": {
-          "filepath": "products/06_ai_consultancy_retainer_13_demo_demo_script.md",
+          "filepath": "../products/06_ai_consultancy_retainer_13_demo_demo_script.md",
           "filename": "06_ai_consultancy_retainer_13_demo_demo_script.md",
           "size_kb": 5.4,
           "lines": 114,
@@ -2944,7 +2944,7 @@
           "is_high_value": true
         },
         "12_demo_investor_deck": {
-          "filepath": "products/06_ai_consultancy_retainer_12_demo_investor_deck.md",
+          "filepath": "../products/06_ai_consultancy_retainer_12_demo_investor_deck.md",
           "filename": "06_ai_consultancy_retainer_12_demo_investor_deck.md",
           "size_kb": 5.9,
           "lines": 97,
@@ -2959,7 +2959,7 @@
           "is_high_value": true
         },
         "01_big_idea_product_manifesto": {
-          "filepath": "products/06_ai_consultancy_retainer_01_big_idea_product_manifesto.md",
+          "filepath": "../products/06_ai_consultancy_retainer_01_big_idea_product_manifesto.md",
           "filename": "06_ai_consultancy_retainer_01_big_idea_product_manifesto.md",
           "size_kb": 4.9,
           "lines": 88,
@@ -2975,7 +2975,7 @@
           "is_high_value": true
         },
         "15_demo_qa_prep": {
-          "filepath": "products/06_ai_consultancy_retainer_15_demo_qa_prep.md",
+          "filepath": "../products/06_ai_consultancy_retainer_15_demo_qa_prep.md",
           "filename": "06_ai_consultancy_retainer_15_demo_qa_prep.md",
           "size_kb": 7.5,
           "lines": 100,
@@ -2990,7 +2990,7 @@
           "is_high_value": true
         },
         "14_demo_slide_headlines": {
-          "filepath": "products/06_ai_consultancy_retainer_14_demo_slide_headlines.md",
+          "filepath": "../products/06_ai_consultancy_retainer_14_demo_slide_headlines.md",
           "filename": "06_ai_consultancy_retainer_14_demo_slide_headlines.md",
           "size_kb": 5.3,
           "lines": 105,
@@ -3005,7 +3005,7 @@
           "is_high_value": true
         },
         "06_plan_tam_sizing": {
-          "filepath": "products/06_ai_consultancy_retainer_06_plan_tam_sizing.md",
+          "filepath": "../products/06_ai_consultancy_retainer_06_plan_tam_sizing.md",
           "filename": "06_ai_consultancy_retainer_06_plan_tam_sizing.md",
           "size_kb": 4.5,
           "lines": 88,
@@ -3020,7 +3020,7 @@
           "is_high_value": true
         },
         "11_build_ui_key_messages": {
-          "filepath": "products/06_ai_consultancy_retainer_11_build_ui_key_messages.md",
+          "filepath": "../products/06_ai_consultancy_retainer_11_build_ui_key_messages.md",
           "filename": "06_ai_consultancy_retainer_11_build_ui_key_messages.md",
           "size_kb": 2.5,
           "lines": 71,
@@ -3035,7 +3035,7 @@
           "is_high_value": false
         },
         "05_plan_competitor_sweep": {
-          "filepath": "products/06_ai_consultancy_retainer_05_plan_competitor_sweep.md",
+          "filepath": "../products/06_ai_consultancy_retainer_05_plan_competitor_sweep.md",
           "filename": "06_ai_consultancy_retainer_05_plan_competitor_sweep.md",
           "size_kb": 5.9,
           "lines": 106,
@@ -3050,7 +3050,7 @@
           "is_high_value": true
         },
         "10_build_ui_landing_page_copy": {
-          "filepath": "products/06_ai_consultancy_retainer_10_build_ui_landing_page_copy.md",
+          "filepath": "../products/06_ai_consultancy_retainer_10_build_ui_landing_page_copy.md",
           "filename": "06_ai_consultancy_retainer_10_build_ui_landing_page_copy.md",
           "size_kb": 3.7,
           "lines": 86,
@@ -3065,7 +3065,7 @@
           "is_high_value": false
         },
         "08_research_prd_ui_prompt": {
-          "filepath": "products/06_ai_consultancy_retainer_08_research_prd_ui_prompt.md",
+          "filepath": "../products/06_ai_consultancy_retainer_08_research_prd_ui_prompt.md",
           "filename": "06_ai_consultancy_retainer_08_research_prd_ui_prompt.md",
           "size_kb": 5.2,
           "lines": 108,
@@ -3080,7 +3080,7 @@
           "is_high_value": true
         },
         "09_build_generate_screens": {
-          "filepath": "products/06_ai_consultancy_retainer_09_build_generate_screens.md",
+          "filepath": "../products/06_ai_consultancy_retainer_09_build_generate_screens.md",
           "filename": "06_ai_consultancy_retainer_09_build_generate_screens.md",
           "size_kb": 5.7,
           "lines": 102,
@@ -3095,7 +3095,7 @@
           "is_high_value": true
         },
         "07_research_prd_skeleton": {
-          "filepath": "products/06_ai_consultancy_retainer_07_research_prd_skeleton.md",
+          "filepath": "../products/06_ai_consultancy_retainer_07_research_prd_skeleton.md",
           "filename": "06_ai_consultancy_retainer_07_research_prd_skeleton.md",
           "size_kb": 6.1,
           "lines": 110,
@@ -3114,7 +3114,7 @@
       "errors": [],
       "high_value_files": [
         {
-          "filepath": "products/06_ai_consultancy_retainer_04_idea_exploration_user_stories.md",
+          "filepath": "../products/06_ai_consultancy_retainer_04_idea_exploration_user_stories.md",
           "filename": "06_ai_consultancy_retainer_04_idea_exploration_user_stories.md",
           "size_kb": 4.4,
           "lines": 92,
@@ -3129,7 +3129,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/06_ai_consultancy_retainer_03_idea_exploration_audience_icps.md",
+          "filepath": "../products/06_ai_consultancy_retainer_03_idea_exploration_audience_icps.md",
           "filename": "06_ai_consultancy_retainer_03_idea_exploration_audience_icps.md",
           "size_kb": 5.3,
           "lines": 117,
@@ -3144,7 +3144,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/06_ai_consultancy_retainer_02_idea_exploration_functional_spec.md",
+          "filepath": "../products/06_ai_consultancy_retainer_02_idea_exploration_functional_spec.md",
           "filename": "06_ai_consultancy_retainer_02_idea_exploration_functional_spec.md",
           "size_kb": 5.5,
           "lines": 105,
@@ -3159,7 +3159,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/06_ai_consultancy_retainer_13_demo_demo_script.md",
+          "filepath": "../products/06_ai_consultancy_retainer_13_demo_demo_script.md",
           "filename": "06_ai_consultancy_retainer_13_demo_demo_script.md",
           "size_kb": 5.4,
           "lines": 114,
@@ -3174,7 +3174,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/06_ai_consultancy_retainer_12_demo_investor_deck.md",
+          "filepath": "../products/06_ai_consultancy_retainer_12_demo_investor_deck.md",
           "filename": "06_ai_consultancy_retainer_12_demo_investor_deck.md",
           "size_kb": 5.9,
           "lines": 97,
@@ -3189,7 +3189,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/06_ai_consultancy_retainer_01_big_idea_product_manifesto.md",
+          "filepath": "../products/06_ai_consultancy_retainer_01_big_idea_product_manifesto.md",
           "filename": "06_ai_consultancy_retainer_01_big_idea_product_manifesto.md",
           "size_kb": 4.9,
           "lines": 88,
@@ -3205,7 +3205,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/06_ai_consultancy_retainer_15_demo_qa_prep.md",
+          "filepath": "../products/06_ai_consultancy_retainer_15_demo_qa_prep.md",
           "filename": "06_ai_consultancy_retainer_15_demo_qa_prep.md",
           "size_kb": 7.5,
           "lines": 100,
@@ -3220,7 +3220,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/06_ai_consultancy_retainer_14_demo_slide_headlines.md",
+          "filepath": "../products/06_ai_consultancy_retainer_14_demo_slide_headlines.md",
           "filename": "06_ai_consultancy_retainer_14_demo_slide_headlines.md",
           "size_kb": 5.3,
           "lines": 105,
@@ -3235,7 +3235,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/06_ai_consultancy_retainer_06_plan_tam_sizing.md",
+          "filepath": "../products/06_ai_consultancy_retainer_06_plan_tam_sizing.md",
           "filename": "06_ai_consultancy_retainer_06_plan_tam_sizing.md",
           "size_kb": 4.5,
           "lines": 88,
@@ -3250,7 +3250,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/06_ai_consultancy_retainer_05_plan_competitor_sweep.md",
+          "filepath": "../products/06_ai_consultancy_retainer_05_plan_competitor_sweep.md",
           "filename": "06_ai_consultancy_retainer_05_plan_competitor_sweep.md",
           "size_kb": 5.9,
           "lines": 106,
@@ -3265,7 +3265,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/06_ai_consultancy_retainer_08_research_prd_ui_prompt.md",
+          "filepath": "../products/06_ai_consultancy_retainer_08_research_prd_ui_prompt.md",
           "filename": "06_ai_consultancy_retainer_08_research_prd_ui_prompt.md",
           "size_kb": 5.2,
           "lines": 108,
@@ -3280,7 +3280,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/06_ai_consultancy_retainer_09_build_generate_screens.md",
+          "filepath": "../products/06_ai_consultancy_retainer_09_build_generate_screens.md",
           "filename": "06_ai_consultancy_retainer_09_build_generate_screens.md",
           "size_kb": 5.7,
           "lines": 102,
@@ -3295,7 +3295,7 @@
           "is_high_value": true
         },
         {
-          "filepath": "products/06_ai_consultancy_retainer_07_research_prd_skeleton.md",
+          "filepath": "../products/06_ai_consultancy_retainer_07_research_prd_skeleton.md",
           "filename": "06_ai_consultancy_retainer_07_research_prd_skeleton.md",
           "size_kb": 6.1,
           "lines": 110,

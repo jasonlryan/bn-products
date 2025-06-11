@@ -167,10 +167,10 @@ Response:"""
         print(f"Error calling LLM: {e}")
         return f"Error generating content: {e}"
 
-def generate_product_prompt_content(product, prompt_info, product_num, prompt_num, llm_output, previous_outputs):
+def generate_product_prompt_content(product, prompt, product_num, prompt_num, llm_output, previous_outputs):
     """Generate the final markdown content with LLM output"""
     
-    title, model, kick_off_prompt = extract_prompt_details(prompt_info['content'])
+    title, model, kick_off_prompt = extract_prompt_details(prompt['content'])
     
     content = f"""# {product['NAME'].strip()} • {title.split('•')[1].strip() if '•' in title else title}
 
@@ -232,9 +232,9 @@ def main():
     global client
     
     # Configuration
-    csv_path = 'data/BN Products List   - 2025.csv'
-    prompts_dir = 'prompts'
-    output_dir = 'products'
+    csv_path = '../data/BN Products List   - 2025.csv'
+    prompts_dir = '../prompts'
+    output_dir = '../products'
     
     # Create output directory if it doesn't exist
     Path(output_dir).mkdir(exist_ok=True)

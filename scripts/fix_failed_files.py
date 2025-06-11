@@ -26,7 +26,7 @@ def read_failed_files_from_report():
     failed_files = []
     
     # Find the latest issues report
-    reports_dir = Path("reports")
+    reports_dir = Path("../reports")
     if not reports_dir.exists():
         print("❌ No reports directory found. Run analyze_products.py first.")
         return []
@@ -143,7 +143,7 @@ PRODUCT CONTEXT:
 
 def get_reduced_context(product_name, stage_num):
     """Get only the most relevant previous outputs to reduce token usage"""
-    products_dir = Path("products")
+    products_dir = Path("../products")
     relevant_outputs = []
     
     # Only include key strategic outputs, not all previous outputs
@@ -329,7 +329,7 @@ def regenerate_failed_file(failed_file, products, prompts):
 """
 
     # Write the file
-    filepath = Path("products") / failed_file['file']
+    filepath = Path("../products") / failed_file['file']
     with open(filepath, 'w', encoding='utf-8') as file:
         file.write(content)
     
@@ -364,8 +364,8 @@ def main():
     print(f"📋 Found {len(failed_files)} failed files to regenerate")
     
     # Read products and prompts
-    csv_path = 'data/BN Products List   - 2025.csv'
-    prompts_dir = 'prompts'
+    csv_path = '../data/BN Products List   - 2025.csv'
+    prompts_dir = '../prompts'
     
     print("📖 Reading products and prompts...")
     products = read_products_from_csv(csv_path)

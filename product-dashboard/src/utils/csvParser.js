@@ -1,0 +1,342 @@
+// Utility to parse CSV data and structure it properly
+export function parseCSVToProducts(csvData) {
+  const lines = csvData.trim().split("\n");
+  const headers = lines[0].split(",").map((h) => h.trim());
+
+  const products = {};
+  const services = {};
+
+  for (let i = 1; i < lines.length; i++) {
+    const values = parseCSVLine(lines[i]);
+    if (values.length < headers.length) continue;
+
+    const item = {};
+    headers.forEach((header, index) => {
+      item[header] = values[index] ? values[index].trim() : "";
+    });
+
+    // Skip empty rows
+    if (!item.NAME || !item.Type) continue;
+
+    const productData = {
+      name: item.NAME,
+      type: item.Type,
+      price: item.PRICE,
+      primaryDeliverables: item["Primary Deliverables"],
+      description: item.DESCRIPTION,
+      nextProduct: item["WHAT IS THE NEXT PRODUCT OR SERVICE?"],
+      perfectFor: item["PERFECT FOR:"],
+      whatClientBuys: item["WHAT THE CLIENT IS ACTUALLY BUYING"],
+      idealClient: item["IDEAL CLIENT"],
+      keyFeatures: parseListField(item["KEY FEATURES"]),
+      benefits: parseListField(item.BENEFITS),
+      hero: {
+        description: item.DESCRIPTION,
+        value_proposition: item["WHAT THE CLIENT IS ACTUALLY BUYING"],
+      },
+      features: parseListField(item["KEY FEATURES"]),
+      pricing_info: {
+        price: item.PRICE,
+        deliverables: item["Primary Deliverables"],
+      },
+    };
+
+    const key = item.NAME.toLowerCase()
+      .replace(/[^a-z0-9\s]/g, "")
+      .replace(/\s+/g, "_")
+      .replace(/^_+|_+$/g, "");
+
+    if (item.Type === "PRODUCT") {
+      products[key] = productData;
+    } else if (item.Type === "SERVICE") {
+      services[key] = productData;
+    }
+  }
+
+  return { products, services };
+}
+
+function parseCSVLine(line) {
+  const result = [];
+  let current = "";
+  let inQuotes = false;
+
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+
+    if (char === '"') {
+      inQuotes = !inQuotes;
+    } else if (char === "," && !inQuotes) {
+      result.push(current);
+      current = "";
+    } else {
+      current += char;
+    }
+  }
+
+  result.push(current);
+  return result.map((field) => field.replace(/^"|"$/g, ""));
+}
+
+function parseListField(field) {
+  if (!field) return [];
+
+  return field
+    .split(/[-•]\s*/)
+    .map((item) => item.trim())
+    .filter((item) => item.length > 0)
+    .slice(0, 10); // Limit to prevent overly long lists
+}
+
+// CSV data from the BN Products List
+export const csvData = `Type ,NAME,PRICE,Primary Deliverables,DESCRIPTION,WHAT IS THE NEXT PRODUCT OR SERVICE? ,PERFECT FOR: ,WHAT THE CLIENT IS ACTUALLY BUYING,IDEAL CLIENT,KEY FEATURES,BENEFITS 
+PRODUCT,AI Power Hour ,£300,A one hour session + follow-up materials ,A one hour deep dive into one specific task/challenge + learning resources and further reading ,"AI-B-C™ 
+",High-level execs who want to get hands on with AI systems ,A one on one coaching session + tailored follow-up materials ,"- Anyone who wants to discover what AI can do for them
+- Senior leaders, functional heads, or team leads responsible for transformation, innovation, marketing, customer experience, or operations.","- Personalised guidance
+- Real-world solutions 
+- Builds your AI literacy ","- Accelerated AI Literacy and Confidence
+- Practical Problem-Solving and Use-Case Development
+- Immediate Strategic Value
+-Tailored Follow-Ups for Lasting Impact"
+PRODUCT,AI-B-C™ ,"£2,000 for a 90-minute Exectutive Briefing
+
+£8,800 for a one day AI Acceleration team day
+
+£17,500 for team-wide Sprint Packages of multiple workshops and briefings  (1x exec briefing, 2x team workshops) ","Workshops, webinars and hands-on capability ","Comprehensive AI capability-building workshops to fast-track organisation-wide AI adoption.
+
+Fast-track organisation-wide AI adoption and build in-house AI expertise across all levels.",AI Innovation Programme ,"Ideal for Small, Medium & Large enterprises eager to embrace AI
+
+Workshops happen in groups up to 20 ","
+
+- Expert-led workshops and seminars  
+- Custom learning plan
+- Hands-on learning and discovery","• Size: Medium to large enterprises (Medium circa 150+ employees. Large circa 500+ employees) 
+• Attitude: Enthusiastic about AI but lacking in-house expertise 
+• AI Maturity: Low 
+• Needs: Widespread AI literacy across departments 
+• Other: Values employee development; has training budget","• Modular curriculum 
+• Role-specific learning paths 
+• Hands-on workshops 
+• Real-world project work 
+• Progress assessments","- Quickly and easily kick start your AI strategy
+- Increased productivity and efficiency
+- Identify AI use-cases
+- Boost employee retention and motivation by building AI skills "
+SERVICE ,AI Innovation Programme ,Bespoke ,"Workshops, consultancy + prototype build package","Framework for continuous AI experimentation and process, product or service improvement.
+
+Systematise AI-driven innovation and turn AI experimentation into tangible business results.
+
+","AI Leadership Partner (Fractional CAIO)
+
+AI Consultancy Retainer ",Ideal for R&D-focused companies ready to leverage AI for product development,"• Consulting on setting up an innovation process 
+• Facilitation of ideation workshops 
+• Support in prototyping and testing AI solutions 
+• Guidance on integrating AI into existing products/services 
+• Metrics and evaluation frameworks for AI initiatives","• Size: Medium to large companies with R&D budgets 
+• Attitude: Innovation-focused; willing to experiment 
+• AI Maturity: Medium 
+• Needs: New product development, process improvement 
+• Other: Likely in tech, PR, agnecy landscape, finance, or AI-amenable industries","• Customised innovation process 
+• AI ideation workshops 
+• Rapid prototyping 
+• Integration with R&D 
+• Innovation metrics tracking","- Increased opportunity for breakthrough innovation
+- Rapid solutions available for a fraction of investment compared to even a year ago
+- Deliver major projects and increase innovation capability and pace
+- Simplify AI challenges with advice from industry-leading experts"
+SERVICE ,AI Leadership Partner (Fractional CAIO),Bespoke ,One on one consultancy + hands-on team innovation workshops,"Long-term collaboration for strategic AI leadership and capability development.
+
+",AI Consultancy Retainer ,Ideal for organisations viewing AI as a strategic imperative,"• Regular strategy sessions with AI experts 
+• Ongoing advisory services at the executive/Board level 
+• Support in AI-related decision making 
+• Assistance with AI talent acquisition and development 
+• Regular AI capability assessments and roadmap updates","• Size: Large enterprises or fast-growing scale-ups 
+• Attitude: Views AI as a strategic imperative 
+• AI Maturity: Low to Medium
+• Needs: Executive-level AI strategy
+• Other: Facing industry disruption or seeking to disrupt","• Executive-level AI guidance 
+• Ongoing strategy development 
+• Skills assessment 
+• Recruitment support 
+• Regular strategy reviews","- Get strategic advice on the impact of AI without big-tech bias
+- Fractional CAIO access with no delay or risk
+- Cut learning time for teams that need to grasp AI opportunities now"
+PRODUCT ,AI-Powered Research and Insight Sprint ,"£10,000","A 5 day sprint producing a creative driection, human truths and insights to inform a campaign ","Accelerate decision-making with AI-driven market intelligence to gain deeper insights faster. 
+
+",AI Innovation Programme ,Ideal for Any size organisation in fast-moving markets,"• Faster insights for smart decisions
+• Access to AI-powered research tools and platforms 
+• Expert analysis and interpretation of AI-generated insights 
+• Custom research reports and dashboards 
+• Strategy recommendations based on AI-driven insights","• Size: Any size
+• Attitude: Data-driven decision-making culture 
+• AI Maturity: Any level 
+• Needs: Rapid market insights, competitive intelligence 
+• Other: Operates in fast-moving markets; values innovation","• AI-driven data analysis 
+• Sentiment analysis 
+• Predictive modeling 
+• Competitor analysis 
+• Interactive dashboards","- Affordable research insights for every campaign – big or small 
+- Faster, more confident decision-making with research-based insights
+- Increased access to data and insights for all skill levels"
+SERVICE ,AI Consultancy Retainer ,Bespoke ,"A series of one-to-one consultancy calls, meetings and briefings, plus optional workshop packages for the seniro, executive team. ","An ongoing, partnership-led service designed to accelerate and embed AI skills, strategy, and innovation across your organisation, providing expert advice, hands-on capability building, and continuous support.⁠",AI Innovation Programme ,"Organisations wanting to move confidently and quickly from AI pilots to organisation-wide, measurable impact—without internal knowledge bottlenecks or wasted effort.","Access to senior AI strategists and practitioners on retainer
+Customised coaching/advisory sessions (including 1:1 leader support and group clinics)
+Ongoing AI literacy programmes and upskilling workshops
+Innovation sprints, pilot support, and prompt libraries
+Proactive recommendations, reporting, and roadmap guidance","- Ambitious, established businesses (often global brands) 
+seeking to build sustainable AI capability, accelerate adoption, and maintain a competitive edge
+- Leadership teams ready to invest in long-term transformation, not just "AI tools"","- Fractional (on-call) Chief AI Officer or senior advisor
+- 1:1 "AI Sherpa" and ad hoc coaching sessions
+- Bespoke workshops and training modules
+- AI knowledge hub and resource sharing
+- Innovation frameworks and pilot delivery
+- Regular check-ins and progress reports⁠
+","- Fast-tracked, organisation-wide AI literacy and confidence
+- Measurable productivity and innovation gains
+- Resilient, up-to-date strategy in a fast-moving field
+- Internal capability to experiment, scale, and adapt AI solutions
+- Partnership model for flexible, long-term value and pace"
+PRODUCT ,AI Innovation Day ,"£8,800",A one-day faciliated workshop,"A fast-paced, immersive one-day sprint designed to take a multidisciplinary team from raw idea to working concept — culminating in the launch of a live website or prototype. The day blends AI-assisted ideation, brand development, copywriting, prototyping, and web deployment to demonstrate what's possible when you combine creativity with AI-powered acceleration.",AI Innovation Programme ,"- Innovation teams looking to rapidly test ideas
+
+- Marketing and digital teams exploring AI's practical application
+
+- Senior leaders wanting a 'show, not tell' AI experience
+
+- Organisations under pressure to move faster from insight to output","- A facilitated one-day workshop, led by strategists and AI experts
+
+- Full-day, end-to-end prototyping support using AI tools (e.g. ChatGPT, Gamma, Framer, Webflow)
+
+- A ready-to-share digital output (e.g. landing page, microsite, prototype)
+
+- Customised prompts, tools, templates and optional follow-up coaching
+
+- Expert reflection and recommendations on embedding AI in product and content development
+","- Medium to large organisations actively investing in innovation
+
+- Teams with a strategic mandate to explore AI capability
+
+- Brands with internal pressure to launch and learn faster
+
+- Leaders who want to prove value through doing, not decks","Idea generation sprint using AI-enhanced brainstorming
+
+No-code tools and AI assistants to build prototypes
+
+Live collaboration across creative, technical and strategy 
+
+Coaching and reflection on how to deploy and next steps 
+
+Delivered in-person or remotely with pre- and post-support options","- Proves what's possible — tangibly and fast
+
+- Accelerates team understanding and belief in AI's potential
+
+- Turns passive interest into active experimentation
+
+- Breaks through silos with hands-on co-creation
+
+- Delivers something useful — not just theoretical learning
+
+- Creates a replicable blueprint for future rapid innovation sprints"
+PRODUCT,Social Intelligence Dashboard,"[To be determined based on scope and markets] 
+
+Per market analysis: £[X]
+Multi-market package (3+ markets): £[X]
+Full implementation + dashboard setup: £[X]
+Training and documentation package: £[X] ","• Market Research Reports (PDF format for each target market)
+
+• Weighted Resonance Index (WRI) Analysis with 20 key attributes scored and ranked
+
+• Interactive React Dashboard with visualizations and competitor analysis
+
+• PDF Report Integration with searchable, interactive viewer
+
+• Executive Summary Reports with strategic recommendations
+","A comprehensive AI-powered market intelligence solution that transforms consumer conversations, competitive data, and market insights into actionable strategic intelligence for clients. The system combines advanced AI research tools (ChatGPT, Gemini, Claude) with a custom React dashboard to deliver deep market understanding across multiple segments and regions.",,"• Automotive OEMs planning market entry or product launches
+
+• Motorcycle manufacturers seeking competitive intelligence
+
+• Strategic planning teams requiring data-driven market insights
+
+• Marketing agencies serving automotive/motorcycle clients
+
+• Business development teams evaluating new market opportunities
+
+• Product managers needing consumer preference validation","Strategic Market Intelligence as a Service 
+
+Clients receive not just data, but a complete intelligence system that provides:
+
+• Competitive Advantage: Deep understanding of consumer preferences and competitor positioning
+
+• Risk Mitigation: Data-driven insights to avoid costly market miscalculations
+
+• Speed to Market: Accelerated research process using AI automation
+
+• Ongoing Capability: Reusable methodology and tools for future analysis
+
+• Executive Confidence: Professional dashboards and reports for stakeholder presentations ","Profile: 
+
+Mid to large-size companies in automotive/motorcycle industry with:
+
+• €50M+ annual revenue
+
+• Active in multiple markets or planning expansion
+
+• Strategic planning or product development functions
+
+• Need for regular competitive intelligence
+
+• Budget for professional market research (€25K+ projects)
+
+• Appreciation for data-driven decision making
+
+Decision Makers: Chief Strategy Officers, Marketing Directors, Product Managers, Business Development Heads","• AI-Powered Research: Automated data collection using ChatGPT, Gemini, and Claude
+
+• Weighted Resonance Index: Proprietary scoring system for 20 key product attributes
+
+• Multi-Market Analysis: Consistent methodology across unlimited target markets
+
+• Interactive Dashboard: Data visualization with competitor analysis
+
+• Source Validation: 50+ verified online resources per market
+
+• PDF Integration: Seamless report viewing within dashboard interface
+
+• Reusable Templates: Structured system for ongoing market analysis
+
+• Quality Assurance: Built-in validation checkpoints and consistency controls ","Strategic Benefits:
+
+• Faster Decision Making: Reduce market research time from months to weeks
+
+• Competitive Intelligence: Deep insights into competitor strengths/weaknesses
+
+• Consumer Understanding: Clear picture of what drives purchase decisions
+
+• Market Positioning: Data-backed recommendations for optimal positioning
+
+Operational Benefits:
+
+• Cost Efficiency: AI automation reduces traditional research costs by 94%
+
+• Scalability: Analyze multiple markets simultaneously with consistent quality
+
+• Repeatability: Documented process enables ongoing market monitoring
+
+• Professional Presentation: Executive-ready dashboards and reports
+
+Risk Management Benefits:
+
+• Validated Sources: 50+ credible sources reduce research bias
+
+• Quantified Insights: WRI scoring provides measurable attribute importance
+
+• Comprehensive Coverage: Social, sales, survey, and expert data integration
+
+• Quality Controls: Multiple validation checkpoints ensure accuracy
+
+Long-term Value:
+
+• Internal Capability Building: Team learns methodology for future independence
+
+• Competitive Monitoring: Dashboard enables ongoing market surveillance
+
+• Strategic Planning: Data foundation for product development and marketing
+
+• Stakeholder Confidence: Professional reporting builds leadership trust "`;

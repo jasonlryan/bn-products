@@ -9,11 +9,15 @@ import webbrowser
 import time
 from pathlib import Path
 import json
+import os
 
 def run_analysis():
     """Run the product analysis script"""
     print("🔍 Running product analysis...")
-    result = subprocess.run(['python3', 'analyze_products.py'], capture_output=True, text=True)
+    # Change to scripts directory and run the analysis script
+    result = subprocess.run(['python3', 'analyze_products.py'], 
+                          cwd=Path(__file__).parent, 
+                          capture_output=True, text=True)
     
     if result.returncode == 0:
         print("✅ Analysis completed successfully")
@@ -26,7 +30,7 @@ def run_analysis():
 
 def get_latest_report():
     """Get the path to the latest summary report"""
-    reports_dir = Path("reports")
+    reports_dir = Path("../reports")
     if not reports_dir.exists():
         return None
     
@@ -45,7 +49,7 @@ def copy_report_to_ui():
     if not latest_report:
         return None
     
-    ui_dir = Path("UI")
+    ui_dir = Path("../UI")
     ui_dir.mkdir(exist_ok=True)
     
     # Copy to UI folder as 'latest_report.json'
@@ -60,7 +64,7 @@ def copy_report_to_ui():
 
 def open_dashboard():
     """Open the dashboard in the default browser"""
-    dashboard_path = Path("UI/reports_dashboard.html").absolute()
+    dashboard_path = Path("../UI/reports_dashboard.html").absolute()
     
     if not dashboard_path.exists():
         print(f"❌ Dashboard not found at {dashboard_path}")

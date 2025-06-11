@@ -344,6 +344,75 @@
             }
           }
         }
+      },
+      "web_copy": {
+        "content": {
+          "description": "A one hour deep dive into one specific task/challenge + learning resources and further reading",
+          "heroSubtitle": "Dive into a tailored one-hour session with AI Power Hour and transform your understanding of Artificial Intelligence. Designed for high-level executives, our platform helps you leverage AI for strategic advantage, enhanced customer experience, and innovation.",
+          "perfectFor": "High-level executives who want to get hands on with AI systems and transform their understanding for strategic advantage",
+          "tagline": "Transform AI Learning into Action",
+          "shortDescription": "Personalized AI coaching for executives in just one hour"
+        },
+        "features": {
+          "list": [
+            "Personalised Guidance",
+            "Real-world Solutions",
+            "AI Literacy Building",
+            "Accelerated Learning",
+            "Strategic Focus",
+            "Follow-up Materials"
+          ],
+          "detailed": [
+            {
+              "icon": "🎯",
+              "title": "Personalised Guidance",
+              "description": "One-on-one coaching tailored to your specific needs and challenges",
+              "category": "Coaching"
+            },
+            {
+              "icon": "🚀",
+              "title": "Real-world Solutions",
+              "description": "Practical applications you can implement immediately in your role",
+              "category": "Application"
+            },
+            {
+              "icon": "📚",
+              "title": "AI Literacy Building",
+              "description": "Comprehensive resources to accelerate your AI knowledge and confidence",
+              "category": "Learning"
+            }
+          ]
+        },
+        "benefits": {
+          "list": [
+            "Accelerated AI Literacy and Confidence",
+            "Practical Problem-Solving and Use-Case Development",
+            "Immediate Strategic Value",
+            "Tailored Follow-Ups for Lasting Impact"
+          ]
+        },
+        "marketing": {
+          "keyMessages": [
+            "Transform AI Learning into Action",
+            "Personalized AI Coaching for Leaders",
+            "Practical AI Insights for Immediate Impact",
+            "Boost Your AI Literacy in Just One Hour"
+          ],
+          "valueProposition": "Get personalized AI coaching that transforms curiosity into confidence and insights into immediate strategic value."
+        },
+        "socialProof": {
+          "testimonial": {
+            "quote": "I came into the AI Power Hour session with curiosity and left with confidence. The personalized approach helped me understand how AI can drive strategic initiatives in my role. I was able to apply the insights from the session immediately and saw real impact. The follow-up materials are a treasure trove for continuous learning.",
+            "author": "Jack",
+            "role": "Chief Innovation Officer",
+            "company": "Technology Firm"
+          }
+        },
+        "pricing": {
+          "amount": "£300",
+          "currency": "GBP",
+          "type": "fixed"
+        }
       }
     },
     "02_ai_b_c": {
@@ -711,6 +780,53 @@
             }
           }
         }
+      },
+      "web_copy": {
+        "content": {
+          "description": "Fast-track your AI adoption and build in-house expertise across all levels of your organization",
+          "heroSubtitle": "Fast-track your AI adoption and build in-house expertise across all levels of your organization with our comprehensive AI capability-building workshops.",
+          "perfectFor": "Medium to large enterprises looking to embrace AI and build comprehensive in-house expertise",
+          "tagline": "Embrace AI. Empower Your Organization",
+          "shortDescription": "Comprehensive AI capability-building workshops for enterprises"
+        },
+        "features": {
+          "list": [
+            "Modular Curriculum",
+            "Role-specific Learning",
+            "Hands-on Workshops",
+            "Real-world Projects",
+            "Progress Assessments",
+            "Expert-led Sessions"
+          ]
+        },
+        "benefits": {
+          "list": [
+            "Custom Learning Plan",
+            "Practical AI Applications",
+            "Boost Productivity & Efficiency"
+          ]
+        },
+        "marketing": {
+          "keyMessages": [
+            "Fast-Track Your AI Adoption Journey",
+            "Build In-House AI Expertise with Ease",
+            "Identify AI Use-Cases, Boost Efficiency",
+            "Embrace AI. Empower Your Organization"
+          ],
+          "valueProposition": "Transform your entire organization's AI capabilities with comprehensive, role-specific training that delivers immediate business value."
+        },
+        "socialProof": {
+          "testimonial": {
+            "quote": "AI-B-C™ transformed our organization's AI journey. Their expert-led workshops and custom learning plan helped us identify practical AI applications and boosted our productivity significantly. Highly recommended for any organization looking to embrace AI!",
+            "author": "CEO",
+            "company": "Mid-Sized Tech Firm"
+          }
+        },
+        "pricing": {
+          "amount": "£2,000-£17,500",
+          "currency": "GBP",
+          "type": "tiered"
+        }
       }
     },
     "03_ai_innovation_programme": {
@@ -1034,6 +1150,54 @@
               "raw_content": "Certainly! Below are eight tough investor questions pertaining to the AI Innovation Programme, along with crisp, confident answers that reflect a deep understanding of the product's value proposition and market context."
             }
           }
+        }
+      },
+      "web_copy": {
+        "content": {
+          "description": "Facilitate breakthrough AI experimentation and transform your product development and service improvement processes",
+          "heroSubtitle": "Facilitate breakthrough AI experimentation and transform your product development and service improvement processes with our AI Innovation Programme.",
+          "perfectFor": "R&D-focused companies looking to systematize AI-driven innovation and turn experimentation into tangible business results",
+          "tagline": "Systematize AI-Driven Innovation",
+          "shortDescription": "Transform product development with systematic AI innovation"
+        },
+        "features": {
+          "list": [
+            "Customised Innovation Process",
+            "AI Ideation Workshops",
+            "Rapid Prototyping",
+            "Integration with R&D",
+            "Innovation Metrics Tracking",
+            "Expert Guidance"
+          ]
+        },
+        "benefits": {
+          "list": [
+            "Customized AI Innovation",
+            "Rapid Prototyping & Testing",
+            "Metrics & Evaluation",
+            "Systematic Innovation Approach"
+          ]
+        },
+        "marketing": {
+          "keyMessages": [
+            "Systematize AI-Driven Innovation",
+            "Transform Product Development",
+            "Turn Experimentation into Results",
+            "Revolutionize Your Innovation Process"
+          ],
+          "valueProposition": "Transform your R&D capabilities with a systematic approach to AI-driven innovation that turns experimentation into measurable business results."
+        },
+        "socialProof": {
+          "testimonial": {
+            "quote": "The AI Innovation Programme proved to be a game-changer for us. The systematic approach, from ideation to integration, coupled with rapid prototyping, helped us unlock the full potential of AI. It has truly revolutionized our product development process.",
+            "author": "CEO",
+            "company": "Tech-Driven Manufacturing Company"
+          }
+        },
+        "pricing": {
+          "amount": "Bespoke Pricing",
+          "currency": "GBP",
+          "type": "bespoke"
         }
       }
     },
@@ -1381,6 +1545,54 @@
             }
           }
         }
+      },
+      "web_copy": {
+        "content": {
+          "description": "Strategic AI leadership and guidance for organizations without a dedicated Chief AI Officer",
+          "heroSubtitle": "Get expert AI leadership and strategic guidance with our Fractional Chief AI Officer service, designed for organizations ready to accelerate their AI transformation.",
+          "perfectFor": "Medium to large organizations needing strategic AI leadership without the commitment of a full-time CAIO",
+          "tagline": "Strategic AI Leadership On-Demand",
+          "shortDescription": "Expert AI leadership without full-time executive cost"
+        },
+        "features": {
+          "list": [
+            "Strategic AI Planning",
+            "Executive Advisory",
+            "AI Governance Framework",
+            "Technology Assessment",
+            "Team Development",
+            "Implementation Oversight"
+          ]
+        },
+        "benefits": {
+          "list": [
+            "Strategic AI Leadership",
+            "Cost-Effective Expertise",
+            "Accelerated AI Transformation",
+            "Risk Mitigation"
+          ]
+        },
+        "marketing": {
+          "keyMessages": [
+            "Strategic AI Leadership On-Demand",
+            "Expert Guidance Without Full-Time Cost",
+            "Accelerate Your AI Transformation",
+            "Navigate AI Complexity with Confidence"
+          ],
+          "valueProposition": "Get C-level AI expertise and strategic leadership without the full-time executive cost, accelerating your AI transformation with expert guidance."
+        },
+        "socialProof": {
+          "testimonial": {
+            "quote": "Having a Fractional CAIO was exactly what we needed. The strategic guidance and AI expertise helped us navigate complex decisions and accelerate our transformation without the overhead of a full-time executive.",
+            "author": "CEO",
+            "company": "Growing Technology Company"
+          }
+        },
+        "pricing": {
+          "amount": "Bespoke Pricing",
+          "currency": "GBP",
+          "type": "bespoke"
+        }
       }
     },
     "05_ai_powered_research_and_insight_sprint": {
@@ -1712,6 +1924,52 @@
               "raw_content": "Here are **8 tough investor questions** regarding the **AI-Powered Research and Insight Sprint** product, along with crisp, confident answers tailored to this offering:"
             }
           }
+        }
+      },
+      "web_copy": {
+        "content": {
+          "description": "Comprehensive AI research and insights to inform your strategic decisions",
+          "heroSubtitle": "Get comprehensive AI research and strategic insights that inform critical business decisions and competitive positioning.",
+          "perfectFor": "Organizations needing deep AI research and strategic insights for informed decision-making",
+          "tagline": "Informed AI Strategy Development",
+          "shortDescription": "Deep AI research and strategic insights for decision-making"
+        },
+        "features": {
+          "list": [
+            "Market Analysis",
+            "Technology Assessment",
+            "Competitive Intelligence",
+            "Strategic Recommendations",
+            "Implementation Roadmap",
+            "Expert Consultation"
+          ]
+        },
+        "benefits": {
+          "list": [
+            "Data-Driven Decision Making",
+            "Competitive Advantage",
+            "Risk Mitigation"
+          ]
+        },
+        "marketing": {
+          "keyMessages": [
+            "Informed AI Strategy Development",
+            "Comprehensive Market Intelligence",
+            "Strategic Decision Support"
+          ],
+          "valueProposition": "Get comprehensive AI research and strategic insights that inform critical business decisions and competitive positioning."
+        },
+        "socialProof": {
+          "testimonial": {
+            "quote": "The AI Research Sprint provided us with invaluable insights that shaped our entire AI strategy. The comprehensive analysis and strategic recommendations were exactly what we needed.",
+            "author": "Strategy Director",
+            "company": "Fortune 500 Company"
+          }
+        },
+        "pricing": {
+          "amount": "£10,000",
+          "currency": "GBP",
+          "type": "fixed"
         }
       }
     },
@@ -2053,6 +2311,54 @@
             }
           }
         }
+      },
+      "web_copy": {
+        "content": {
+          "description": "Ongoing AI consultancy and support for continuous innovation and optimization",
+          "heroSubtitle": "Get ongoing AI consultancy and support to ensure continuous innovation, optimization, and strategic advantage in your AI journey.",
+          "perfectFor": "Organizations requiring ongoing AI expertise and support for continuous innovation and optimization",
+          "tagline": "Continuous AI Excellence",
+          "shortDescription": "Ongoing AI consultancy for continuous innovation"
+        },
+        "features": {
+          "list": [
+            "Ongoing Support",
+            "Strategic Advisory",
+            "Technology Optimization",
+            "Innovation Guidance",
+            "Performance Monitoring",
+            "Expert Access"
+          ]
+        },
+        "benefits": {
+          "list": [
+            "Continuous Innovation",
+            "Ongoing Optimization",
+            "Strategic Advantage",
+            "Expert Support",
+            "Risk Management"
+          ]
+        },
+        "marketing": {
+          "keyMessages": [
+            "Continuous AI Excellence",
+            "Ongoing Strategic Support",
+            "Sustained Innovation Advantage"
+          ],
+          "valueProposition": "Maintain your competitive edge with ongoing AI consultancy that ensures continuous innovation, optimization, and strategic advantage."
+        },
+        "socialProof": {
+          "testimonial": {
+            "quote": "The ongoing consultancy retainer has been invaluable for our AI journey. Having expert support available whenever we need it has accelerated our innovation and helped us avoid costly mistakes.",
+            "author": "CTO",
+            "company": "Scale-up Technology Company"
+          }
+        },
+        "pricing": {
+          "amount": "Bespoke Pricing",
+          "currency": "GBP",
+          "type": "bespoke"
+        }
       }
     },
     "07_ai_innovation_day": {
@@ -2376,6 +2682,56 @@
               "raw_content": "Certainly! Below are eight tough investor questions along with crisp, confident answers tailored specifically for the AI Innovation Day product."
             }
           }
+        }
+      },
+      "web_copy": {
+        "content": {
+          "description": "Full-day intensive workshop to accelerate your team's AI innovation capabilities",
+          "heroSubtitle": "AI Innovation Day is a one-day, immersive workshop designed to empower your team to transform raw ideas into working concepts. Experience the power of AI-assisted ideation, prototyping, and web deployment, all culminating in a live website or prototype.",
+          "perfectFor": "Innovation teams, marketing and digital teams, and senior leaders looking to experience AI-accelerated innovation",
+          "tagline": "Accelerate AI Innovation",
+          "shortDescription": "One-day intensive AI innovation workshop with live prototyping"
+        },
+        "features": {
+          "list": [
+            "Innovation Workshops",
+            "Hands-on Prototyping",
+            "Use Case Development",
+            "Team Collaboration",
+            "Expert Facilitation",
+            "Action Planning"
+          ]
+        },
+        "benefits": {
+          "list": [
+            "Accelerated Innovation",
+            "Team Empowerment",
+            "Practical Experience",
+            "Immediate Results",
+            "Strategic Clarity",
+            "Enhanced Collaboration"
+          ]
+        },
+        "marketing": {
+          "keyMessages": [
+            "Accelerate AI Innovation",
+            "Transform Ideas into Prototypes",
+            "Experience AI-Powered Innovation",
+            "Empower Your Innovation Team"
+          ],
+          "valueProposition": "Transform your team's innovation capabilities in just one day with hands-on AI workshops that turn ideas into working prototypes."
+        },
+        "socialProof": {
+          "testimonial": {
+            "quote": "AI Innovation Day was a game-changer for our team. We went from ideas to a working prototype in just one day. The hands-on approach and expert facilitation made all the difference.",
+            "author": "Innovation Director",
+            "company": "Digital Agency"
+          }
+        },
+        "pricing": {
+          "amount": "£8,800",
+          "currency": "GBP",
+          "type": "fixed"
         }
       }
     },
@@ -2757,6 +3113,60 @@
               "raw_content": "Certainly! Below are eight tough investor questions, along with crisp, confident answers specifically tailored for the Social Intelligence Dashboard product."
             }
           }
+        }
+      },
+      "web_copy": {
+        "content": {
+          "description": "AI-powered market intelligence dashboard for automotive and motorcycle industries",
+          "heroSubtitle": "Transform consumer conversations, competitive data, and market insights into actionable strategic intelligence with our AI-powered Social Intelligence Dashboard.",
+          "perfectFor": "Mid to large-sized companies in automotive/motorcycle industries seeking comprehensive market intelligence and competitive analysis",
+          "tagline": "Transform Data into Strategic Intelligence",
+          "shortDescription": "AI-powered market intelligence for automotive industry"
+        },
+        "features": {
+          "list": [
+            "AI-Powered Research",
+            "Weighted Resonance Index",
+            "Interactive Dashboard",
+            "Market Research Reports",
+            "Competitive Analysis",
+            "Consumer Insights",
+            "Real-time Data",
+            "Strategic Recommendations"
+          ]
+        },
+        "benefits": {
+          "list": [
+            "Data-Driven Decisions",
+            "Competitive Advantage",
+            "Market Intelligence",
+            "Consumer Understanding",
+            "Strategic Insights",
+            "Time Efficiency",
+            "Cost Reduction",
+            "Risk Mitigation"
+          ]
+        },
+        "marketing": {
+          "keyMessages": [
+            "Transform Data into Strategic Insights",
+            "Accelerate Market Entry with AI Insights",
+            "Gain Competitive Edge Through Deep Analysis",
+            "Empower Your Strategy with Data-Driven Decisions"
+          ],
+          "valueProposition": "Transform consumer conversations and market data into actionable strategic intelligence that drives informed decision-making and competitive advantage."
+        },
+        "socialProof": {
+          "testimonial": {
+            "quote": "The Social Intelligence Dashboard revolutionized our market research approach. The AI-powered insights and competitive analysis helped us make strategic decisions with confidence and speed.",
+            "author": "Market Research Director",
+            "company": "Automotive Manufacturer"
+          }
+        },
+        "pricing": {
+          "amount": "Market-based pricing",
+          "currency": "GBP",
+          "type": "market_based"
         }
       }
     }

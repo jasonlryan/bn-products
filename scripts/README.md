@@ -1,3 +1,101 @@
+# Scripts Directory
+
+This directory contains all the Python scripts for the BN Product development workflow.
+
+## Scripts Overview
+
+### Core Scripts
+
+1. **`analyze_products.py`** - Product Analysis Tool
+
+   - Analyzes generated product files and creates summary reports
+   - Usage: `python3 analyze_products.py`
+   - Outputs: CSV reports and JSON summaries in `../reports/`
+
+2. **`generate_product_prompts.py`** - Product Prompt Generator with LLM Integration
+
+   - Generates markdown files for each product-prompt combination using OpenAI API
+   - Usage: `python3 generate_product_prompts.py`
+   - Requires: `OPENAI_API_KEY` environment variable
+   - Outputs: Generated product files in `../products/`
+
+3. **`launch_dashboard.py`** - Dashboard Launcher
+   - Runs analysis and opens the reports dashboard
+   - Usage: `python3 launch_dashboard.py`
+   - Opens: Browser dashboard with latest reports
+
+### Utility Scripts
+
+4. **`fix_failed_files.py`** - Failed Files Recovery
+
+   - Regenerates files that failed due to token limits using reduced context
+   - Usage: `python3 fix_failed_files.py`
+   - Requires: `OPENAI_API_KEY` environment variable
+
+5. **`generate_product_pages.py`** - Product Landing Pages Generator
+
+   - Creates individual HTML landing pages for each product
+   - Usage: `python3 generate_product_pages.py`
+   - Outputs: HTML files in `../UI/`
+
+6. **`generate_with_claude.py`** - Manual LLM Processing
+
+   - Alternative workflow for manual content generation with Claude
+   - Usage: `python3 generate_with_claude.py`
+   - Creates: Processing queue for manual LLM interaction
+
+7. **`extract_dashboard_data.py`** - Dashboard Data Extractor
+   - Extracts marketing-ready content from dashboard HTML files
+   - Usage: `python3 extract_dashboard_data.py`
+   - Requires: `beautifulsoup4` package (`pip install beautifulsoup4`)
+   - Outputs: Updates `../dashboard-react/config/product-config.json`
+   - Purpose: Consolidates dashboard HTML content into React dashboard data source
+
+## Quick Start
+
+1. **Generate product content:**
+
+   ```bash
+   cd scripts
+   python3 generate_product_prompts.py
+   ```
+
+2. **Analyze and view results:**
+
+   ```bash
+   python3 launch_dashboard.py
+   ```
+
+3. **Fix any failed files:**
+   ```bash
+   python3 fix_failed_files.py
+   ```
+
+## Dependencies
+
+- Python 3.7+
+- Required packages: `csv`, `pathlib`, `json`, `re`, `time`, `subprocess`, `webbrowser`
+- Optional: `openai` package for LLM integration
+- Optional: `python-dotenv` for environment variable management
+
+## Environment Variables
+
+- `OPENAI_API_KEY` - Required for LLM-powered scripts
+
+## File Structure
+
+All scripts work with the following directory structure:
+
+```
+bn_product/
+├── scripts/          # This directory
+├── data/            # CSV product data
+├── prompts/         # Prompt templates
+├── products/        # Generated product files
+├── reports/         # Analysis reports
+└── UI/              # Generated web interface
+```
+
 # Product Configuration Generator
 
 This script generates and maintains a structured JSON configuration file from product markdown files. It supports both creating new product configurations and updating existing ones.

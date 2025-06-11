@@ -12,9 +12,8 @@ from datetime import datetime
 import json
 
 class ProductAnalyzer:
-    def __init__(self, products_dir="products"):
+    def __init__(self, products_dir="../products"):
         self.products_dir = Path(products_dir)
-        self.products = {}
         self.stages = [
             "01_big_idea_product_manifesto",
             "02_idea_exploration_functional_spec", 
@@ -334,7 +333,7 @@ class ProductAnalyzer:
     def save_reports(self):
         """Save all reports to files"""
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        reports_dir = Path("reports")
+        reports_dir = Path("../reports")
         reports_dir.mkdir(exist_ok=True)
         
         # Master Index
@@ -400,6 +399,7 @@ class ProductAnalyzer:
 def main():
     print("🔍 Analyzing product files...")
     analyzer = ProductAnalyzer()
+    analyzer.products = {}  # Initialize the products dict
     analyzer.scan_all_files()
     
     print(f"📊 Found {len(analyzer.products)} products with {sum(p['total_files'] for p in analyzer.products.values())} total files")
