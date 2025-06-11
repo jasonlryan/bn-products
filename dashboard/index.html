@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Dashboard</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background-color: white;
+            color: black;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e0e0e0;
+            background-color: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: black;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-logo img {
+            height: 2rem;
+            margin-right: 0.5rem;
+        }
+
+        .nav-logo-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: black;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: #0700FF;
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+
+        /* Tab Navigation */
+        .tab-navigation {
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 2rem;
+        }
+
+        .tab-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 0;
+        }
+
+        .tab {
+            background: none;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #64748b;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .tab:hover {
+            color: #0700FF;
+            background: rgba(7, 0, 255, 0.05);
+        }
+
+        .tab.active {
+            color: #0700FF;
+            border-bottom-color: #0700FF;
+            background: white;
+        }
+
+        /* Products Section */
+        .products-section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .products-section h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        /* Product Cards */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .product-card {
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .product-card:hover {
+            border-color: #0700FF;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(7, 0, 255, 0.1);
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .product-header h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: black;
+            margin: 0;
+        }
+
+        .product-badges {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .product-type {
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .product-type.product {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .product-type.service {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .product-price {
+            padding: 0.25rem 0.75rem;
+            background: #f1f5f9;
+            color: #475569;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .product-description {
+            margin-bottom: 1.5rem;
+        }
+
+        .product-description p {
+            color: #333;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .product-perfect-for {
+            margin: 1rem 0;
+        }
+
+        .product-perfect-for h4 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-perfect-for p {
+            font-size: 0.875rem;
+            color: #6b7280;
+            line-height: 1.4;
+        }
+
+        .product-features {
+            margin-bottom: 1.5rem;
+        }
+
+        .product-features h4 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .features-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .feature-tag {
+            background-color: #f8f9ff;
+            color: #0700FF;
+            padding: 0.25rem 0.75rem;
+            border-radius: 16px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .feature-tag.more {
+            background-color: #e0e0e0;
+            color: #666;
+        }
+
+        .product-benefits {
+            margin-bottom: 1.5rem;
+        }
+
+        .product-benefits h4 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-benefits ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .product-benefits li {
+            font-size: 0.875rem;
+            color: #6b7280;
+            line-height: 1.4;
+            margin-bottom: 0.25rem;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .product-benefits li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .more-benefits {
+            font-style: italic;
+            color: #9ca3af !important;
+        }
+
+        .more-benefits:before {
+            content: "+" !important;
+            color: #9ca3af !important;
+        }
+
+        .product-cta {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .cta-text {
+            color: #0700FF;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        /* Call to Action Section */
+        .cta-section {
+            background-color: #f8f9ff;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .cta-primary {
+            background-color: #0700FF;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-primary:hover {
+            background-color: #0500CC;
+            transform: translateY(-2px);
+        }
+
+        .cta-secondary {
+            background-color: white;
+            color: #0700FF;
+            border: 2px solid #0700FF;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-secondary:hover {
+            background-color: #0700FF;
+            color: white;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #f8f9ff;
+            border-top: 1px solid #e0e0e0;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .footer p {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .product-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .tab-navigation {
+                padding: 0 1rem;
+            }
+            
+            .tab {
+                padding: 0.75rem 1rem;
+                font-size: 0.875rem;
+            }
+            
+            .product-badges {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-logo">
+            <img src="bn-logo.png" alt="BrilliantNoise">
+            <span class="nav-logo-text">Product Dashboard</span>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="hero-content">
+            <h1>AI Solutions Portfolio</h1>
+            <p class="hero-subtitle">
+                Explore our range of AI products and services designed to accelerate innovation and drive business growth.
+            </p>
+        </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="tab-navigation">
+        <div class="tab-container">
+            <button class="tab active" onclick="showTab('products')">
+                Products (5)
+            </button>
+            <button class="tab" onclick="showTab('services')">
+                Services (3)
+            </button>
+        </div>
+    </div>
+
+    <!-- Products Section -->
+    <div class="products-section">
+        <h2 id="section-title">Our Product Suite</h2>
+        <p class="section-subtitle" id="section-subtitle">
+            Choose the perfect AI product for your business needs
+        </p>
+
+        <!-- Products Grid -->
+        <div class="products-grid" id="products-grid">
+            <!-- AI Power Hour -->
+            <a href="ai-power-hour.html" class="product-card">
+                <div class="product-header">
+                    <h3>AI Power Hour</h3>
+                    <div class="product-badges">
+                        <span class="product-type product">PRODUCT</span>
+                        <span class="product-price">£300</span>
+                    </div>
+                </div>
+                
+                <div class="product-description">
+                    <p>A one hour deep dive into one specific task/challenge + learning resources and further reading</p>
+                </div>
+
+                <div class="product-perfect-for">
+                    <h4>Perfect For:</h4>
+                    <p>High-level execs who want to get hands on with AI systems</p>
+                </div>
+
+                <div class="product-features">
+                    <h4>Key Features:</h4>
+                    <div class="features-preview">
+                        <span class="feature-tag">Personalised guidance</span>
+                        <span class="feature-tag">Real-world solutions</span>
+                        <span class="feature-tag">Builds your AI literacy</span>
+                    </div>
+                </div>
+
+                <div class="product-benefits">
+                    <h4>Key Benefits:</h4>
+                    <ul>
+                        <li>Accelerated AI Literacy and Confidence</li>
+                        <li>Practical Problem-Solving and Use-Case Development</li>
+                        <li class="more-benefits">+2 more benefits</li>
+                    </ul>
+                </div>
+
+                <div class="product-cta">
+                    <span class="cta-text">Learn More →</span>
+                </div>
+            </a>
+
+            <!-- AI-B-C -->
+            <a href="ai-b-c.html" class="product-card">
+                <div class="product-header">
+                    <h3>AI-B-C™</h3>
+                    <div class="product-badges">
+                        <span class="product-type product">PRODUCT</span>
+                        <span class="product-price">£2,000 - £17,500</span>
+                    </div>
+                </div>
+                
+                <div class="product-description">
+                    <p>Comprehensive AI capability-building workshops to fast-track organisation-wide AI adoption and build in-house AI expertise across all levels.</p>
+                </div>
+
+                <div class="product-perfect-for">
+                    <h4>Perfect For:</h4>
+                    <p>Small, Medium & Large enterprises eager to embrace AI. Workshops happen in groups up to 20</p>
+                </div>
+
+                <div class="product-features">
+                    <h4>Key Features:</h4>
+                    <div class="features-preview">
+                        <span class="feature-tag">Modular curriculum</span>
+                        <span class="feature-tag">Role-specific learning paths</span>
+                        <span class="feature-tag">Hands-on workshops</span>
+                        <span class="feature-tag more">+2 more</span>
+                    </div>
+                </div>
+
+                <div class="product-benefits">
+                    <h4>Key Benefits:</h4>
+                    <ul>
+                        <li>Quickly and easily kick start your AI strategy</li>
+                        <li>Increased productivity and efficiency</li>
+                        <li class="more-benefits">+2 more benefits</li>
+                    </ul>
+                </div>
+
+                <div class="product-cta">
+                    <span class="cta-text">Learn More →</span>
+                </div>
+            </a>
+
+            <!-- AI Research Sprint -->
+            <a href="ai-research-sprint.html" class="product-card">
+                <div class="product-header">
+                    <h3>AI-Powered Research and Insight Sprint</h3>
+                    <div class="product-badges">
+                        <span class="product-type product">PRODUCT</span>
+                        <span class="product-price">£10,000</span>
+                    </div>
+                </div>
+                
+                <div class="product-description">
+                    <p>Accelerate decision-making with AI-driven market intelligence to gain deeper insights faster.</p>
+                </div>
+
+                <div class="product-perfect-for">
+                    <h4>Perfect For:</h4>
+                    <p>Any size organisation in fast-moving markets</p>
+                </div>
+
+                <div class="product-features">
+                    <h4>Key Features:</h4>
+                    <div class="features-preview">
+                        <span class="feature-tag">AI-driven data analysis</span>
+                        <span class="feature-tag">Sentiment analysis</span>
+                        <span class="feature-tag">Predictive modeling</span>
+                        <span class="feature-tag more">+2 more</span>
+                    </div>
+                </div>
+
+                <div class="product-benefits">
+                    <h4>Key Benefits:</h4>
+                    <ul>
+                        <li>Affordable research insights for every campaign</li>
+                        <li>Faster, more confident decision-making</li>
+                        <li class="more-benefits">+1 more benefit</li>
+                    </ul>
+                </div>
+
+                <div class="product-cta">
+                    <span class="cta-text">Learn More →</span>
+                </div>
+            </a>
+
+            <!-- AI Innovation Day -->
+            <a href="ai-innovation-day.html" class="product-card">
+                <div class="product-header">
+                    <h3>AI Innovation Day</h3>
+                    <div class="product-badges">
+                        <span class="product-type product">PRODUCT</span>
+                        <span class="product-price">£8,800</span>
+                    </div>
+                </div>
+                
+                <div class="product-description">
+                    <p>A fast-paced, immersive one-day sprint designed to take a multidisciplinary team from raw idea to working concept — culminating in the launch of a live website or prototype.</p>
+                </div>
+
+                <div class="product-perfect-for">
+                    <h4>Perfect For:</h4>
+                    <p>Innovation teams looking to rapidly test ideas, Marketing and digital teams exploring AI's practical application</p>
+                </div>
+
+                <div class="product-features">
+                    <h4>Key Features:</h4>
+                    <div class="features-preview">
+                        <span class="feature-tag">AI-enhanced brainstorming</span>
+                        <span class="feature-tag">No-code tools</span>
+                        <span class="feature-tag">Live collaboration</span>
+                        <span class="feature-tag more">+2 more</span>
+                    </div>
+                </div>
+
+                <div class="product-benefits">
+                    <h4>Key Benefits:</h4>
+                    <ul>
+                        <li>Proves what's possible — tangibly and fast</li>
+                        <li>Accelerates team understanding and belief in AI's potential</li>
+                        <li class="more-benefits">+4 more benefits</li>
+                    </ul>
+                </div>
+
+                <div class="product-cta">
+                    <span class="cta-text">Learn More →</span>
+                </div>
+            </a>
+
+            <!-- Social Intelligence Dashboard -->
+            <a href="social-intelligence-dashboard.html" class="product-card">
+                <div class="product-header">
+                    <h3>Social Intelligence Dashboard</h3>
+                    <div class="product-badges">
+                        <span class="product-type product">PRODUCT</span>
+                        <span class="product-price">Market-based pricing</span>
+                    </div>
+                </div>
+                
+                <div class="product-description">
+                    <p>A comprehensive AI-powered market intelligence solution that transforms consumer conversations, competitive data, and market insights into actionable strategic intelligence for clients.</p>
+                </div>
+
+                <div class="product-perfect-for">
+                    <h4>Perfect For:</h4>
+                    <p>Automotive OEMs planning market entry or product launches, Motorcycle manufacturers seeking competitive intelligence</p>
+                </div>
+
+                <div class="product-features">
+                    <h4>Key Features:</h4>
+                    <div class="features-preview">
+                        <span class="feature-tag">AI-Powered Research</span>
+                        <span class="feature-tag">Weighted Resonance Index</span>
+                        <span class="feature-tag">Multi-Market Analysis</span>
+                        <span class="feature-tag more">+5 more</span>
+                    </div>
+                </div>
+
+                <div class="product-benefits">
+                    <h4>Key Benefits:</h4>
+                    <ul>
+                        <li>Faster Decision Making: Reduce research time from months to weeks</li>
+                        <li>Cost Efficiency: AI automation reduces traditional research costs by 94%</li>
+                        <li class="more-benefits">+6 more benefits</li>
+                    </ul>
+                </div>
+
+                <div class="product-cta">
+                    <span class="cta-text">Learn More →</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- Services Grid (Hidden by default) -->
+        <div class="products-grid" id="services-grid" style="display: none;">
+            <!-- AI Innovation Programme -->
+            <a href="ai-innovation-programme.html" class="product-card">
+                <div class="product-header">
+                    <h3>AI Innovation Programme</h3>
+                    <div class="product-badges">
+                        <span class="product-type service">SERVICE</span>
+                        <span class="product-price">Bespoke</span>
+                    </div>
+                </div>
+                
+                <div class="product-description">
+                    <p>Framework for continuous AI experimentation and process, product or service improvement. Systematise AI-driven innovation and turn AI experimentation into tangible business results.</p>
+                </div>
+
+                <div class="product-perfect-for">
+                    <h4>Perfect For:</h4>
+                    <p>R&D-focused companies ready to leverage AI for product development</p>
+                </div>
+
+                <div class="product-features">
+                    <h4>Key Features:</h4>
+                    <div class="features-preview">
+                        <span class="feature-tag">Customised innovation process</span>
+                        <span class="feature-tag">AI ideation workshops</span>
+                        <span class="feature-tag">Rapid prototyping</span>
+                        <span class="feature-tag more">+2 more</span>
+                    </div>
+                </div>
+
+                <div class="product-benefits">
+                    <h4>Key Benefits:</h4>
+                    <ul>
+                        <li>Increased opportunity for breakthrough innovation</li>
+                        <li>Rapid solutions available for a fraction of investment</li>
+                        <li class="more-benefits">+2 more benefits</li>
+                    </ul>
+                </div>
+
+                <div class="product-cta">
+                    <span class="cta-text">Learn More →</span>
+                </div>
+            </a>
+
+            <!-- AI Leadership Partner -->
+            <a href="ai-leadership-partner.html" class="product-card">
+                <div class="product-header">
+                    <h3>AI Leadership Partner (Fractional CAIO)</h3>
+                    <div class="product-badges">
+                        <span class="product-type service">SERVICE</span>
+                        <span class="product-price">Bespoke</span>
+                    </div>
+                </div>
+                
+                <div class="product-description">
+                    <p>Long-term collaboration for strategic AI leadership and capability development.</p>
+                </div>
+
+                <div class="product-perfect-for">
+                    <h4>Perfect For:</h4>
+                    <p>Organisations viewing AI as a strategic imperative</p>
+                </div>
+
+                <div class="product-features">
+                    <h4>Key Features:</h4>
+                    <div class="features-preview">
+                        <span class="feature-tag">Executive-level AI guidance</span>
+                        <span class="feature-tag">Ongoing strategy development</span>
+                        <span class="feature-tag">Skills assessment</span>
+                        <span class="feature-tag more">+2 more</span>
+                    </div>
+                </div>
+
+                <div class="product-benefits">
+                    <h4>Key Benefits:</h4>
+                    <ul>
+                        <li>Get strategic advice on the impact of AI without big-tech bias</li>
+                        <li>Fractional CAIO access with no delay or risk</li>
+                        <li class="more-benefits">+1 more benefit</li>
+                    </ul>
+                </div>
+
+                <div class="product-cta">
+                    <span class="cta-text">Learn More →</span>
+                </div>
+            </a>
+
+            <!-- AI Consultancy Retainer -->
+            <a href="ai-consultancy-retainer.html" class="product-card">
+                <div class="product-header">
+                    <h3>AI Consultancy Retainer</h3>
+                    <div class="product-badges">
+                        <span class="product-type service">SERVICE</span>
+                        <span class="product-price">Bespoke</span>
+                    </div>
+                </div>
+                
+                <div class="product-description">
+                    <p>An ongoing, partnership-led service designed to accelerate and embed AI skills, strategy, and innovation across your organisation, providing expert advice, hands-on capability building, and continuous support.</p>
+                </div>
+
+                <div class="product-perfect-for">
+                    <h4>Perfect For:</h4>
+                    <p>Organisations wanting to move confidently and quickly from AI pilots to organisation-wide, measurable impact</p>
+                </div>
+
+                <div class="product-features">
+                    <h4>Key Features:</h4>
+                    <div class="features-preview">
+                        <span class="feature-tag">Fractional Chief AI Officer</span>
+                        <span class="feature-tag">1:1 "AI Sherpa" sessions</span>
+                        <span class="feature-tag">Bespoke workshops</span>
+                        <span class="feature-tag more">+3 more</span>
+                    </div>
+                </div>
+
+                <div class="product-benefits">
+                    <h4>Key Benefits:</h4>
+                    <ul>
+                        <li>Fast-tracked, organisation-wide AI literacy and confidence</li>
+                        <li>Measurable productivity and innovation gains</li>
+                        <li class="more-benefits">+3 more benefits</li>
+                    </ul>
+                </div>
+
+                <div class="product-cta">
+                    <span class="cta-text">Learn More →</span>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Call to Action Section -->
+    <div class="cta-section">
+        <h2>Ready to Transform Your Business?</h2>
+        <p>Get started with our AI solutions today and see immediate results.</p>
+        <div class="cta-buttons">
+            <a href="mailto:hello@example.com" class="cta-primary">Schedule Demo</a>
+            <a href="mailto:sales@example.com" class="cta-secondary">Contact Sales</a>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Update tab buttons
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update content
+            const productsGrid = document.getElementById('products-grid');
+            const servicesGrid = document.getElementById('services-grid');
+            const sectionTitle = document.getElementById('section-title');
+            const sectionSubtitle = document.getElementById('section-subtitle');
+
+            if (tabName === 'products') {
+                productsGrid.style.display = 'grid';
+                servicesGrid.style.display = 'none';
+                sectionTitle.textContent = 'Our Product Suite';
+                sectionSubtitle.textContent = 'Choose the perfect AI product for your business needs';
+            } else {
+                productsGrid.style.display = 'none';
+                servicesGrid.style.display = 'grid';
+                sectionTitle.textContent = 'Our Service Suite';
+                sectionSubtitle.textContent = 'Choose the perfect AI service for your business needs';
+            }
+        }
+    </script>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 AI Product Portfolio. Transforming businesses through intelligent solutions.</p>
+    </footer>
+</body>
+</html> 
