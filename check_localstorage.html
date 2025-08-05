@@ -1,0 +1,33 @@
+<\!DOCTYPE html>
+<html>
+<head>
+    <title>Check LocalStorage</title>
+</head>
+<body>
+    <h1>LocalStorage Contents</h1>
+    <div id="content"></div>
+    <script>
+        const content = document.getElementById('content');
+        let html = '<h2>All LocalStorage Keys:</h2><ul>';
+        
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            html += '<li>' + key + '</li>';
+        }
+        html += '</ul>';
+        
+        html += '<h2>Compilation-related entries:</h2><ul>';
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && (key.includes('compilation') || key.includes('compiled'))) {
+                const value = localStorage.getItem(key);
+                html += '<li><strong>' + key + ':</strong> ' + (value ? value.substring(0, 100) + '...' : 'null') + '</li>';
+            }
+        }
+        html += '</ul>';
+        
+        content.innerHTML = html;
+    </script>
+</body>
+</html>
+EOF < /dev/null
