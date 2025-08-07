@@ -66,4 +66,4 @@ const TabPanel: React.FC<TabPanelProps> = ({
   );
 };
 
-export default TabPanel; 
+export default TabPanel;

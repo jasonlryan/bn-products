@@ -70,8 +70,6 @@ export default function ProductPage() {
   } | null>(null);
   const [isLoadingFunctionalSpec, setIsLoadingFunctionalSpec] = useState(false);
 
-
-
   // Listen for panel config changes
   useEffect(() => {
     const handleConfigChange = () => {
@@ -187,8 +185,6 @@ export default function ProductPage() {
         return [];
     }
   };
-
-
 
   const generateHomePanels = (): ContentPanel[] => {
     // Home tab doesn't use panels - it renders the landing page directly
@@ -1174,8 +1170,6 @@ export default function ProductPage() {
     setProductData(newProduct);
   }, [id]);
 
-
-
   if (!productData) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -1378,7 +1372,6 @@ export default function ProductPage() {
   };
 
   // Force refresh panels (for debugging)
-
 
   const tabs = [
     { id: 'home', label: 'Home', icon: Home },

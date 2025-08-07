@@ -103,14 +103,10 @@ export default function Dashboard() {
         {/* Section Title and Subtitle */}
         <div className="text-center mb-12">
           <h2 className="text-4xl font-semibold text-gray-900 mb-4">
-            {activeTab === 'products'
-              ? 'Our Service Portfolio'
-              : 'Our Service Portfolio'}
+            Our Service Portfolio
           </h2>
           <p className="text-lg text-gray-600">
-            {activeTab === 'products'
-              ? 'Comprehensive AI services to transform your organization'
-              : 'Comprehensive AI services to transform your organization'}
+            Comprehensive AI services to transform your organization
           </p>
         </div>
 
