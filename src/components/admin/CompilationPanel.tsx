@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { RefreshCw, FileText, TrendingUp, Target, Zap } from 'lucide-react'
 import { Button, Card } from '../ui'
 import { useProducts, useCompilation } from '../../hooks'

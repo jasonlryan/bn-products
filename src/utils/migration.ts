@@ -1,4 +1,4 @@
-import { MigrationResult } from '@/services/storage/types'
+import type { MigrationResult } from '../services/storage/types'
 
 export class MigrationHelper {
   /**
@@ -108,7 +108,6 @@ export class MigrationHelper {
     missingKeys: string[]
     errors: string[]
   }> {
-    const summary = this.getLocalStorageSummary()
     const missingKeys: string[] = []
     const errors: string[] = []
 

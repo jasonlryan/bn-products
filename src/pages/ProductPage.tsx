@@ -1356,6 +1356,7 @@ export default function ProductPage() {
   };
 
   // Utility function to check compilation status for debugging
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const checkCompilationStatus = async (productId: string) => {
     console.log(
       `🔍 [ProductPage] Checking compilation status for ${productId}`
@@ -1437,33 +1438,7 @@ export default function ProductPage() {
   };
 
   // Force refresh panels (for debugging)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const refreshPanels = async () => {
-    if (!productData) return;
 
-    console.log(
-      `🔄 [ProductPage] Force refreshing panels for ${productData.id}`
-    );
-    setIsLoadingPanels(true);
-
-    // Check compilation status
-    await checkCompilationStatus(productData.id);
-
-    // Reload panels
-    try {
-      const panels = await generateContentPanels(activeView, productData);
-      const orderedPanels = applyPanelOrder(panels);
-      setContentPanels(orderedPanels);
-      console.log(
-        `✅ [ProductPage] Refreshed ${panels.length} panels for ${activeView}`
-      );
-    } catch (error) {
-      console.error(`❌ [ProductPage] Error refreshing panels:`, error);
-      setContentPanels([]);
-    } finally {
-      setIsLoadingPanels(false);
-    }
-  };
 
   const tabs = [
     { id: 'home', label: 'Home', icon: Home },

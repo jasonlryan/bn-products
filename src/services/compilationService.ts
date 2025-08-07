@@ -184,11 +184,9 @@ export class CompilationService {
     marketIntel: number
     productStrategy: number
   }> {
-    const [marketing, marketIntel, productStrategy] = await Promise.all([
-      storage.get<number>(`bn:count:marketing:${productId}`) || 0,
-      storage.get<number>(`bn:count:market-intel:${productId}`) || 0,
-      storage.get<number>(`bn:count:product-strategy:${productId}`) || 0
-    ])
+    const marketing = (await storage.get<number>(`bn:count:marketing:${productId}`)) || 0;
+    const marketIntel = (await storage.get<number>(`bn:count:market-intel:${productId}`)) || 0;
+    const productStrategy = (await storage.get<number>(`bn:count:product-strategy:${productId}`)) || 0;
 
     return { marketing, marketIntel, productStrategy }
   }

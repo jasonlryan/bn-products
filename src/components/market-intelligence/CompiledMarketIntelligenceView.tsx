@@ -11,10 +11,10 @@ import {
   Database,
 } from 'lucide-react';
 import MarkdownRenderer from '../MarkdownRenderer';
-import type { CompiledMarketIntelligence } from '../../services/marketIntelligenceCompiler';
+import type { CompiledMarketIntelligencePage } from '../../services/marketIntelligenceCompiler';
 
 interface CompiledMarketIntelligenceViewProps {
-  compiledPage: CompiledMarketIntelligence;
+  compiledPage: CompiledMarketIntelligencePage;
   className?: string;
 }
 

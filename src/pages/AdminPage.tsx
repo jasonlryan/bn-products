@@ -19,7 +19,7 @@ import { getAllProductsAndServices, getProductById } from '../config';
 import { marketingCompiler } from '../services/marketingCompiler';
 import { marketIntelligenceCompiler } from '../services/marketIntelligenceCompiler';
 import { productStrategyCompiler } from '../services/productStrategyCompiler';
-import { useProducts, saveCompiledContent } from '../hooks';
+// Remove unused import
 import { Button, Card } from '../components/ui';
 import { MARKETING_COMPILATION_PROMPT } from '../prompts/marketingPrompt';
 import { MARKET_INTELLIGENCE_COMPILATION_PROMPT } from '../prompts/marketIntelligencePrompt';

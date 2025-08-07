@@ -63,11 +63,15 @@ class FunctionalSpecService {
           productId,
           contentType: 'functional-spec',
           lastGenerated: new Date().toISOString(),
-          source: 'redis'
+          promptVersion: '1.0.0'
         },
         sections: {
-          'Generated Output': content
+          'Original Prompt': '',
+          'Product Context': '',
+          'Generated Output': content,
+          'Context Used': ''
         },
+        fullContent: content,
         lastModified: new Date().toISOString(),
         version: '1.0.0'
       };
