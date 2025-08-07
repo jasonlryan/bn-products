@@ -6,6 +6,10 @@
   "framework": "vite",
   "rewrites": [
     {
+      "source": "/api/storage",
+      "destination": "/api/storage.ts"
+    },
+    {
       "source": "/api/(.*)",
       "destination": "/src/app/api/$1"
     },
