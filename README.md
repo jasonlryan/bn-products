@@ -1,6 +1,6 @@
 # BN Products - Redis-Powered Product Management System
 
-A comprehensive product management platform built with React, TypeScript, and Vite, featuring a Redis-based storage architecture for scalable data persistence and real-time compilation workflows.
+A comprehensive product management platform built with React, TypeScript, and Vite, featuring a Redis-based storage architecture for scalable data persistence and real-time compilation workflows. **Updated for auto-deployment test.**
 
 ## Architecture Overview
 
