@@ -29,7 +29,7 @@ import { productStrategyCompiler } from '../services/productStrategyCompiler';
 import { functionalSpecService } from '../services/functionalSpecService';
 import { productToCSVProduct } from '../utils/productToCsvAdapter';
 
-import { panelConfigManager } from '../utils/panelConfig';
+
 
 type ViewType =
   | 'home'
@@ -1289,87 +1289,7 @@ export default function ProductPage() {
     console.log(`Updated ${field}:`, content);
   };
 
-  // Utility function to check compilation status for debugging
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const checkCompilationStatus = async (productId: string) => {
-    console.log(
-      `🔍 [ProductPage] Checking compilation status for ${productId}`
-    );
 
-    try {
-      // Check marketing compilation
-      const marketingCount =
-        await marketingCompiler.getCompilationCount(productId);
-      const marketingExists =
-        await marketingCompiler.hasCompiledPage(productId);
-      const marketingPage = marketingExists
-        ? await marketingCompiler.loadCompiledPage(productId)
-        : null;
-
-      // Check market intelligence compilation
-      const marketIntelCount =
-        await marketIntelligenceCompiler.getCompilationCount(productId);
-      const marketIntelExists =
-        await marketIntelligenceCompiler.hasCompiledPage(productId);
-      const marketIntelPage = marketIntelExists
-        ? await marketIntelligenceCompiler.loadCompiledPage(productId)
-        : null;
-
-      // Check product strategy compilation
-      const productStrategyCount =
-        await productStrategyCompiler.getCompilationCount(productId);
-      const productStrategyExists =
-        await productStrategyCompiler.hasCompiledPage(productId);
-      const productStrategyPage = productStrategyExists
-        ? await productStrategyCompiler.loadCompiledPage(productId)
-        : null;
-
-      console.log(`📊 [ProductPage] Compilation Status for ${productId}:`, {
-        marketing: {
-          count: marketingCount,
-          exists: marketingExists,
-          pageId: marketingPage?.id,
-          compiledAt: marketingPage?.compiledAt,
-        },
-        marketIntelligence: {
-          count: marketIntelCount,
-          exists: marketIntelExists,
-          pageId: marketIntelPage?.id,
-          compiledAt: marketIntelPage?.compiledAt,
-        },
-        productStrategy: {
-          count: productStrategyCount,
-          exists: productStrategyExists,
-          pageId: productStrategyPage?.id,
-          compiledAt: productStrategyPage?.compiledAt,
-        },
-      });
-
-      return {
-        marketing: {
-          count: marketingCount,
-          exists: marketingExists,
-          page: marketingPage,
-        },
-        marketIntelligence: {
-          count: marketIntelCount,
-          exists: marketIntelExists,
-          page: marketIntelPage,
-        },
-        productStrategy: {
-          count: productStrategyCount,
-          exists: productStrategyExists,
-          page: productStrategyPage,
-        },
-      };
-    } catch (error) {
-      console.error(
-        `❌ [ProductPage] Error checking compilation status for ${productId}:`,
-        error
-      );
-      return null;
-    }
-  };
 
   // Force refresh panels (for debugging)
 
