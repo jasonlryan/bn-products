@@ -9,6 +9,9 @@ import { marketingCompiler } from './marketingCompiler'
 import { marketIntelligenceCompiler } from './marketIntelligenceCompiler'
 import { productStrategyCompiler } from './productStrategyCompiler'
 import type { Product } from '../types/product'
+import { keyFactory } from '../utils/keyFactory'
+import { fingerprintObject } from '../utils/fingerprint'
+import { eventBus } from '../utils/events'
 
 const storage = getStorageService()
 
@@ -25,6 +28,7 @@ export interface CompilationJob {
 }
 
 export class CompilationService {
+  private readonly SCHEMA_VERSION = 'v1'
   /**
    * Compile marketing content and save to Redis
    */
@@ -35,9 +39,10 @@ export class CompilationService {
   }> {
     try {
       console.log(`🚀 Starting marketing compilation for product ${productId}`)
+      eventBus.publish('compilation:started', { productId, type: 'marketing' })
       
       // Get product data
-      const product = await productService.getProduct(productId)
+      const product = await productService.getProductById(productId)
       if (!product) {
         throw new Error(`Product ${productId} not found`)
       }
@@ -48,20 +53,29 @@ export class CompilationService {
       // Compile using existing service
       const compiledPage = await marketingCompiler.compileMarketingPage(legacyProduct)
       
-      // Save compiled content to Redis with proper key structure
-      await storage.set(`bn:compiled:marketing:${productId}`, {
+      // Build metadata and save compiled content
+      const sourceFingerprint = fingerprintObject({
+        features: product.features,
+        benefits: product.benefits,
+        marketing: product.marketing,
+      })
+      await storage.set(keyFactory.compiled('marketing', productId), {
         id: compiledPage.id,
         productId: compiledPage.productId,
         compiledAt: compiledPage.compiledAt,
         content: compiledPage.content,
         rawMarkdown: compiledPage.rawMarkdown,
-        type: 'marketing'
+        type: 'marketing',
+        schemaVersion: this.SCHEMA_VERSION,
+        sourceFingerprint,
+        sourceUpdatedAt: new Date().toISOString(),
       })
 
       // Update compilation count
-      await storage.increment(`bn:count:marketing:${productId}`)
+      await storage.increment(keyFactory.count('marketing', productId))
 
       console.log(`✅ Marketing compilation completed for product ${productId}`)
+      eventBus.publish('compilation:completed', { productId, type: 'marketing' })
       
       return {
         success: true,
@@ -69,6 +83,7 @@ export class CompilationService {
       }
     } catch (error) {
       console.error(`❌ Marketing compilation failed for product ${productId}:`, error)
+      eventBus.publish('compilation:failed', { productId, type: 'marketing', error: error instanceof Error ? error.message : 'Unknown error' })
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error'
@@ -86,8 +101,9 @@ export class CompilationService {
   }> {
     try {
       console.log(`🚀 Starting market intelligence compilation for product ${productId}`)
+      eventBus.publish('compilation:started', { productId, type: 'market-intel' })
       
-      const product = await productService.getProduct(productId)
+      const product = await productService.getProductById(productId)
       if (!product) {
         throw new Error(`Product ${productId} not found`)
       }
@@ -95,19 +111,25 @@ export class CompilationService {
       const legacyProduct = this.convertToLegacyProduct(product)
       const compiledPage = await marketIntelligenceCompiler.compileMarketIntelligencePage(legacyProduct)
       
-      // Save to Redis
-      await storage.set(`bn:compiled:market-intel:${productId}`, {
+      const sourceFingerprint = fingerprintObject({
+        richContent: legacyProduct.richContent,
+      })
+      await storage.set(keyFactory.compiled('market-intel', productId), {
         id: compiledPage.id,
         productId: compiledPage.productId,
         compiledAt: compiledPage.compiledAt,
         content: compiledPage.content,
         rawMarkdown: compiledPage.rawMarkdown,
-        type: 'market-intel'
+        type: 'market-intel',
+        schemaVersion: this.SCHEMA_VERSION,
+        sourceFingerprint,
+        sourceUpdatedAt: new Date().toISOString(),
       })
 
-      await storage.increment(`bn:count:market-intel:${productId}`)
+      await storage.increment(keyFactory.count('market-intel', productId))
 
       console.log(`✅ Market intelligence compilation completed for product ${productId}`)
+      eventBus.publish('compilation:completed', { productId, type: 'market-intel' })
       
       return {
         success: true,
@@ -115,6 +137,7 @@ export class CompilationService {
       }
     } catch (error) {
       console.error(`❌ Market intelligence compilation failed for product ${productId}:`, error)
+      eventBus.publish('compilation:failed', { productId, type: 'market-intel', error: error instanceof Error ? error.message : 'Unknown error' })
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error'
@@ -132,8 +155,9 @@ export class CompilationService {
   }> {
     try {
       console.log(`🚀 Starting product strategy compilation for product ${productId}`)
+      eventBus.publish('compilation:started', { productId, type: 'product-strategy' })
       
-      const product = await productService.getProduct(productId)
+      const product = await productService.getProductById(productId)
       if (!product) {
         throw new Error(`Product ${productId} not found`)
       }
@@ -141,19 +165,25 @@ export class CompilationService {
       const legacyProduct = this.convertToLegacyProduct(product)
       const compiledPage = await productStrategyCompiler.compileProductStrategy(legacyProduct)
       
-      // Save to Redis
-      await storage.set(`bn:compiled:product-strategy:${productId}`, {
+      const sourceFingerprint = fingerprintObject({
+        richContent: legacyProduct.richContent,
+      })
+      await storage.set(keyFactory.compiled('product-strategy', productId), {
         id: compiledPage.id,
         productId: compiledPage.productId,
         compiledAt: compiledPage.compiledAt,
         content: compiledPage.content,
         rawMarkdown: compiledPage.rawMarkdown,
-        type: 'product-strategy'
+        type: 'product-strategy',
+        schemaVersion: this.SCHEMA_VERSION,
+        sourceFingerprint,
+        sourceUpdatedAt: new Date().toISOString(),
       })
 
-      await storage.increment(`bn:count:product-strategy:${productId}`)
+      await storage.increment(keyFactory.count('product-strategy', productId))
 
       console.log(`✅ Product strategy compilation completed for product ${productId}`)
+      eventBus.publish('compilation:completed', { productId, type: 'product-strategy' })
       
       return {
         success: true,
@@ -161,6 +191,7 @@ export class CompilationService {
       }
     } catch (error) {
       console.error(`❌ Product strategy compilation failed for product ${productId}:`, error)
+      eventBus.publish('compilation:failed', { productId, type: 'product-strategy', error: error instanceof Error ? error.message : 'Unknown error' })
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error'
@@ -172,8 +203,17 @@ export class CompilationService {
    * Get compiled content from Redis
    */
   async getCompiledContent(productId: string, type: CompilationType): Promise<any> {
-    const key = `bn:compiled:${type}:${productId}`
-    return await storage.get(key)
+    const key = keyFactory.compiled(type, productId)
+    const data = await storage.get<any>(key)
+    if (!data) return null
+    try {
+      if (typeof data.compiledAt === 'string') {
+        data.compiledAt = new Date(data.compiledAt)
+      }
+    } catch {
+      // noop – leave as-is if parsing fails
+    }
+    return data
   }
 
   /**
@@ -184,9 +224,9 @@ export class CompilationService {
     marketIntel: number
     productStrategy: number
   }> {
-    const marketing = (await storage.get<number>(`bn:count:marketing:${productId}`)) || 0;
-    const marketIntel = (await storage.get<number>(`bn:count:market-intel:${productId}`)) || 0;
-    const productStrategy = (await storage.get<number>(`bn:count:product-strategy:${productId}`)) || 0;
+    const marketing = (await storage.get<number>(keyFactory.count('marketing', productId))) || 0;
+    const marketIntel = (await storage.get<number>(keyFactory.count('market-intel', productId))) || 0;
+    const productStrategy = (await storage.get<number>(keyFactory.count('product-strategy', productId))) || 0;
 
     return { marketing, marketIntel, productStrategy }
   }
@@ -195,7 +235,7 @@ export class CompilationService {
    * Check if compiled content exists
    */
   async hasCompiledContent(productId: string, type: CompilationType): Promise<boolean> {
-    const key = `bn:compiled:${type}:${productId}`
+    const key = keyFactory.compiled(type, productId)
     return await storage.exists(key)
   }
 
@@ -203,8 +243,39 @@ export class CompilationService {
    * Delete compiled content
    */
   async deleteCompiledContent(productId: string, type: CompilationType): Promise<void> {
-    await storage.delete(`bn:compiled:${type}:${productId}`)
-    await storage.delete(`bn:count:${type}:${productId}`)
+    await storage.delete(keyFactory.compiled(type, productId))
+    await storage.delete(keyFactory.count(type, productId))
+  }
+
+  /** Determine if compiled content is stale compared to current product source */
+  async isCompiledStale(productId: string, type: CompilationType): Promise<boolean> {
+    const compiled = await this.getCompiledContent(productId, type)
+    if (!compiled) return true
+    if (compiled.schemaVersion && compiled.schemaVersion !== this.SCHEMA_VERSION) return true
+
+    const product = await productService.getProductById(productId)
+    if (!product) return true
+
+    const currentFingerprint = this.computeFingerprintForType(product, type)
+    return compiled.sourceFingerprint !== currentFingerprint
+  }
+
+  private computeFingerprintForType(product: any, type: CompilationType): string {
+    switch (type) {
+      case 'marketing':
+        return fingerprintObject({
+          features: product.features,
+          benefits: product.benefits,
+          marketing: product.marketing,
+        })
+      case 'market-intel':
+      case 'product-strategy':
+        return fingerprintObject({
+          richContent: product.richContent,
+        })
+      default:
+        return fingerprintObject(product)
+    }
   }
 
   /**

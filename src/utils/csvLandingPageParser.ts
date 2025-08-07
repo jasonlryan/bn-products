@@ -17,11 +17,32 @@ function parseListItems(content: string | string[]): string[] {
   
   // If it's a string, split by common bullet point patterns and clean up
   if (typeof content === 'string') {
-    return content
-      .split(/[-•\n]/)
-      .map(item => item.trim())
-      .filter(item => item.length > 0)
-      .slice(0, 6); // Limit to 6 items for UI purposes
+    // Normalise line endings
+    const normalised = content.replace(/\r\n/g, '\n');
+    // Primary split on newlines; do NOT split on hyphens to avoid fragmenting phrases like "Real world solutions"
+    let parts = normalised
+      .split('\n')
+      .map(part => part.replace(/^\s*[•*\-]\s*/, '')) // trim leading bullets if present
+      .map(part => part.trim())
+      .filter(part => part.length > 0);
+
+    // If we still only have one big line, try splitting on bullet characters explicitly
+    if (parts.length === 1) {
+      parts = normalised
+        .split(/[•·]/)
+        .map(part => part.trim())
+        .filter(part => part.length > 0);
+    }
+
+    // As a last resort, if commas/semicolons are used consistently, split on those
+    if (parts.length === 1 && /[,;]\s+/.test(normalised)) {
+      parts = normalised
+        .split(/[,;]\s+/)
+        .map(part => part.trim())
+        .filter(part => part.length > 0);
+    }
+
+    return parts.slice(0, 6); // Limit to 6 items for UI purposes
   }
   
   return [];

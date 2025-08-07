@@ -344,22 +344,14 @@ ${content.strategicImplementationGuide.continuousImprovement}
       rawMarkdown
     };
 
-    // Save to storage
-    await this.saveCompiledPage(compiledStrategy);
-    
-    // Increment compilation count
-    await this.incrementCompilationCount(product.id);
-
     return compiledStrategy;
   }
 
   /**
    * Save compiled page to localStorage
    */
-  async saveCompiledPage(compiledStrategy: CompiledProductStrategyPage): Promise<void> {
-    const key = `bn:compiled:product-strategy:${compiledStrategy.productId}`;
-    await this.storage.set(key, compiledStrategy);
-  }
+  // Writes are centralised in compilationService. This method is kept for backward compatibility but should not be used.
+  async saveCompiledPage(_compiledStrategy: CompiledProductStrategyPage): Promise<void> { /* no-op */ }
 
   /**
    * Get compilation count for a product
@@ -373,10 +365,8 @@ ${content.strategicImplementationGuide.continuousImprovement}
   /**
    * Increment compilation count
    */
-  private async incrementCompilationCount(productId: string): Promise<void> {
-    const key = `bn:count:product-strategy:${productId}`;
-    await this.storage.increment(key);
-  }
+  // Writes are centralised in compilationService. This method is kept for backward compatibility but should not be used.
+  private async incrementCompilationCount(_productId: string): Promise<void> { /* no-op */ }
 
   /**
    * Reset compilation count

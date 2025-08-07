@@ -30,72 +30,27 @@ function parseListItems(items: string | string[]): string[] {
   
   // If it's already an array, we need to check if items were fragmented during parsing
   if (Array.isArray(items)) {
-    // Special handling for clearly fragmented items
-    const reconstructed: string[] = [];
-    let currentItem = '';
-    
+    // Join obvious fragments that resulted from incorrect splitting
+    const joined: string[] = [];
+    let buffer = '';
+    const flush = () => {
+      if (buffer.trim()) joined.push(buffer.trim());
+      buffer = '';
+    };
     for (let i = 0; i < items.length; i++) {
-      const item = items[i].trim();
-      if (!item) continue;
-      
-      currentItem += (currentItem ? ' ' : '') + item;
-      
-      // Check if this looks like a complete benefit/feature item
-      const isCompleteItem = 
-        // Item ends with a complete word/concept
-        (item.match(/\w+$/) && 
-         // Next item starts with capital letter (new item) or we're at the end
-         (i === items.length - 1 || items[i + 1]?.trim().match(/^[A-Z]/)) &&
-         // Current accumulated item has substance (not just fragments)
-         currentItem.length > 10) ||
-        // Or this is the last item
-        (i === items.length - 1);
-      
-      if (isCompleteItem) {
-        reconstructed.push(currentItem.trim());
-        currentItem = '';
+      const token = (items[i] || '').trim();
+      if (!token) continue;
+      // If token is very short or clearly a continuation, append to buffer
+      const isFragment = token.split(' ').length <= 2 && token.toLowerCase() === token;
+      buffer += (buffer ? ' ' : '') + token;
+      // If next token starts with uppercase and current buffer seems complete, flush
+      const next = (items[i + 1] || '').trim();
+      const nextStartsNew = next && /^[A-Z]/.test(next);
+      if (!isFragment || nextStartsNew || i === items.length - 1) {
+        flush();
       }
     }
-    
-    // Handle any remaining text
-    if (currentItem.trim()) {
-      reconstructed.push(currentItem.trim());
-    }
-    
-    // If reconstruction didn't help much, try a different approach
-    if (reconstructed.length === items.length) {
-      // Look for obvious fragments that should be joined
-      const regrouped: string[] = [];
-      let accumulator = '';
-      
-      for (let i = 0; i < items.length; i++) {
-        const item = items[i].trim();
-        accumulator += (accumulator ? ' ' : '') + item;
-        
-        // Check if we should end this group
-        const shouldEnd = 
-          // This item ends with a meaningful word and next starts with capital
-          (i < items.length - 1 && 
-           item.match(/[a-zA-Z]{3,}$/) && 
-           items[i + 1]?.trim().match(/^[A-Z][a-z]/)) ||
-          // Or we're at the end
-          (i === items.length - 1) ||
-          // Or current accumulator is getting very long (likely multiple items)
-          (accumulator.length > 60);
-        
-        if (shouldEnd) {
-          regrouped.push(accumulator.trim());
-          accumulator = '';
-        }
-      }
-      
-      // Use whichever gives us more reasonable results
-      return regrouped.length < items.length && regrouped.length > 0 ? regrouped : reconstructed;
-    }
-    
-    return reconstructed
-      .map(item => item.trim())
-      .filter(item => item.length > 0);
+    return joined;
   }
   
   // If it's a string, split it appropriately

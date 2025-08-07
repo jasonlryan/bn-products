@@ -22,13 +22,13 @@ import {
   getAllProducts,
   getAllServices,
 } from '../config';
-import { marketingCompiler } from '../services/marketingCompiler';
-import { marketIntelligenceCompiler } from '../services/marketIntelligenceCompiler';
-import { productStrategyCompiler } from '../services/productStrategyCompiler';
+import { compilationService } from '../services/compilationService';
+import { eventBus } from '../utils/events';
 import { productService } from '../services/storage/productService';
 import { getStorageService } from '../services/storage/storageService';
 // Remove unused import
 import { Button, Card } from '../components/ui';
+import Badge from '../components/ui/Badge';
 import { QueueManagementPanel } from '../components/admin/QueueManagementPanel';
 import FeedbackAdminPanel from '../components/admin/FeedbackAdminPanel';
 import { MARKETING_COMPILATION_PROMPT } from '../prompts/marketingPrompt';
@@ -103,9 +103,29 @@ const AdminPage: React.FC = () => {
       marketIntelligence: true,
       productStrategy: true,
     });
+  const [stale, setStale] = useState<
+    Record<
+      string,
+      {
+        marketing: boolean;
+        marketIntel: boolean;
+        productStrategy: boolean;
+      }
+    >
+  >({});
 
   useEffect(() => {
     loadData();
+    const unsubscribe = eventBus.subscribe('compilation:completed', () => {
+      loadData();
+    });
+    const unsubscribeFailed = eventBus.subscribe('compilation:failed', () => {
+      loadData();
+    });
+    return () => {
+      unsubscribe();
+      unsubscribeFailed();
+    };
   }, []);
 
   const togglePanel = (panelName: keyof typeof expandedPanels) => {
@@ -132,15 +152,65 @@ const AdminPage: React.FC = () => {
       // Load admin settings from localStorage
       const savedSettings = localStorage.getItem('admin-settings');
 
-      // Get compilation counts from all compiler services
-      const marketingCounts = await marketingCompiler.getAllCompilationCounts();
-      const marketIntelligenceCounts =
-        await marketIntelligenceCompiler.getAllCompilationCounts();
-      const productStrategyCounts =
-        await productStrategyCompiler.getAllCompilationCounts();
+      // Get compilation counts via centralised service
+      const counts = await Promise.all(
+        allProducts.map((p: any) =>
+          compilationService.getCompilationCounts(p.id)
+        )
+      );
+      const marketingCounts = Object.fromEntries(
+        allProducts.map((p: any, i: number) => [p.id, counts[i].marketing])
+      );
+      const marketIntelligenceCounts = Object.fromEntries(
+        allProducts.map((p: any, i: number) => [p.id, counts[i].marketIntel])
+      );
+      const productStrategyCounts = Object.fromEntries(
+        allProducts.map((p: any, i: number) => [
+          p.id,
+          counts[i].productStrategy,
+        ])
+      );
+
+      // Compute staleness for each product/type
+      const staleEntries = await Promise.all(
+        allProducts.map(async (p: any) => {
+          try {
+            const [m, mi, ps] = await Promise.all([
+              compilationService.isCompiledStale(p.id, 'marketing'),
+              compilationService.isCompiledStale(p.id, 'market-intel'),
+              compilationService.isCompiledStale(p.id, 'product-strategy'),
+            ]);
+            return [
+              p.id,
+              { marketing: !!m, marketIntel: !!mi, productStrategy: !!ps },
+            ] as const;
+          } catch {
+            return [
+              p.id,
+              { marketing: false, marketIntel: false, productStrategy: false },
+            ] as const;
+          }
+        })
+      );
+      setStale(Object.fromEntries(staleEntries));
 
       if (savedSettings) {
         const parsed = JSON.parse(savedSettings);
+        // Normalize any lingering 'compiling' flags back to 'idle' on load
+        const normalize = (
+          obj:
+            | Record<string, 'idle' | 'compiling' | 'complete' | 'error'>
+            | undefined
+        ): Record<string, 'idle' | 'compiling' | 'complete' | 'error'> => {
+          const source = obj || {};
+          return Object.fromEntries(
+            Object.entries(source).map(([k, v]) => [
+              k,
+              v === 'compiling' ? 'idle' : v,
+            ])
+          ) as Record<string, 'idle' | 'compiling' | 'complete' | 'error'>;
+        };
+
         setSettings({
           editModeEnabled: parsed.editModeEnabled ?? true,
           lastCompiled: Object.fromEntries(
@@ -149,7 +219,7 @@ const AdminPage: React.FC = () => {
               new Date(v as string),
             ])
           ),
-          compilationStatus: parsed.compilationStatus || {},
+          compilationStatus: normalize(parsed.compilationStatus),
           // Use the marketing compiler counts as the source of truth
           compilationCount: marketingCounts,
           marketingPrompt:
@@ -165,7 +235,7 @@ const AdminPage: React.FC = () => {
               ([k, v]) => [k, new Date(v as string)]
             )
           ),
-          marketIntelligenceStatus: parsed.marketIntelligenceStatus || {},
+          marketIntelligenceStatus: normalize(parsed.marketIntelligenceStatus),
           marketIntelligenceCount: marketIntelligenceCounts,
           // Load product strategy settings
           productStrategyLastCompiled: Object.fromEntries(
@@ -173,7 +243,7 @@ const AdminPage: React.FC = () => {
               ([k, v]) => [k, new Date(v as string)]
             )
           ),
-          productStrategyStatus: parsed.productStrategyStatus || {},
+          productStrategyStatus: normalize(parsed.productStrategyStatus),
           productStrategyCount: productStrategyCounts,
         });
         setMarketingPromptEditText(
@@ -284,8 +354,8 @@ const AdminPage: React.FC = () => {
         'Are you sure you want to reset the compilation count for this product?'
       )
     ) {
-      // Reset in the marketing compiler service
-      marketingCompiler.resetCompilationCount(productId);
+      // Reset via centralised service
+      compilationService.deleteCompiledContent(productId, 'marketing');
 
       // Update local state
       const newSettings = {
@@ -317,16 +387,15 @@ const AdminPage: React.FC = () => {
         throw new Error('Product not found');
       }
 
-      // Compile the market intelligence page
-      const compiledPage =
-        await marketIntelligenceCompiler.compileMarketIntelligencePage(product);
-
-      // Save the compiled page (this will also increment the count)
-      await marketIntelligenceCompiler.saveCompiledPage(compiledPage);
+      // Compile and persist via centralised service
+      const miResult =
+        await compilationService.compileMarketIntelligence(productId);
+      if (!miResult.success)
+        throw new Error(miResult.error || 'Compilation failed');
 
       // Get the updated count from the service
-      const newCount =
-        await marketIntelligenceCompiler.getCompilationCount(productId);
+      const miCounts = await compilationService.getCompilationCounts(productId);
+      const newCount = miCounts.marketIntel;
 
       // Update admin settings with success status
       const finalSettings = {
@@ -394,7 +463,7 @@ const AdminPage: React.FC = () => {
       )
     ) {
       // Reset in the market intelligence compiler service
-      marketIntelligenceCompiler.resetCompilationCount(productId);
+      compilationService.deleteCompiledContent(productId, 'market-intel');
 
       // Update admin settings
       const newSettings = {
@@ -454,16 +523,15 @@ const AdminPage: React.FC = () => {
         throw new Error('Product not found');
       }
 
-      // Compile the product strategy
-      const compiledStrategy =
-        await productStrategyCompiler.compileProductStrategy(product);
-
-      // Save the compiled page (this will also increment the count)
-      await productStrategyCompiler.saveCompiledPage(compiledStrategy);
+      // Compile and persist via centralised service
+      const psResult =
+        await compilationService.compileProductStrategy(productId);
+      if (!psResult.success)
+        throw new Error(psResult.error || 'Compilation failed');
 
       // Get the updated count from the service
-      const newCount =
-        await productStrategyCompiler.getCompilationCount(productId);
+      const psCounts = await compilationService.getCompilationCounts(productId);
+      const newCount = psCounts.productStrategy;
 
       // Update admin settings with success status
       const finalSettings = {
@@ -530,8 +598,8 @@ const AdminPage: React.FC = () => {
         'Are you sure you want to reset the product strategy compilation count for this product?'
       )
     ) {
-      // Reset in the product strategy compiler service
-      productStrategyCompiler.resetCompilationCount(productId);
+      // Reset via compilation service
+      compilationService.deleteCompiledContent(productId, 'product-strategy');
 
       // Update admin settings
       const newSettings = {
@@ -567,15 +635,14 @@ const AdminPage: React.FC = () => {
         throw new Error(`Product not found: ${productId}`);
       }
 
-      // Compile the marketing page using the actual service
-      const compiledPage =
-        await marketingCompiler.compileMarketingPage(product);
-
-      // Save the compiled page (this will also increment the count)
-      await marketingCompiler.saveCompiledPage(compiledPage);
+      // Compile and persist via centralized service
+      const result = await compilationService.compileMarketing(productId);
+      if (!result.success)
+        throw new Error(result.error || 'Compilation failed');
 
       // Get the updated count from the service
-      const newCount = await marketingCompiler.getCompilationCount(productId);
+      const counts = await compilationService.getCompilationCounts(productId);
+      const newCount = counts.marketing;
       const finalSettings = {
         ...newSettings,
         compilationStatus: {
@@ -593,10 +660,7 @@ const AdminPage: React.FC = () => {
       };
       saveSettings(finalSettings);
 
-      console.log(
-        `Marketing page compiled for product: ${productId}`,
-        compiledPage
-      );
+      console.log(`Marketing page compiled for product: ${productId}`);
     } catch (error) {
       console.error('Compilation failed:', error);
       const errorSettings = {
@@ -1333,6 +1397,13 @@ const AdminPage: React.FC = () => {
                                   className={`text-xs mt-1 ${getStatusColor(product.id)}`}
                                 >
                                   {getStatusText(product.id)}
+                                  {(settings.compilationCount?.[product.id] ||
+                                    0) > 0 &&
+                                    stale[product.id]?.marketing && (
+                                      <Badge variant="warning" className="ml-2">
+                                        Stale
+                                      </Badge>
+                                    )}
                                 </p>
                               </div>
 
@@ -1389,7 +1460,9 @@ const AdminPage: React.FC = () => {
                                       product.id
                                     ] === 'compiling'
                                       ? 'Compiling...'
-                                      : 'Compile'}
+                                      : stale[product.id]?.marketing
+                                        ? 'Recompile'
+                                        : 'Compile'}
                                   </span>
                                 </Button>
                               </div>
@@ -1479,6 +1552,14 @@ const AdminPage: React.FC = () => {
                                 </h4>
                                 <p className="text-xs text-gray-600 mt-1">
                                   {getMarketIntelligenceStatusText(product.id)}
+                                  {(settings.marketIntelligenceCount?.[
+                                    product.id
+                                  ] || 0) > 0 &&
+                                    stale[product.id]?.marketIntel && (
+                                      <Badge variant="warning" className="ml-2">
+                                        Stale
+                                      </Badge>
+                                    )}
                                 </p>
                               </div>
 
@@ -1539,7 +1620,9 @@ const AdminPage: React.FC = () => {
                                       product.id
                                     ] === 'compiling'
                                       ? 'Compiling...'
-                                      : 'Compile'}
+                                      : stale[product.id]?.marketIntel
+                                        ? 'Recompile'
+                                        : 'Compile'}
                                   </span>
                                 </Button>
                               </div>
@@ -1623,6 +1706,14 @@ const AdminPage: React.FC = () => {
                                 </h4>
                                 <p className="text-xs text-gray-600 mt-1">
                                   {getProductStrategyStatusText(product.id)}
+                                  {(settings.productStrategyCount?.[
+                                    product.id
+                                  ] || 0) > 0 &&
+                                    stale[product.id]?.productStrategy && (
+                                      <Badge variant="warning" className="ml-2">
+                                        Stale
+                                      </Badge>
+                                    )}
                                 </p>
                               </div>
 
@@ -1682,7 +1773,9 @@ const AdminPage: React.FC = () => {
                                       product.id
                                     ] === 'compiling'
                                       ? 'Compiling...'
-                                      : 'Compile'}
+                                      : stale[product.id]?.productStrategy
+                                        ? 'Recompile'
+                                        : 'Compile'}
                                   </span>
                                 </Button>
                               </div>

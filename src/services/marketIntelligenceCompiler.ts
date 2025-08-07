@@ -374,22 +374,14 @@ ${content.intelligenceSources.intelligenceGaps.map(gap => `- ${gap}`).join('\n')
       rawMarkdown
     };
 
-    // Save to storage
-    await this.saveCompiledPage(compiledPage);
-    
-    // Increment compilation count
-    await this.incrementCompilationCount(product.id);
-
     return compiledPage;
   }
 
   /**
    * Save compiled page to localStorage
    */
-  async saveCompiledPage(compiledPage: CompiledMarketIntelligencePage): Promise<void> {
-    const key = `bn:compiled:market-intel:${compiledPage.productId}`;
-    await this.storage.set(key, compiledPage);
-  }
+  // Writes are centralised in compilationService. This method is kept for backward compatibility but should not be used.
+  async saveCompiledPage(_compiledPage: CompiledMarketIntelligencePage): Promise<void> { /* no-op */ }
 
   /**
    * Get compilation count for a product
@@ -403,10 +395,8 @@ ${content.intelligenceSources.intelligenceGaps.map(gap => `- ${gap}`).join('\n')
   /**
    * Increment compilation count
    */
-  private async incrementCompilationCount(productId: string): Promise<void> {
-    const key = `bn:count:market-intel:${productId}`;
-    await this.storage.increment(key);
-  }
+  // Writes are centralised in compilationService. This method is kept for backward compatibility but should not be used.
+  private async incrementCompilationCount(_productId: string): Promise<void> { /* no-op */ }
 
   /**
    * Reset compilation count

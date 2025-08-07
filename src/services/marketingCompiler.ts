@@ -793,11 +793,6 @@ ${content.implementationGuide.successMetrics.map(metric => `- ${metric}`).join('
         rawMarkdown
       };
       
-      console.log('💾 [Marketing Compiler] Saving compiled page to storage...');
-      // Save to storage
-      await this.saveCompiledPage(compiledPage);
-      console.log('✅ [Marketing Compiler] Page saved to storage');
-      
       console.log('🎉 [Marketing Compiler] Compilation completed successfully');
       return compiledPage;
     } catch (error) {
@@ -806,16 +801,8 @@ ${content.implementationGuide.successMetrics.map(metric => `- ${metric}`).join('
     }
   }
 
-  /**
-   * Save compiled page to storage
-   */
-  async saveCompiledPage(compiledPage: CompiledMarketingPage): Promise<void> {
-    const key = `bn:compiled:marketing:${compiledPage.productId}`;
-    await this.storage.set(key, compiledPage);
-    
-    // Also increment the compilation count
-    await this.incrementCompilationCount(compiledPage.productId);
-  }
+  // Writes are centralised in compilationService. This method is kept for backward compatibility but should not be used.
+  async saveCompiledPage(_compiledPage: CompiledMarketingPage): Promise<void> { /* no-op */ }
 
   /**
    * Get compilation count for a product
@@ -834,14 +821,8 @@ ${content.implementationGuide.successMetrics.map(metric => `- ${metric}`).join('
   /**
    * Increment compilation count for a product
    */
-  private async incrementCompilationCount(productId: string): Promise<void> {
-    try {
-      const key = `bn:count:marketing:${productId}`;
-      await this.storage.increment(key);
-    } catch (error) {
-      console.error('Failed to increment compilation count:', error);
-    }
-  }
+  // Writes are centralised in compilationService. This method is kept for backward compatibility but should not be used.
+  private async incrementCompilationCount(_productId: string): Promise<void> { /* no-op */ }
 
   /**
    * Reset compilation count for a product

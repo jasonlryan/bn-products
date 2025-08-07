@@ -1,5 +1,6 @@
 import { getStorageService } from './storage/storageService';
 import { productService } from './storage/productService';
+import { eventBus } from '../utils/events';
 import type { RichContentFile } from './storage/types';
 
 export interface FunctionalSpecData {
@@ -78,6 +79,7 @@ class FunctionalSpecService {
 
       await this.productService.setContent(productId, 'functional-spec', richContentFile);
       console.log(`✅ [FunctionalSpec] Saved to Redis: ${productId}`);
+      eventBus.publish('product:updated', { productId });
     } catch (error) {
       console.error(`❌ [FunctionalSpec] Error saving functional spec for ${productId}:`, error);
       throw error;

@@ -1,6 +1,7 @@
 import { getStorageService } from './storageService';
 import type { Product, RichContentFile } from '../../types/product';
 import { getAllProducts, getAllServices, getProductById } from '../../config';
+import { eventBus } from '../../utils/events';
 
 class ProductService {
   private storage = getStorageService();
@@ -138,6 +139,8 @@ class ProductService {
     try {
       await this.storage.set(`${this.PRODUCT_PREFIX}:${product.id}`, product);
       console.log(`✅ [ProductService] Updated product ${product.id} in Redis`);
+      // Notify listeners that this product was updated so UIs can mark stale
+      eventBus.publish('product:updated', { productId: product.id });
     } catch (error) {
       console.error(`❌ [ProductService] Error updating product ${product.id} in Redis:`, error);
       throw error;
@@ -171,6 +174,8 @@ class ProductService {
   async setContent(productId: string, contentType: string, content: RichContentFile): Promise<void> {
     const key = `bn:content:${productId}:${contentType}`;
     await this.storage.set(key, content);
+    // Notify listeners for per-section updates
+    eventBus.publish('product:updated', { productId });
   }
 }
 

@@ -23,9 +23,8 @@ import { LandingPageView } from '../components/landing/LandingPageView';
 import CompiledMarketingView from '../components/marketing/CompiledMarketingView';
 import CompiledMarketIntelligenceView from '../components/market-intelligence/CompiledMarketIntelligenceView';
 import CompiledProductStrategyView from '../components/product-strategy/CompiledProductStrategyView';
-import { marketingCompiler } from '../services/marketingCompiler';
-import { marketIntelligenceCompiler } from '../services/marketIntelligenceCompiler';
-import { productStrategyCompiler } from '../services/productStrategyCompiler';
+import { compilationService } from '../services/compilationService';
+import { eventBus } from '../utils/events';
 import { functionalSpecService } from '../services/functionalSpecService';
 import { productToCSVProduct } from '../utils/productToCsvAdapter';
 import FeedbackWidget from '../components/FeedbackWidget';
@@ -59,6 +58,30 @@ export default function ProductPage() {
   const [activeView, setActiveView] = useState<ViewType>('home');
   const [contentPanels, setContentPanels] = useState<ContentPanel[]>([]);
   const [configVersion, setConfigVersion] = useState(0); // Force re-renders when config changes
+  useEffect(() => {
+    // Auto-refresh compiled views when a compilation completes
+    const unsubscribeCompleted = eventBus.subscribe(
+      'compilation:completed',
+      ({ productId }) => {
+        if (product && product.id === productId) {
+          // Trigger a light refresh by bumping configVersion and re-running panel builders
+          setConfigVersion((v) => v + 1);
+        }
+      }
+    );
+    const unsubscribeUpdated = eventBus.subscribe(
+      'product:updated',
+      ({ productId }) => {
+        if (product && product.id === productId) {
+          setConfigVersion((v) => v + 1);
+        }
+      }
+    );
+    return () => {
+      unsubscribeCompleted();
+      unsubscribeUpdated();
+    };
+  }, [product]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isLoadingPanels, setIsLoadingPanels] = useState(false);
   const [functionalSpecData, setFunctionalSpecData] = useState<{
@@ -198,13 +221,16 @@ export default function ProductPage() {
     product: any
   ): Promise<ContentPanel[]> => {
     try {
-      // Check if marketing page has been compiled and count > 0
-      const compilationCount = await marketingCompiler.getCompilationCount(
-        product.id
-      );
-      const hasCompiledPage = await marketingCompiler.hasCompiledPage(
-        product.id
-      );
+      // Check if marketing page has been compiled and count > 0 (via centralised service)
+      const {
+        getCompilationCounts,
+        hasCompiledContent,
+        getCompiledContent,
+        isCompiledStale,
+      } = compilationService;
+      const counts = await getCompilationCounts(product.id);
+      const compilationCount = counts.marketing;
+      const hasCompiledPage = await hasCompiledContent(product.id, 'marketing');
 
       console.log(
         `🔍 [ProductPage] Marketing compilation check for ${product.id}:`,
@@ -217,10 +243,11 @@ export default function ProductPage() {
 
       // If compiled content exists, ALWAYS show it instead of raw panels
       if (compilationCount > 0 && hasCompiledPage) {
-        // Show compiled marketing view as a single panel
-        const compiledPage = await marketingCompiler.loadCompiledPage(
-          product.id
-        );
+        // Show compiled marketing view as a single panel and surface staleness
+        const [compiledPage, stale] = await Promise.all([
+          getCompiledContent(product.id, 'marketing'),
+          isCompiledStale(product.id, 'marketing').catch(() => false),
+        ]);
         if (compiledPage) {
           console.log(
             `✅ [ProductPage] Loading compiled marketing page for ${product.id}`,
@@ -233,7 +260,7 @@ export default function ProductPage() {
           return [
             {
               id: 'compiled-marketing',
-              title: 'Compiled Marketing Page',
+              title: `Compiled Marketing Page${stale ? ' (Stale)' : ''}`,
               content: <CompiledMarketingView compiledPage={compiledPage} />,
             },
           ];
@@ -394,11 +421,18 @@ export default function ProductPage() {
     product: any
   ): Promise<ContentPanel[]> => {
     try {
-      // Check if market intelligence page has been compiled and count > 0
-      const compilationCount =
-        await marketIntelligenceCompiler.getCompilationCount(product.id);
-      const hasCompiledPage = await marketIntelligenceCompiler.hasCompiledPage(
-        product.id
+      // Check if market intelligence page has been compiled and count > 0 (via centralised service)
+      const {
+        getCompilationCounts,
+        hasCompiledContent,
+        getCompiledContent,
+        isCompiledStale,
+      } = compilationService;
+      const counts = await getCompilationCounts(product.id);
+      const compilationCount = counts.marketIntel;
+      const hasCompiledPage = await hasCompiledContent(
+        product.id,
+        'market-intel'
       );
 
       console.log(
@@ -412,10 +446,11 @@ export default function ProductPage() {
 
       // If compiled content exists, ALWAYS show it instead of raw panels
       if (compilationCount > 0 && hasCompiledPage) {
-        // Show compiled market intelligence view as a single panel
-        const compiledPage = await marketIntelligenceCompiler.loadCompiledPage(
-          product.id
-        );
+        // Show compiled market intelligence view with staleness hint
+        const [compiledPage, stale] = await Promise.all([
+          getCompiledContent(product.id, 'market-intel'),
+          isCompiledStale(product.id, 'market-intel').catch(() => false),
+        ]);
         if (compiledPage) {
           console.log(
             `✅ [ProductPage] Loading compiled market intelligence page for ${product.id}`,
@@ -428,7 +463,7 @@ export default function ProductPage() {
           return [
             {
               id: 'compiled-market-intelligence',
-              title: 'Compiled Market Intelligence',
+              title: `Compiled Market Intelligence${stale ? ' (Stale)' : ''}`,
               content: (
                 <CompiledMarketIntelligenceView compiledPage={compiledPage} />
               ),
@@ -640,11 +675,18 @@ export default function ProductPage() {
     product: any
   ): Promise<ContentPanel[]> => {
     try {
-      // Check if product strategy has been compiled and count > 0
-      const compilationCount =
-        await productStrategyCompiler.getCompilationCount(product.id);
-      const hasCompiledPage = await productStrategyCompiler.hasCompiledPage(
-        product.id
+      // Check if product strategy has been compiled and count > 0 (via centralised service)
+      const {
+        getCompilationCounts,
+        hasCompiledContent,
+        getCompiledContent,
+        isCompiledStale,
+      } = compilationService;
+      const counts = await getCompilationCounts(product.id);
+      const compilationCount = counts.productStrategy;
+      const hasCompiledPage = await hasCompiledContent(
+        product.id,
+        'product-strategy'
       );
 
       console.log(
@@ -658,10 +700,11 @@ export default function ProductPage() {
 
       // If compiled content exists, ALWAYS show it instead of raw panels
       if (compilationCount > 0 && hasCompiledPage) {
-        // Show compiled product strategy view as a single panel
-        const compiledStrategy = await productStrategyCompiler.loadCompiledPage(
-          product.id
-        );
+        // Show compiled product strategy view with staleness hint
+        const [compiledStrategy, stale] = await Promise.all([
+          getCompiledContent(product.id, 'product-strategy'),
+          isCompiledStale(product.id, 'product-strategy').catch(() => false),
+        ]);
         if (compiledStrategy) {
           console.log(
             `✅ [ProductPage] Loading compiled product strategy page for ${product.id}`,
@@ -674,7 +717,7 @@ export default function ProductPage() {
           return [
             {
               id: 'compiled-product-strategy',
-              title: 'Compiled Product Strategy',
+              title: `Compiled Product Strategy${stale ? ' (Stale)' : ''}`,
               content: (
                 <CompiledProductStrategyView
                   compiledStrategy={compiledStrategy}
