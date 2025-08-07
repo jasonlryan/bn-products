@@ -15,6 +15,7 @@
     }
   ],
   "env": {
-    "VITE_REDIS_ENABLED": "true"
+    "VITE_REDIS_ENABLED": "true",
+    "VITE_OPENAI_API_KEY": "@openai_api_key"
   }
 }
