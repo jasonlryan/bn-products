@@ -8,7 +8,7 @@
 import type { Product } from '../types/product';
 import { MARKETING_COMPILATION_PROMPT } from '../prompts/marketingPrompt';
 import { aiService } from './aiService';
-import { getStorageService } from './storage';
+import { getStorageService } from './storage/storageService';
 
 export interface MarketingInputs {
   keyMessages: string;

@@ -8,7 +8,7 @@ This application uses a dual-storage architecture that seamlessly migrates from 
 
 ### Storage System
 
-- **DualStorageService**: Automatically tries Redis first, falls back to localStorage
+- **DualStorageService**: **Redis is the source of truth** - always tries Redis first, falls back to localStorage only when Redis is unavailable
 - **RedisStorageService**: Production storage using Vercel KV
 - **LocalStorageService**: Development/fallback storage
 - **Key Namespace**: All Redis keys use `bn:` prefix for organization
@@ -23,16 +23,30 @@ The system includes a sophisticated compilation service that processes product d
 
 ## Environment Setup
 
-Create a `.env` file with the following variables:
+### Quick Start (localStorage only)
 
-```env
-# Redis/Vercel KV Configuration
-KV_REST_API_URL=your_vercel_kv_url
-KV_REST_API_TOKEN=your_vercel_kv_token
+For immediate development without Redis setup:
 
-# Optional: Enable Redis in development
-VITE_REDIS_ENABLED=true
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
 ```
+
+The application will automatically use localStorage for all data storage.
+
+### Production Setup (Redis)
+
+For production or when you need persistent data, see the [Redis Setup Guide](docs/redis-setup.md) for detailed configuration instructions.
+
+**Key Points:**
+
+- Redis is the **source of truth** for all data
+- localStorage is used as fallback when Redis is unavailable
+- In production (Vercel), Redis is automatically configured
+- For local development with Redis, you need to set up environment variables
 
 ## Installation & Development
 
@@ -40,7 +54,7 @@ VITE_REDIS_ENABLED=true
 # Install dependencies
 npm install
 
-# Start development server
+# Start development server (localStorage only)
 npm run dev
 
 # Build for production
@@ -53,25 +67,33 @@ npm run preview
 ## Key Features
 
 ### 1. Product Management
+
 - Create, read, update products
 - Support for multiple product types
 - Rich content management with descriptions and metadata
+- **Redis-first data storage**: All product data is stored in Redis as the source of truth
 
 ### 2. Redis Storage Integration
-- Seamless migration from localStorage to Redis
-- Automatic fallback mechanisms
+
+- **Redis-first architecture**: All data is written to Redis first when available
+- Automatic fallback to localStorage when Redis is unavailable
 - Production-ready scalability with Vercel KV
+- Seamless data synchronization between Redis and localStorage
+- **Config-to-Redis sync**: Admin panel includes tools to sync product configuration data to Redis
 
 ### 3. Compilation System
+
 - **CompilationService**: Handles all compilation workflows
 - **CompilationPanel**: Admin interface for managing compilations
 - **React Hooks**: `useCompilation` for state management
 - **SWR Integration**: Efficient data fetching and caching
 
 ### 4. Testing & Development Tools
+
 - **populate-storage.html**: Populate Redis with sample data
 - **test-redis-compilation.html**: Test compilation workflows
 - Redis population utilities and migration tools
+- **Admin sync tools**: Sync configuration data to Redis via admin panel
 
 ## Project Structure
 
@@ -99,26 +121,26 @@ src/
 ## Storage Service Usage
 
 ```typescript
-import { storageService } from './services/storage/storageService'
+import { storageService } from './services/storage/storageService';
 
 // The service automatically handles Redis/localStorage switching
-await storageService.set('bn:products:123', productData)
-const product = await storageService.get('bn:products:123')
+await storageService.set('bn:products:123', productData);
+const product = await storageService.get('bn:products:123');
 ```
 
 ## Compilation Workflow
 
 ```typescript
-import { useCompilation } from './hooks/useCompilation'
+import { useCompilation } from './hooks/useCompilation';
 
 function AdminPanel() {
-  const { compile, compileAll, isCompiling } = useCompilation()
-  
+  const { compile, compileAll, isCompiling } = useCompilation();
+
   // Compile individual content type
-  await compile('product-123', 'marketing')
-  
+  await compile('product-123', 'marketing');
+
   // Compile all content types
-  await compileAll('product-123')
+  await compileAll('product-123');
 }
 ```
 
@@ -128,17 +150,19 @@ The application is configured for deployment on Vercel with:
 
 - **vercel.json**: Deployment configuration
 - **API Routes**: Serverless functions for Redis operations
-- **Environment Variables**: Automatic KV_* variable injection
+- **Environment Variables**: Automatic KV\_\* variable injection
 - **Build Optimization**: Vite-based bundling
 
 ## Development vs Production
 
 ### Development
+
 - Uses localStorage by default
 - Can enable Redis with `VITE_REDIS_ENABLED=true`
 - Includes test pages and debugging tools
 
 ### Production (Vercel)
+
 - Automatically uses Vercel KV (Redis)
 - Serverless API routes for backend operations
 - Optimized builds with caching

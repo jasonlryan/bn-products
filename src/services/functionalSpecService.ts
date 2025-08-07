@@ -1,5 +1,5 @@
 import { getStorageService } from './storage/storageService';
-import { getProductService } from './storage/productService';
+import { productService } from './storage/productService';
 import type { RichContentFile } from './storage/types';
 
 export interface FunctionalSpecData {
@@ -12,7 +12,7 @@ export interface FunctionalSpecData {
 
 class FunctionalSpecService {
   private storage = getStorageService();
-  private productService = getProductService();
+  private productService = productService;
 
   /**
    * Get Functional Spec from Redis, fallback to config files

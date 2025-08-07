@@ -8,8 +8,10 @@ import {
   Target,
   Award,
   CheckCircle,
+  Download,
 } from 'lucide-react';
 import MarkdownRenderer from '../MarkdownRenderer';
+import { downloadPDF, markdownToText, type PDFContent } from '../../utils/pdfGenerator';
 import type { CompiledMarketingPage } from '../../services/marketingCompiler';
 
 interface CompiledMarketingViewProps {
@@ -68,6 +70,60 @@ const CompiledMarketingView: React.FC<CompiledMarketingViewProps> = ({
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  };
+
+  const downloadAsPDF = async () => {
+    try {
+      const pdfContent: PDFContent = {
+        title: 'Sales & Marketing Enablement Guide',
+        sections: [
+          {
+            title: 'Executive Summary',
+            content: markdownToText(
+              content.executiveSummary.productOverview +
+              '\n\n' +
+              content.executiveSummary.targetMarket +
+              '\n\n' +
+              (content.executiveSummary.uniqueValueProp || (content.executiveSummary as any).valueProposition) +
+              '\n\n' +
+              ((content.executiveSummary as any).keyBenefits?.join?.('\n') || '')
+            ),
+          },
+          {
+            title: 'Messaging Framework',
+            content: markdownToText(
+              ((content.messagingFramework as any).coreMessage || content.messagingFramework.primaryValueProps.map(p => p.title).join(', ')) +
+              '\n\n' +
+              ((content.messagingFramework as any).keyMessages?.join?.('\n') || content.messagingFramework.primaryValueProps.map(p => p.description).join('\n')) +
+              '\n\n' +
+              (content.messagingFramework.elevatorPitches?.thirtySecond || (content.messagingFramework as any).elevatorPitch) +
+              '\n\n' +
+              (content.messagingFramework.keyDifferentiators?.join?.('\n') || (content.messagingFramework as any).differentiators?.join?.('\n') || '')
+            ),
+          },
+          {
+            title: 'Sales Process',
+            content: markdownToText(
+              ((content as any).salesProcess?.qualificationQuestions?.join?.('\n') || (content as any).salesEnablement?.discoveryQuestions?.join?.('\n') || '') +
+              '\n\n' +
+              ((content as any).salesProcess?.demonstrationSteps?.join?.('\n') || '') +
+              '\n\n' +
+              ((content as any).salesProcess?.closingTechniques?.join?.('\n') || (content as any).salesEnablement?.closingTechniques || '')
+            ),
+          },
+        ],
+        metadata: {
+          productId: compiledPage.productId,
+          compiledAt: compiledPage.compiledAt.toISOString(),
+          contentType: 'marketing',
+        },
+      };
+
+      await downloadPDF(pdfContent, `compiled_marketing_${compiledPage.productId}.pdf`);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Failed to generate PDF. Please try again.');
+    }
   };
 
   const downloadSection = (section: string) => {
@@ -802,6 +858,12 @@ const CompiledMarketingView: React.FC<CompiledMarketingViewProps> = ({
               className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-green-100 text-green-800 rounded-lg hover:bg-green-200 transition-colors"
             >
               📊 Download as JSON
+            </button>
+            <button
+              onClick={() => downloadAsPDF()}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-purple-100 text-purple-800 rounded-lg hover:bg-purple-200 transition-colors"
+            >
+              📄 Download as PDF
             </button>
           </div>
 

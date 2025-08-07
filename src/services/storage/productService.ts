@@ -1,221 +1,171 @@
-import { getStorageService } from './storageService'
-import type { ProductDefinition, RichContentFile } from './types'
+import { getStorageService } from './storageService';
+import type { Product, RichContentFile } from '../../types/product';
+import { getAllProducts, getAllServices, getProductById } from '../../config';
 
-export class ProductService {
-  private storage = getStorageService()
+class ProductService {
+  private storage = getStorageService();
+  private readonly PRODUCT_PREFIX = 'bn:product';
+  private readonly PRODUCTS_LIST_KEY = 'bn:products:list';
+  private readonly SERVICES_LIST_KEY = 'bn:services:list';
 
-  async createProduct(product: Omit<ProductDefinition, 'id' | 'metadata'>): Promise<string> {
-    // Generate product ID from name
-    const productId = this.generateProductId(product.name)
+  /**
+   * Sync all product configuration data to Redis
+   */
+  async syncConfigToRedis(): Promise<void> {
+    console.log('🔄 [ProductService] Syncing config data to Redis...');
     
-    // Create full product definition
-    const fullProduct: ProductDefinition = {
-      ...product,
-      id: productId,
-      metadata: {
-        createdAt: new Date().toISOString(),
-        lastModified: new Date().toISOString(),
-        version: '1.0.0'
+    try {
+      // Get all products and services from config
+      const allProducts = getAllProducts();
+      const allServices = getAllServices();
+      
+      // Store each product/service in Redis
+      const productPromises = allProducts.map(product => 
+        this.storage.set(`${this.PRODUCT_PREFIX}:${product.id}`, product)
+      );
+      
+      const servicePromises = allServices.map(service => 
+        this.storage.set(`${this.PRODUCT_PREFIX}:${service.id}`, service)
+      );
+      
+      // Store product and service lists
+      const productIds = allProducts.map(p => p.id);
+      const serviceIds = allServices.map(s => s.id);
+      
+      await Promise.all([
+        ...productPromises,
+        ...servicePromises,
+        this.storage.set(this.PRODUCTS_LIST_KEY, productIds),
+        this.storage.set(this.SERVICES_LIST_KEY, serviceIds)
+      ]);
+      
+      console.log(`✅ [ProductService] Synced ${allProducts.length} products and ${allServices.length} services to Redis`);
+    } catch (error) {
+      console.error('❌ [ProductService] Error syncing config to Redis:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get all products from Redis (with fallback to config)
+   */
+  async getAllProducts(): Promise<Product[]> {
+    try {
+      // Try to get from Redis first
+      const productIds = await this.storage.get<string[]>(this.PRODUCTS_LIST_KEY);
+      
+      if (productIds && productIds.length > 0) {
+        console.log(`🔍 [ProductService] Found ${productIds.length} products in Redis`);
+        const products = await Promise.all(
+          productIds.map(id => this.storage.get<Product>(`${this.PRODUCT_PREFIX}:${id}`))
+        );
+        const validProducts = products.filter(p => p !== null) as Product[];
+        console.log(`✅ [ProductService] Retrieved ${validProducts.length} products from Redis`);
+        return validProducts;
+      } else {
+        console.log('⚠️ [ProductService] No products found in Redis, syncing from config...');
+        await this.syncConfigToRedis();
+        return this.getAllProducts();
       }
+    } catch (error) {
+      console.error('❌ [ProductService] Error getting products from Redis, falling back to config:', error);
+      return getAllProducts();
     }
-
-    // Save product definition
-    await this.storage.set(`bn:product:definition:${productId}`, fullProduct)
-    
-    // Update product list
-    const productList = await this.listProductIds()
-    if (!productList.includes(productId)) {
-      productList.push(productId)
-      await this.storage.set('bn:product:list', productList)
-    }
-
-    return productId
   }
 
-  async getProduct(id: string): Promise<ProductDefinition | null> {
-    return this.storage.get<ProductDefinition>(`bn:product:definition:${id}`)
-  }
-
-  async updateProduct(id: string, updates: Partial<ProductDefinition>): Promise<void> {
-    const existing = await this.getProduct(id)
-    if (!existing) {
-      throw new Error(`Product ${id} not found`)
-    }
-
-    const updated: ProductDefinition = {
-      ...existing,
-      ...updates,
-      id: existing.id, // Ensure ID cannot be changed
-      metadata: {
-        ...existing.metadata,
-        ...updates.metadata,
-        lastModified: new Date().toISOString()
+  /**
+   * Get all services from Redis (with fallback to config)
+   */
+  async getAllServices(): Promise<Product[]> {
+    try {
+      // Try to get from Redis first
+      const serviceIds = await this.storage.get<string[]>(this.SERVICES_LIST_KEY);
+      
+      if (serviceIds && serviceIds.length > 0) {
+        console.log(`🔍 [ProductService] Found ${serviceIds.length} services in Redis`);
+        const services = await Promise.all(
+          serviceIds.map(id => this.storage.get<Product>(`${this.PRODUCT_PREFIX}:${id}`))
+        );
+        const validServices = services.filter(s => s !== null) as Product[];
+        console.log(`✅ [ProductService] Retrieved ${validServices.length} services from Redis`);
+        return validServices;
+      } else {
+        console.log('⚠️ [ProductService] No services found in Redis, syncing from config...');
+        await this.syncConfigToRedis();
+        return this.getAllServices();
       }
-    }
-
-    await this.storage.set(`bn:product:definition:${id}`, updated)
-  }
-
-  async deleteProduct(id: string): Promise<void> {
-    // Delete product definition
-    await this.storage.delete(`bn:product:definition:${id}`)
-    
-    // Delete all content
-    const contentTypes = [
-      'manifesto', 'functional-spec', 'audience-icps', 'user-stories',
-      'competitor-analysis', 'market-sizing', 'prd-skeleton', 'ui-prompt',
-      'screen-generation', 'landing-page-copy', 'key-messages',
-      'investor-deck', 'demo-script', 'slide-headlines', 'qa-prep'
-    ]
-    
-    for (const type of contentTypes) {
-      await this.storage.delete(`bn:content:${id}:${type}`)
-    }
-    
-    // Delete compiled content
-    await this.storage.delete(`bn:compiled:marketing:${id}`)
-    await this.storage.delete(`bn:compiled:market-intel:${id}`)
-    await this.storage.delete(`bn:compiled:product-strategy:${id}`)
-    
-    // Delete counts
-    await this.storage.delete(`bn:count:marketing:${id}`)
-    await this.storage.delete(`bn:count:market-intel:${id}`)
-    await this.storage.delete(`bn:count:product-strategy:${id}`)
-    
-    // Update product list
-    const productList = await this.listProductIds()
-    const index = productList.indexOf(id)
-    if (index > -1) {
-      productList.splice(index, 1)
-      await this.storage.set('bn:product:list', productList)
+    } catch (error) {
+      console.error('❌ [ProductService] Error getting services from Redis, falling back to config:', error);
+      return getAllServices();
     }
   }
 
-  async listProducts(): Promise<ProductDefinition[]> {
-    const ids = await this.listProductIds()
-    const products = await Promise.all(
-      ids.map(id => this.getProduct(id))
-    )
-    return products.filter((p): p is ProductDefinition => p !== null)
-  }
-
-  async listProductIds(): Promise<string[]> {
-    const list = await this.storage.get<string[]>('bn:product:list')
-    return list || []
-  }
-
-  // Content management
-  async getContent(productId: string, type: string): Promise<RichContentFile | null> {
-    return this.storage.get<RichContentFile>(`bn:content:${productId}:${type}`)
-  }
-
-  async setContent(productId: string, type: string, content: RichContentFile): Promise<void> {
-    // Ensure product exists
-    const product = await this.getProduct(productId)
-    if (!product) {
-      throw new Error(`Product ${productId} not found`)
-    }
-
-    // Save content with updated metadata
-    const updatedContent: RichContentFile = {
-      ...content,
-      metadata: {
-        ...content.metadata,
-        productId,
-        contentType: type,
-        lastGenerated: content.metadata.lastGenerated || new Date().toISOString()
-      },
-      lastModified: new Date().toISOString(),
-      version: content.version || '1.0.0'
-    }
-
-    await this.storage.set(`bn:content:${productId}:${type}`, updatedContent)
-  }
-
-  async getAllContent(productId: string): Promise<Record<string, RichContentFile>> {
-    const contentTypes = [
-      'manifesto', 'functional-spec', 'audience-icps', 'user-stories',
-      'competitor-analysis', 'market-sizing', 'prd-skeleton', 'ui-prompt',
-      'screen-generation', 'landing-page-copy', 'key-messages',
-      'investor-deck', 'demo-script', 'slide-headlines', 'qa-prep'
-    ]
-
-    const content: Record<string, RichContentFile> = {}
-    
-    for (const type of contentTypes) {
-      const file = await this.getContent(productId, type)
-      if (file) {
-        content[type] = file
-      }
-    }
-
-    return content
-  }
-
-  async cloneProduct(sourceId: string, newName: string): Promise<string> {
-    const source = await this.getProduct(sourceId)
-    if (!source) {
-      throw new Error(`Source product ${sourceId} not found`)
-    }
-
-    // Create new product with updated name
-    const newProductId = await this.createProduct({
-      ...source,
-      name: newName
-    })
-
-    // Clone all content
-    const content = await this.getAllContent(sourceId)
-    for (const [type, file] of Object.entries(content)) {
-      await this.setContent(newProductId, type, {
-        ...file,
-        metadata: {
-          ...file.metadata,
-          productId: newProductId
+  /**
+   * Get a specific product by ID from Redis (with fallback to config)
+   */
+  async getProductById(id: string): Promise<Product | undefined> {
+    try {
+      const product = await this.storage.get<Product>(`${this.PRODUCT_PREFIX}:${id}`);
+      if (product) {
+        console.log(`✅ [ProductService] Retrieved product ${id} from Redis`);
+        return product;
+      } else {
+        console.log(`⚠️ [ProductService] Product ${id} not found in Redis, getting from config...`);
+        const configProduct = getProductById(id);
+        if (configProduct) {
+          // Sync this product to Redis for future access
+          await this.storage.set(`${this.PRODUCT_PREFIX}:${id}`, configProduct);
+          console.log(`✅ [ProductService] Synced product ${id} to Redis`);
         }
-      })
+        return configProduct;
+      }
+    } catch (error) {
+      console.error(`❌ [ProductService] Error getting product ${id} from Redis, falling back to config:`, error);
+      return getProductById(id);
     }
-
-    // Clone compiled content if exists
-    const compiledMarketing = await this.storage.get(`bn:compiled:marketing:${sourceId}`)
-    if (compiledMarketing) {
-      await this.storage.set(`bn:compiled:marketing:${newProductId}`, compiledMarketing)
-    }
-
-    const compiledMarketIntel = await this.storage.get(`bn:compiled:market-intel:${sourceId}`)
-    if (compiledMarketIntel) {
-      await this.storage.set(`bn:compiled:market-intel:${newProductId}`, compiledMarketIntel)
-    }
-
-    const compiledProductStrategy = await this.storage.get(`bn:compiled:product-strategy:${sourceId}`)
-    if (compiledProductStrategy) {
-      await this.storage.set(`bn:compiled:product-strategy:${newProductId}`, compiledProductStrategy)
-    }
-
-    return newProductId
   }
 
-  private generateProductId(name: string): string {
-    // Generate ID from name (e.g., "AI Power Hour" -> "ai_power_hour")
-    const baseId = name
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '_')
-      .replace(/^_+|_+$/g, '')
-    
-    // Add a numeric prefix for sorting
-    const timestamp = Date.now()
-    const prefix = String(timestamp).slice(-2).padStart(2, '0')
-    
-    return `${prefix}_${baseId}`
+  /**
+   * Update a product in Redis
+   */
+  async updateProduct(product: Product): Promise<void> {
+    try {
+      await this.storage.set(`${this.PRODUCT_PREFIX}:${product.id}`, product);
+      console.log(`✅ [ProductService] Updated product ${product.id} in Redis`);
+    } catch (error) {
+      console.error(`❌ [ProductService] Error updating product ${product.id} in Redis:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete a product from Redis
+   */
+  async deleteProduct(id: string): Promise<void> {
+    try {
+      await this.storage.delete(`${this.PRODUCT_PREFIX}:${id}`);
+      console.log(`✅ [ProductService] Deleted product ${id} from Redis`);
+    } catch (error) {
+      console.error(`❌ [ProductService] Error deleting product ${id} from Redis:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get content for a specific product and content type
+   */
+  async getContent(productId: string, contentType: string): Promise<RichContentFile | null> {
+    const key = `bn:content:${productId}:${contentType}`;
+    return this.storage.get<RichContentFile>(key);
+  }
+
+  /**
+   * Set content for a specific product and content type
+   */
+  async setContent(productId: string, contentType: string, content: RichContentFile): Promise<void> {
+    const key = `bn:content:${productId}:${contentType}`;
+    await this.storage.set(key, content);
   }
 }
 
-// Export singleton instance
-let productService: ProductService
-
-export function getProductService(): ProductService {
-  if (!productService) {
-    productService = new ProductService()
-  }
-  return productService
-}
+export const productService = new ProductService();

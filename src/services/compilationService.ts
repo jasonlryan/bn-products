@@ -3,14 +3,14 @@
  * Handles compilation workflows and ensures data is saved to Redis
  */
 
-import { getStorageService, getProductService } from './storage'
+import { getStorageService } from './storage/storageService'
+import { productService } from './storage/productService'
 import { marketingCompiler } from './marketingCompiler'
 import { marketIntelligenceCompiler } from './marketIntelligenceCompiler'
 import { productStrategyCompiler } from './productStrategyCompiler'
 import type { Product } from '../types/product'
 
 const storage = getStorageService()
-const productService = getProductService()
 
 export type CompilationType = 'marketing' | 'market-intel' | 'product-strategy'
 

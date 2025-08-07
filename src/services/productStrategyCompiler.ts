@@ -8,7 +8,7 @@
 import type { Product } from '../types/product';
 import { PRODUCT_STRATEGY_COMPILATION_PROMPT } from '../prompts/productStrategyPrompt';
 import { aiService } from './aiService';
-import { getStorageService } from './storage';
+import { getStorageService } from './storage/storageService';
 
 export interface ProductStrategyInputs {
   productManifesto: string;

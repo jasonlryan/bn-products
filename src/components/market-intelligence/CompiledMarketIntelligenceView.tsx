@@ -2,15 +2,23 @@ import React, { useState } from 'react';
 import {
   ChevronDown,
   ChevronUp,
-  TrendingUp,
-  Target,
+  FileText,
   Users,
+  MessageSquare,
+  Target,
+  Award,
+  CheckCircle,
+  Download,
+  TrendingUp,
+  MapPin,
   BarChart3,
+  Globe,
   Eye,
   Lightbulb,
   Database,
 } from 'lucide-react';
 import MarkdownRenderer from '../MarkdownRenderer';
+import { downloadPDF, markdownToText, type PDFContent } from '../../utils/pdfGenerator';
 import type { CompiledMarketIntelligencePage } from '../../services/marketIntelligenceCompiler';
 
 interface CompiledMarketIntelligenceViewProps {
@@ -69,6 +77,58 @@ const CompiledMarketIntelligenceView: React.FC<
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  };
+
+  const downloadAsPDF = async () => {
+    try {
+      const pdfContent: PDFContent = {
+        title: 'Strategic Market Intelligence Dashboard',
+        sections: [
+          {
+            title: 'Market Overview',
+            content: markdownToText(
+              content.marketOverview.marketDefinition +
+              '\n\n' +
+              content.marketOverview.marketSize +
+              '\n\n' +
+              (typeof content.marketOverview.keyDrivers === 'string' ? content.marketOverview.keyDrivers : (content.marketOverview.keyDrivers as string[])?.join('\n') || '') +
+              '\n\n' +
+              content.marketOverview.successFactors
+            ),
+          },
+          {
+            title: 'Competitive Landscape',
+            content: markdownToText(
+              content.competitiveLandscape.marketMap +
+              '\n\n' +
+              content.competitiveLandscape.threatAssessment
+            ),
+          },
+          {
+            title: 'Customer Intelligence',
+            content: markdownToText(
+              ((content.customerIntelligence as any).customerSegments?.join?.('\n') || content.customerIntelligence.customerJourney) +
+              '\n\n' +
+              ((content.customerIntelligence as any).buyingBehavior || content.customerIntelligence.budgetProcurement) +
+              '\n\n' +
+              ((content.customerIntelligence as any).customerNeeds?.join?.('\n') || '') +
+              '\n\n' +
+              ((content.customerIntelligence as any).customerPainPoints?.join?.('\n') || '')
+            ),
+          },
+        ],
+        metadata: {
+          productId: compiledPage.productId,
+          compiledAt: compiledPage.compiledAt.toISOString(),
+          contentType: 'market-intelligence',
+        },
+      };
+
+      await downloadPDF(pdfContent, `compiled_market_intelligence_${compiledPage.productId}.pdf`);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Failed to generate PDF. Please try again.');
+    }
   };
 
   const downloadSection = (section: string) => {
@@ -850,6 +910,12 @@ const CompiledMarketIntelligenceView: React.FC<
               className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-green-100 text-green-800 rounded-lg hover:bg-green-200 transition-colors"
             >
               📊 Download as JSON
+            </button>
+            <button
+              onClick={() => downloadAsPDF()}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-purple-100 text-purple-800 rounded-lg hover:bg-purple-200 transition-colors"
+            >
+              📄 Download as PDF
             </button>
           </div>
 

@@ -1,20 +1,50 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Settings, MessageSquare } from 'lucide-react';
-import { getAllProducts, getAllServices } from '../config';
+import { productService } from '../services/storage/productService';
 import { Card, Button } from '../components/ui';
 import { cleanProductName, cleanDescription } from '../utils/textCleaner';
 import FeedbackWidget from '../components/FeedbackWidget';
+import type { Product } from '../types/product';
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<'products' | 'services'>(
     'products'
   );
+  const [products, setProducts] = useState<Product[]>([]);
+  const [services, setServices] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Get data from new configuration
-  const products = getAllProducts();
-  const services = getAllServices();
+  // Load data from Redis on component mount
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        console.log(
+          '🔄 [Dashboard] Loading products and services from Redis...'
+        );
+
+        const [productsData, servicesData] = await Promise.all([
+          productService.getAllProducts(),
+          productService.getAllServices(),
+        ]);
+
+        setProducts(productsData);
+        setServices(servicesData);
+
+        console.log(
+          `✅ [Dashboard] Loaded ${productsData.length} products and ${servicesData.length} services from Redis`
+        );
+      } catch (error) {
+        console.error('❌ [Dashboard] Error loading data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
 
   const handleProductClick = (productId: string) => {
     navigate(`/product/${productId}`);
@@ -23,6 +53,17 @@ export default function Dashboard() {
   const handleServiceClick = (serviceId: string) => {
     navigate(`/service/${serviceId}`);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading products and services...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -151,21 +192,14 @@ export default function Dashboard() {
                   Key Features:
                 </h4>
                 <div className="flex flex-wrap gap-1">
-                  {item.features
-                    .slice(0, 3)
-                    .map((feature: string, index: number) => (
-                      <span
-                        key={index}
-                        className="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full border border-blue-200"
-                      >
-                        {feature}
-                      </span>
-                    ))}
-                  {item.features.length > 3 && (
-                    <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full border border-gray-200">
-                      +{item.features.length - 3} more
+                  {item.features.map((feature: string, index: number) => (
+                    <span
+                      key={index}
+                      className="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full border border-blue-200"
+                    >
+                      {feature}
                     </span>
-                  )}
+                  ))}
                 </div>
               </div>
 
@@ -175,29 +209,17 @@ export default function Dashboard() {
                   Key Benefits:
                 </h4>
                 <ul className="space-y-1">
-                  {item.benefits
-                    .slice(0, 2)
-                    .map((benefit: string, index: number) => (
-                      <li
-                        key={index}
-                        className="flex items-start space-x-2 text-xs text-gray-600"
-                      >
-                        <span className="text-green-500 font-bold mt-0.5 flex-shrink-0">
-                          ✓
-                        </span>
-                        <span className="leading-relaxed">{benefit}</span>
-                      </li>
-                    ))}
-                  {item.benefits.length > 2 && (
-                    <li className="flex items-start space-x-2 text-xs text-gray-500 italic">
-                      <span className="text-gray-400 font-bold mt-0.5 flex-shrink-0">
-                        +
+                  {item.benefits.map((benefit: string, index: number) => (
+                    <li
+                      key={index}
+                      className="flex items-start space-x-2 text-xs text-gray-600"
+                    >
+                      <span className="text-green-500 font-bold mt-0.5 flex-shrink-0">
+                        ✓
                       </span>
-                      <span className="leading-relaxed">
-                        +{item.benefits.length - 2} more benefits
-                      </span>
+                      <span className="leading-relaxed">{benefit}</span>
                     </li>
-                  )}
+                  ))}
                 </ul>
               </div>
 

@@ -14,11 +14,13 @@ import {
   RotateCcw,
   TrendingUp,
   Target,
+  Database,
 } from 'lucide-react';
 import { getAllProductsAndServices, getProductById } from '../config';
 import { marketingCompiler } from '../services/marketingCompiler';
 import { marketIntelligenceCompiler } from '../services/marketIntelligenceCompiler';
 import { productStrategyCompiler } from '../services/productStrategyCompiler';
+import { productService } from '../services/storage/productService';
 // Remove unused import
 import { Button, Card } from '../components/ui';
 import { QueueManagementPanel } from '../components/admin/QueueManagementPanel';
@@ -640,6 +642,23 @@ const AdminPage: React.FC = () => {
     return 'Not compiled';
   };
 
+  const syncProductData = async () => {
+    if (
+      confirm(
+        'Are you sure you want to sync all product data from config to Redis?'
+      )
+    ) {
+      try {
+        await productService.syncConfigToRedis();
+        alert('Product data synced to Redis successfully!');
+        await loadData(); // Reload data to reflect changes
+      } catch (error) {
+        console.error('Error syncing product data:', error);
+        alert('Failed to sync product data.');
+      }
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -739,6 +758,28 @@ const AdminPage: React.FC = () => {
                       </span>
                     </>
                   )}
+                </div>
+
+                {/* Redis Sync Section */}
+                <div className="border-t border-gray-200 pt-4">
+                  <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
+                    <div>
+                      <h3 className="font-medium text-gray-900">
+                        Redis Data Sync
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Sync product configuration data to Redis (source of
+                        truth)
+                      </p>
+                    </div>
+                    <button
+                      onClick={syncProductData}
+                      className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors"
+                    >
+                      <Database className="w-4 h-4 mr-2" />
+                      Sync to Redis
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
@@ -1507,7 +1548,8 @@ const AdminPage: React.FC = () => {
                   Queue Management
                 </h2>
                 <p className="text-gray-600 mt-1">
-                  Advanced compilation queue with priority management and monitoring
+                  Advanced compilation queue with priority management and
+                  monitoring
                 </p>
               </div>
             </div>

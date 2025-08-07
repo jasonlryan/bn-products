@@ -2,16 +2,20 @@ import React, { useState } from 'react';
 import {
   ChevronDown,
   ChevronUp,
-  Target,
+  FileText,
   Users,
-  Briefcase,
-  TrendingUp,
-  MapPin,
-  Settings,
+  MessageSquare,
+  Target,
   Award,
   CheckCircle,
+  Download,
+  MapPin,
+  Briefcase,
+  TrendingUp,
+  Settings,
 } from 'lucide-react';
 import MarkdownRenderer from '../MarkdownRenderer';
+import { downloadPDF, markdownToText, type PDFContent } from '../../utils/pdfGenerator';
 import type { CompiledProductStrategyPage } from '../../services/productStrategyCompiler';
 
 interface CompiledProductStrategyViewProps {
@@ -71,10 +75,62 @@ const CompiledProductStrategyView: React.FC<
     URL.revokeObjectURL(url);
   };
 
-  const downloadAsPDF = () => {
-    // This is a placeholder. In a real application, you'd use a library like pdfmake or jsPDF
-    // to generate a PDF from the markdown content.
-    alert('PDF download functionality is not yet implemented.');
+  const downloadAsPDF = async () => {
+    try {
+      const pdfContent: PDFContent = {
+        title: 'Strategic Product Roadmap & Business Strategy',
+        sections: [
+          {
+            title: 'Executive Strategy Summary',
+            content: markdownToText(
+              content.executiveStrategySummary.productVision +
+              '\n\n' +
+              content.executiveStrategySummary.productMission +
+              '\n\n' +
+              content.executiveStrategySummary.marketPositioning +
+              '\n\n' +
+              content.executiveStrategySummary.strategicObjectives?.join('\n') +
+              '\n\n' +
+              content.executiveStrategySummary.successMetrics?.join('\n')
+            ),
+          },
+          {
+            title: 'Product Definition & Positioning',
+            content: markdownToText(
+              content.productDefinitionPositioning.problemSolutionFit +
+              '\n\n' +
+              content.productDefinitionPositioning.uniqueValueProposition +
+              '\n\n' +
+              content.productDefinitionPositioning.magicMomentArticulation +
+              '\n\n' +
+              content.productDefinitionPositioning.competitiveDifferentiation?.join('\n')
+            ),
+          },
+          {
+            title: 'Strategic Implementation Guide',
+            content: markdownToText(
+              content.strategicImplementationGuide.resourceRequirements?.join('\n') +
+              '\n\n' +
+              content.strategicImplementationGuide.teamStructure +
+              '\n\n' +
+              content.strategicImplementationGuide.keyDecisionPoints?.join('\n') +
+              '\n\n' +
+              content.strategicImplementationGuide.continuousImprovement
+            ),
+          },
+        ],
+        metadata: {
+          productId: compiledStrategy.productId,
+          compiledAt: compiledStrategy.compiledAt.toISOString(),
+          contentType: 'product-strategy',
+        },
+      };
+
+      await downloadPDF(pdfContent, `compiled_strategy_${compiledStrategy.productId}.pdf`);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Failed to generate PDF. Please try again.');
+    }
   };
 
   const downloadSection = (section: string) => {

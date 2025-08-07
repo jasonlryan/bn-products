@@ -8,7 +8,7 @@
 import type { Product } from '../types/product';
 import { MARKET_INTELLIGENCE_COMPILATION_PROMPT } from '../prompts/marketIntelligencePrompt';
 import { aiService } from './aiService';
-import { getStorageService } from './storage';
+import { getStorageService } from './storage/storageService';
 
 export interface MarketIntelligenceInputs {
   marketOpportunity: string;
