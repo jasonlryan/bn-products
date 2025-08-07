@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Settings, MessageSquare } from 'lucide-react';
 import { productService } from '../services/storage/productService';
+import { getAllProducts, getAllServices } from '../config';
 import { Card, Button } from '../components/ui';
 import { cleanProductName, cleanDescription } from '../utils/textCleaner';
 import FeedbackWidget from '../components/FeedbackWidget';
@@ -32,12 +33,18 @@ export default function Dashboard() {
 
         setProducts(productsData);
         setServices(servicesData);
-
+        
         console.log(
-          `✅ [Dashboard] Loaded ${productsData.length} products and ${servicesData.length} services from Redis`
+          `✅ [Dashboard] Loaded ${productsData.length} products and ${servicesData.length} services`
         );
       } catch (error) {
         console.error('❌ [Dashboard] Error loading data:', error);
+        // Fallback to static config if everything fails
+        console.log('🔄 [Dashboard] Falling back to static config...');
+        const fallbackProducts = getAllProducts();
+        const fallbackServices = getAllServices();
+        setProducts(fallbackProducts);
+        setServices(fallbackServices);
       } finally {
         setLoading(false);
       }

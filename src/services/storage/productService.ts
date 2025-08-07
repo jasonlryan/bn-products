@@ -65,7 +65,10 @@ class ProductService {
       } else {
         console.log('⚠️ [ProductService] No products found in Redis, syncing from config...');
         await this.syncConfigToRedis();
-        return this.getAllProducts();
+        // After sync, get the data directly from config to avoid recursion
+        const configProducts = getAllProducts();
+        console.log(`✅ [ProductService] Synced and returning ${configProducts.length} products from config`);
+        return configProducts;
       }
     } catch (error) {
       console.error('❌ [ProductService] Error getting products from Redis, falling back to config:', error);
@@ -92,7 +95,10 @@ class ProductService {
       } else {
         console.log('⚠️ [ProductService] No services found in Redis, syncing from config...');
         await this.syncConfigToRedis();
-        return this.getAllServices();
+        // After sync, get the data directly from config to avoid recursion
+        const configServices = getAllServices();
+        console.log(`✅ [ProductService] Synced and returning ${configServices.length} services from config`);
+        return configServices;
       }
     } catch (error) {
       console.error('❌ [ProductService] Error getting services from Redis, falling back to config:', error);

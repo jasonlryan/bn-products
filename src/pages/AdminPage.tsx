@@ -16,11 +16,17 @@ import {
   Target,
   Database,
 } from 'lucide-react';
-import { getAllProductsAndServices, getProductById } from '../config';
+import {
+  getAllProductsAndServices,
+  getProductById,
+  getAllProducts,
+  getAllServices,
+} from '../config';
 import { marketingCompiler } from '../services/marketingCompiler';
 import { marketIntelligenceCompiler } from '../services/marketIntelligenceCompiler';
 import { productStrategyCompiler } from '../services/productStrategyCompiler';
 import { productService } from '../services/storage/productService';
+import { getStorageService } from '../services/storage/storageService';
 // Remove unused import
 import { Button, Card } from '../components/ui';
 import { QueueManagementPanel } from '../components/admin/QueueManagementPanel';
@@ -659,6 +665,135 @@ const AdminPage: React.FC = () => {
     }
   };
 
+  const populateRedisComplete = async () => {
+    if (
+      confirm(
+        'Are you sure you want to populate Redis with ALL data (products, site copy, compilations, feedback)? This will initialize all Redis keys.'
+      )
+    ) {
+      try {
+        const storage = getStorageService();
+
+        // 1. Sync Product Configurations
+        await productService.syncConfigToRedis();
+
+        // 2. Initialize Site Copy Table
+        const siteCopy = {
+          navigation: {
+            dashboard: 'Dashboard',
+            products: 'Products',
+            services: 'Services',
+            admin: 'Admin',
+          },
+          footer: {
+            copyright: '© 2025 Business Name. All rights reserved.',
+            feedback: 'Give Feedback',
+            privacy: 'Privacy Policy',
+            terms: 'Terms of Service',
+          },
+          landing: {
+            hero: {
+              title: 'AI-Powered Product Management',
+              subtitle:
+                'Transform your business with intelligent product strategies',
+              cta: 'Get Started',
+            },
+            features: {
+              title: 'Key Features',
+              subtitle: 'Everything you need to succeed',
+            },
+            benefits: {
+              title: 'Key Benefits',
+              subtitle: 'Why choose our platform',
+            },
+          },
+          common: {
+            loading: 'Loading...',
+            error: 'An error occurred',
+            success: 'Success!',
+            save: 'Save',
+            cancel: 'Cancel',
+            edit: 'Edit',
+            delete: 'Delete',
+            download: 'Download',
+            compile: 'Compile',
+            view: 'View',
+          },
+        };
+        await storage.set('bn:site:copy', siteCopy);
+
+        // 3. Initialize Compilation Counts
+        const allProducts = getAllProducts();
+        const allServices = getAllServices();
+        const allItems = [...allProducts, ...allServices];
+
+        for (const item of allItems) {
+          await storage.set(`bn:count:marketing:${item.id}`, 0);
+          await storage.set(`bn:count:market-intel:${item.id}`, 0);
+          await storage.set(`bn:count:product-strategy:${item.id}`, 0);
+        }
+
+        // 4. Initialize Compilation Queue and History
+        await storage.set('bn:compilation:queue', []);
+        await storage.set('bn:compilation:history', []);
+
+        // 5. Initialize Feedback Data
+        await storage.set('bn:feedback:list', []);
+        const feedbackStats = {
+          total: 0,
+          byPage: {},
+          byProduct: {},
+          byCategory: {},
+          lastUpdated: new Date().toISOString(),
+        };
+        await storage.set('bn:feedback:stats', feedbackStats);
+
+        // 6. Initialize Queue Statistics
+        const queueStats = {
+          totalJobs: 0,
+          activeJobs: 0,
+          completedJobs: 0,
+          failedJobs: 0,
+          averageProcessingTime: 0,
+          lastUpdated: new Date().toISOString(),
+        };
+        await storage.set('bn:compilation:stats', queueStats);
+
+        // 7. Initialize Settings
+        const adminSettings = {
+          editModeEnabled: false,
+          lastCompiled: {},
+          compilationStatus: {},
+          marketingPrompt: 'Default marketing prompt',
+          marketIntelligencePrompt: 'Default market intelligence prompt',
+          productStrategyPrompt: 'Default product strategy prompt',
+        };
+        await storage.set('bn:settings:admin', adminSettings);
+
+        const siteSettings = {
+          theme: 'light',
+          language: 'en',
+          timezone: 'UTC',
+          features: {
+            feedback: true,
+            compilation: true,
+            pdfExport: true,
+            adminPanel: true,
+          },
+        };
+        await storage.set('bn:settings:site', siteSettings);
+
+        alert(
+          `Redis populated successfully! Initialized data for ${allItems.length} products/services with complete tables.`
+        );
+        await loadData(); // Reload data to reflect changes
+      } catch (error) {
+        console.error('Error populating Redis:', error);
+        alert('Failed to populate Redis.');
+      }
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -762,7 +897,7 @@ const AdminPage: React.FC = () => {
 
                 {/* Redis Sync Section */}
                 <div className="border-t border-gray-200 pt-4">
-                  <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
+                  <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg mb-4">
                     <div>
                       <h3 className="font-medium text-gray-900">
                         Redis Data Sync
@@ -778,6 +913,46 @@ const AdminPage: React.FC = () => {
                     >
                       <Database className="w-4 h-4 mr-2" />
                       Sync to Redis
+                    </button>
+                  </div>
+
+                  <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg mb-4">
+                    <div>
+                      <h3 className="font-medium text-gray-900">
+                        Complete Redis Population
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Initialize ALL Redis data (configs, compilation,
+                        feedback)
+                      </p>
+                    </div>
+                    <button
+                      onClick={populateRedisComplete}
+                      className="inline-flex items-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 transition-colors"
+                    >
+                      <Database className="w-4 h-4 mr-2" />
+                      Populate Redis
+                    </button>
+                  </div>
+
+                  <div className="flex items-center justify-between p-4 bg-purple-50 rounded-lg">
+                    <div>
+                      <h3 className="font-medium text-gray-900">
+                        Redis Population Tool
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Open the dedicated Redis population tool with detailed
+                        logging
+                      </p>
+                    </div>
+                    <button
+                      onClick={() =>
+                        window.open('/populate-redis.html', '_blank')
+                      }
+                      className="inline-flex items-center px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-md hover:bg-purple-700 transition-colors"
+                    >
+                      <Database className="w-4 h-4 mr-2" />
+                      Open Tool
                     </button>
                   </div>
                 </div>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Populate Redis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+        }
+        .success {
+            color: #28a745;
+        }
+        .error {
+            color: #dc3545;
+        }
+        .info {
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Redis Population Tool</h1>
+        <p>This tool will populate Redis with all necessary data for the application to work properly.</p>
+        
+        <button id="populateBtn" onclick="populateRedis()">Populate Redis</button>
+        <button id="checkBtn" onclick="checkRedis()">Check Redis Status</button>
+        <button id="clearBtn" onclick="clearLog()">Clear Log</button>
+        
+        <div id="log" class="log"></div>
+    </div>
+
+    <script type="module">
+        let logElement;
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logMessage = `[${timestamp}] ${message}\n`;
+            logElement.innerHTML += `<span class="${type}">${logMessage}</span>`;
+            logElement.scrollTop = logElement.scrollHeight;
+            console.log(message);
+        }
+
+        async function populateRedis() {
+            const btn = document.getElementById('populateBtn');
+            btn.disabled = true;
+            btn.textContent = 'Populating...';
+            
+            log('🚀 Starting Redis population...', 'info');
+            
+            try {
+                // Import the storage service
+                const { getStorageService } = await import('/src/services/storage/storageService.js');
+                const storage = getStorageService();
+                
+                log('📦 Step 1: Syncing product configurations...', 'info');
+                
+                // Read the config file
+                const response = await fetch('/src/config/product-config.json');
+                const configData = await response.json();
+                
+                const productIds = Object.keys(configData.products || {});
+                const serviceIds = Object.keys(configData.services || {});
+                
+                log(`   - Found ${productIds.length} products`, 'info');
+                log(`   - Found ${serviceIds.length} services`, 'info');
+                
+                // Store products in Redis
+                for (const productId of productIds) {
+                    const product = configData.products[productId];
+                    await storage.set(`bn:product:${productId}`, product);
+                    log(`   ✅ Stored product: ${productId}`, 'success');
+                }
+                
+                await storage.set('bn:products:list', productIds);
+                await storage.set('bn:services:list', serviceIds);
+                
+                log('📝 Step 2: Initializing site copy table...', 'info');
+                const siteCopy = {
+                    navigation: {
+                        dashboard: 'Dashboard',
+                        products: 'Products',
+                        services: 'Services',
+                        admin: 'Admin',
+                    },
+                    footer: {
+                        copyright: '© 2025 Business Name. All rights reserved.',
+                        feedback: 'Give Feedback',
+                        privacy: 'Privacy Policy',
+                        terms: 'Terms of Service',
+                    },
+                    landing: {
+                        hero: {
+                            title: 'AI-Powered Product Management',
+                            subtitle: 'Transform your business with intelligent product strategies',
+                            cta: 'Get Started',
+                        },
+                        features: {
+                            title: 'Key Features',
+                            subtitle: 'Everything you need to succeed',
+                        },
+                        benefits: {
+                            title: 'Key Benefits',
+                            subtitle: 'Why choose our platform',
+                        },
+                    },
+                    common: {
+                        loading: 'Loading...',
+                        error: 'An error occurred',
+                        success: 'Success!',
+                        save: 'Save',
+                        cancel: 'Cancel',
+                        edit: 'Edit',
+                        delete: 'Delete',
+                        download: 'Download',
+                        compile: 'Compile',
+                        view: 'View',
+                    },
+                };
+                
+                await storage.set('bn:site:copy', siteCopy);
+                log('   ✅ Site copy initialized', 'success');
+                
+                log('📊 Step 3: Initializing compilation counts...', 'info');
+                const allItems = [...productIds, ...serviceIds];
+                
+                for (const itemId of allItems) {
+                    await storage.set(`bn:count:marketing:${itemId}`, 0);
+                    await storage.set(`bn:count:market-intel:${itemId}`, 0);
+                    await storage.set(`bn:count:product-strategy:${itemId}`, 0);
+                }
+                log(`   ✅ Initialized counts for ${allItems.length} items`, 'success');
+                
+                log('🔄 Step 4: Initializing compilation queue...', 'info');
+                await storage.set('bn:compilation:queue', []);
+                await storage.set('bn:compilation:history', []);
+                log('   ✅ Compilation queue initialized', 'success');
+                
+                log('💬 Step 5: Initializing feedback data...', 'info');
+                await storage.set('bn:feedback:list', []);
+                
+                const feedbackStats = {
+                    total: 0,
+                    byPage: {},
+                    byProduct: {},
+                    byCategory: {},
+                    lastUpdated: new Date().toISOString(),
+                };
+                await storage.set('bn:feedback:stats', feedbackStats);
+                log('   ✅ Feedback data initialized', 'success');
+                
+                log('⚙️ Step 6: Initializing settings...', 'info');
+                const adminSettings = {
+                    editModeEnabled: false,
+                    lastCompiled: {},
+                    compilationStatus: {},
+                    marketingPrompt: 'Default marketing prompt',
+                    marketIntelligencePrompt: 'Default market intelligence prompt',
+                    productStrategyPrompt: 'Default product strategy prompt',
+                };
+                await storage.set('bn:settings:admin', adminSettings);
+                
+                const siteSettings = {
+                    theme: 'light',
+                    language: 'en',
+                    timezone: 'UTC',
+                    features: {
+                        feedback: true,
+                        compilation: true,
+                        pdfExport: true,
+                        adminPanel: true,
+                    },
+                };
+                await storage.set('bn:settings:site', siteSettings);
+                log('   ✅ Settings initialized', 'success');
+                
+                log('\n✅ Redis population completed successfully!', 'success');
+                log('\n📊 Summary:', 'info');
+                log(`   - Products: ${productIds.length}`, 'info');
+                log(`   - Services: ${serviceIds.length}`, 'info');
+                log(`   - Compilation counts: ${allItems.length} items`, 'info');
+                log(`   - Site copy and settings initialized`, 'info');
+                
+                log('\n🗂️ Redis Tables Created:', 'info');
+                log('   ✅ Products Table (bn:product:*, bn:products:list, bn:services:list)', 'success');
+                log('   ✅ Site Copy Table (bn:site:copy)', 'success');
+                log('   ✅ Compilations Table (bn:count:*, bn:compilation:*)', 'success');
+                log('   ✅ Feedback Table (bn:feedback:*)', 'success');
+                log('   ✅ Settings Table (bn:settings:*)', 'success');
+                
+                log('\n🎉 Your application should now load properly!', 'success');
+                
+            } catch (error) {
+                log(`❌ Error during Redis population: ${error.message}`, 'error');
+                console.error('Full error:', error);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Populate Redis';
+            }
+        }
+
+        async function checkRedis() {
+            log('🔍 Checking Redis status...', 'info');
+            
+            try {
+                const { getStorageService } = await import('/src/services/storage/storageService.js');
+                const storage = getStorageService();
+                
+                // Check if products list exists
+                const productsList = await storage.get('bn:products:list');
+                if (productsList) {
+                    log(`✅ Products list found: ${productsList.length} products`, 'success');
+                } else {
+                    log('❌ Products list not found', 'error');
+                }
+                
+                // Check if site copy exists
+                const siteCopy = await storage.get('bn:site:copy');
+                if (siteCopy) {
+                    log('✅ Site copy found', 'success');
+                } else {
+                    log('❌ Site copy not found', 'error');
+                }
+                
+                // Check compilation counts
+                const marketingCount = await storage.get('bn:count:marketing:01_ai_power_hour');
+                if (marketingCount !== null) {
+                    log('✅ Compilation counts initialized', 'success');
+                } else {
+                    log('❌ Compilation counts not found', 'error');
+                }
+                
+            } catch (error) {
+                log(`❌ Error checking Redis: ${error.message}`, 'error');
+            }
+        }
+
+        function clearLog() {
+            logElement.innerHTML = '';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            logElement = document.getElementById('log');
+            log('Redis Population Tool Ready', 'info');
+            log('Click "Populate Redis" to initialize all data', 'info');
+        });
+
+        // Make functions globally available
+        window.populateRedis = populateRedis;
+        window.checkRedis = checkRedis;
+        window.clearLog = clearLog;
+    </script>
+</body>
+</html> 
