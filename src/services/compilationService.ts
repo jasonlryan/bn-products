@@ -228,6 +228,25 @@ export class CompilationService {
   }
 
   /**
+   * Compile by specific type
+   */
+  async compileByType(productId: string, type: CompilationType): Promise<{
+    success: boolean;
+    error?: string;
+  }> {
+    switch (type) {
+      case 'marketing':
+        return await this.compileMarketing(productId);
+      case 'market-intel':
+        return await this.compileMarketIntelligence(productId);
+      case 'product-strategy':
+        return await this.compileProductStrategy(productId);
+      default:
+        return { success: false, error: `Unknown compilation type: ${type}` };
+    }
+  }
+
+  /**
    * Batch compile all types for a product
    */
   async compileAll(productId: string): Promise<{
