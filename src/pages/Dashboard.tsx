@@ -100,15 +100,7 @@ export default function Dashboard() {
           </Button>
         </div>
 
-        {/* Section Title and Subtitle */}
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-semibold text-gray-900 mb-4">
-            Our Service Portfolio
-          </h2>
-          <p className="text-lg text-gray-600">
-            Comprehensive AI services to transform your organization
-          </p>
-        </div>
+
 
         {/* Product/Service Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
