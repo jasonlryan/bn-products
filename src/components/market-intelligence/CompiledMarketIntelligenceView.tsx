@@ -10,6 +10,7 @@ import {
   Lightbulb,
   Database,
 } from 'lucide-react';
+import MarkdownRenderer from '../MarkdownRenderer';
 import type { CompiledMarketIntelligence } from '../../services/marketIntelligenceCompiler';
 
 interface CompiledMarketIntelligenceViewProps {
@@ -41,6 +42,81 @@ const CompiledMarketIntelligenceView: React.FC<
   };
 
   const { content } = compiledPage;
+
+  const downloadAsMarkdown = () => {
+    const blob = new Blob([compiledPage.rawMarkdown], {
+      type: 'text/markdown',
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `compiled_market_intelligence_${compiledPage.productId}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const downloadAsJSON = () => {
+    const blob = new Blob([JSON.stringify(compiledPage, null, 2)], {
+      type: 'application/json',
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `compiled_market_intelligence_${compiledPage.productId}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const downloadSection = (section: string) => {
+    let contentToDownload = '';
+    switch (section) {
+      case 'market':
+        contentToDownload =
+          content.marketOverview.marketDefinition +
+          '\n\n' +
+          content.marketOverview.marketSize +
+          '\n\n' +
+          content.marketOverview.keyDrivers?.join('\n') +
+          '\n\n' +
+          content.marketOverview.marketChallenges?.join('\n');
+        break;
+      case 'competitive':
+        contentToDownload =
+          content.competitiveLandscape.competitiveOverview +
+          '\n\n' +
+          content.competitiveLandscape.keyCompetitors?.join('\n') +
+          '\n\n' +
+          content.competitiveLandscape.competitiveAdvantages?.join('\n') +
+          '\n\n' +
+          content.competitiveLandscape.marketPositioning;
+        break;
+      case 'customer':
+        contentToDownload =
+          content.customerIntelligence.customerSegments?.join('\n') +
+          '\n\n' +
+          content.customerIntelligence.buyingBehavior +
+          '\n\n' +
+          content.customerIntelligence.customerNeeds?.join('\n') +
+          '\n\n' +
+          content.customerIntelligence.customerPainPoints?.join('\n');
+        break;
+      default:
+        contentToDownload = compiledPage.rawMarkdown;
+    }
+    const blob = new Blob([contentToDownload], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `compiled_market_intelligence_${compiledPage.productId}_${section}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className={`max-w-6xl mx-auto ${className}`}>
@@ -745,6 +821,64 @@ const CompiledMarketIntelligenceView: React.FC<
             </div>
           </div>
         )}
+      </div>
+
+      {/* Raw Markdown View */}
+      <div className="mt-8 bg-gray-50 rounded-lg p-6">
+        <h3 className="font-semibold text-gray-900 mb-4">
+          Raw Market Intelligence Document
+        </h3>
+        <div className="bg-white border border-gray-200 rounded-lg p-4 max-h-96 overflow-y-auto">
+          <MarkdownRenderer content={compiledPage.rawMarkdown} />
+        </div>
+      </div>
+
+      {/* Download Options */}
+      <div className="mt-8 bg-blue-50 rounded-lg p-6">
+        <h3 className="font-semibold text-blue-900 mb-4">
+          📥 Download Compiled Content
+        </h3>
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="space-y-3">
+            <h4 className="font-medium text-blue-800">
+              Complete Market Intelligence Report
+            </h4>
+            <button
+              onClick={() => downloadAsMarkdown()}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition-colors"
+            >
+              📄 Download as Markdown
+            </button>
+            <button
+              onClick={() => downloadAsJSON()}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-green-100 text-green-800 rounded-lg hover:bg-green-200 transition-colors"
+            >
+              📊 Download as JSON
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            <h4 className="font-medium text-blue-800">Individual Sections</h4>
+            <button
+              onClick={() => downloadSection('market')}
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-purple-100 text-purple-800 rounded-lg hover:bg-purple-200 transition-colors text-sm"
+            >
+              📊 Market Overview
+            </button>
+            <button
+              onClick={() => downloadSection('competitive')}
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-indigo-100 text-indigo-800 rounded-lg hover:bg-indigo-200 transition-colors text-sm"
+            >
+              🏆 Competitive Landscape
+            </button>
+            <button
+              onClick={() => downloadSection('customer')}
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-green-100 text-green-800 rounded-lg hover:bg-green-200 transition-colors text-sm"
+            >
+              👥 Customer Intelligence
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -8,6 +8,7 @@
 import type { Product } from '../types/product';
 import { MARKET_INTELLIGENCE_COMPILATION_PROMPT } from '../prompts/marketIntelligencePrompt';
 import { aiService } from './aiService';
+import { getStorageService } from './storage';
 
 export interface MarketIntelligenceInputs {
   marketOpportunity: string;
@@ -92,6 +93,25 @@ export interface CompiledMarketIntelligencePage {
 }
 
 class MarketIntelligenceCompilerService {
+  private storage = getStorageService();
+
+  /**
+   * Utility function to extract JSON from markdown-formatted responses
+   */
+  private extractJsonFromResponse(response: string): string {
+    // Remove markdown code blocks if present
+    let cleanedResponse = response.trim();
+    
+    // Remove ```json and ``` markers
+    cleanedResponse = cleanedResponse.replace(/^```json\s*/i, '');
+    cleanedResponse = cleanedResponse.replace(/^```\s*/i, '');
+    cleanedResponse = cleanedResponse.replace(/\s*```$/i, '');
+    
+    // Remove any leading/trailing whitespace
+    cleanedResponse = cleanedResponse.trim();
+    
+    return cleanedResponse;
+  }
 
   /**
    * Extract market intelligence inputs from product data
@@ -167,8 +187,15 @@ ${inputs.industryTrends || 'No industry trends data available'}
         inputData
       );
       
+      // Extract JSON from potential markdown formatting
+      const cleanedResponse = this.extractJsonFromResponse(aiResponse);
+      
+      // Debug logging
+      console.log('Raw AI response:', aiResponse.substring(0, 200) + '...');
+      console.log('Cleaned response:', cleanedResponse.substring(0, 200) + '...');
+      
       // Parse the JSON response
-      const parsedContent = JSON.parse(aiResponse);
+      const parsedContent = JSON.parse(cleanedResponse);
       
       // Validate the structure matches our interface
       if (!parsedContent.marketOverview || !parsedContent.competitiveLandscape) {
@@ -178,6 +205,13 @@ ${inputs.industryTrends || 'No industry trends data available'}
       return parsedContent as CompiledMarketIntelligencePage['content'];
     } catch (error) {
       console.error('AI compilation failed:', error);
+      
+      // Provide more specific error information
+      if (error instanceof SyntaxError && error.message.includes('JSON')) {
+        console.error('JSON parsing failed. Raw response preview:', aiResponse?.substring(0, 500));
+        throw new Error(`Market Intelligence compilation failed: Invalid JSON response from AI. Please try again.`);
+      }
+      
       throw new Error(`Market Intelligence compilation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -339,11 +373,11 @@ ${content.intelligenceSources.intelligenceGaps.map(gap => `- ${gap}`).join('\n')
       rawMarkdown
     };
 
-    // Save to localStorage
-    this.saveCompiledPage(compiledPage);
+    // Save to storage
+    await this.saveCompiledPage(compiledPage);
     
     // Increment compilation count
-    this.incrementCompilationCount(product.id);
+    await this.incrementCompilationCount(product.id);
 
     return compiledPage;
   }
@@ -351,54 +385,50 @@ ${content.intelligenceSources.intelligenceGaps.map(gap => `- ${gap}`).join('\n')
   /**
    * Save compiled page to localStorage
    */
-  saveCompiledPage(compiledPage: CompiledMarketIntelligencePage): void {
-    const key = `compiled-market-intelligence-${compiledPage.productId}`;
-    localStorage.setItem(key, JSON.stringify(compiledPage));
+  async saveCompiledPage(compiledPage: CompiledMarketIntelligencePage): Promise<void> {
+    const key = `bn:compiled:market-intel:${compiledPage.productId}`;
+    await this.storage.set(key, compiledPage);
   }
 
   /**
    * Get compilation count for a product
    */
-  getCompilationCount(productId: string): number {
-    const key = `market-intelligence-compilation-count-${productId}`;
-    const count = localStorage.getItem(key);
-    return count ? parseInt(count, 10) : 0;
+  async getCompilationCount(productId: string): Promise<number> {
+    const key = `bn:count:market-intel:${productId}`;
+    const count = await this.storage.get<number>(key);
+    return count || 0;
   }
 
   /**
    * Increment compilation count
    */
-  private incrementCompilationCount(productId: string): void {
-    const key = `market-intelligence-compilation-count-${productId}`;
-    const currentCount = this.getCompilationCount(productId);
-    localStorage.setItem(key, (currentCount + 1).toString());
+  private async incrementCompilationCount(productId: string): Promise<void> {
+    const key = `bn:count:market-intel:${productId}`;
+    await this.storage.increment(key);
   }
 
   /**
    * Reset compilation count
    */
-  resetCompilationCount(productId: string): void {
-    const key = `market-intelligence-compilation-count-${productId}`;
-    localStorage.removeItem(key);
+  async resetCompilationCount(productId: string): Promise<void> {
+    const key = `bn:count:market-intel:${productId}`;
+    await this.storage.delete(key);
     
     // Also remove compiled page
-    const pageKey = `compiled-market-intelligence-${productId}`;
-    localStorage.removeItem(pageKey);
+    const pageKey = `bn:compiled:market-intel:${productId}`;
+    await this.storage.delete(pageKey);
   }
 
   /**
    * Get all compilation counts
    */
-  getAllCompilationCounts(): Record<string, number> {
+  async getAllCompilationCounts(): Promise<Record<string, number>> {
     const counts: Record<string, number> = {};
+    const keys = await this.storage.keys('bn:count:market-intel:*');
     
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key?.startsWith('market-intelligence-compilation-count-')) {
-        const productId = key.replace('market-intelligence-compilation-count-', '');
-        const count = localStorage.getItem(key);
-        counts[productId] = count ? parseInt(count, 10) : 0;
-      }
+    for (const key of keys) {
+      const productId = key.replace('bn:count:market-intel:', '');
+      counts[productId] = await this.getCompilationCount(productId);
     }
     
     return counts;
@@ -407,16 +437,20 @@ ${content.intelligenceSources.intelligenceGaps.map(gap => `- ${gap}`).join('\n')
   /**
    * Load compiled page from localStorage
    */
-  loadCompiledPage(productId: string): CompiledMarketIntelligencePage | null {
-    const key = `compiled-market-intelligence-${productId}`;
-    const data = localStorage.getItem(key);
+  async loadCompiledPage(productId: string): Promise<CompiledMarketIntelligencePage | null> {
+    const key = `bn:compiled:market-intel:${productId}`;
+    const data = await this.storage.get<CompiledMarketIntelligencePage>(key);
     
     if (!data) {
       return null;
     }
     
     try {
-      return JSON.parse(data) as CompiledMarketIntelligencePage;
+      // Convert date strings back to Date objects if needed
+      if (typeof data.compiledAt === 'string') {
+        data.compiledAt = new Date(data.compiledAt);
+      }
+      return data;
     } catch (error) {
       console.error('Failed to parse compiled market intelligence page:', error);
       return null;
@@ -426,8 +460,9 @@ ${content.intelligenceSources.intelligenceGaps.map(gap => `- ${gap}`).join('\n')
   /**
    * Check if product has compiled page
    */
-  hasCompiledPage(productId: string): boolean {
-    return this.loadCompiledPage(productId) !== null;
+  async hasCompiledPage(productId: string): Promise<boolean> {
+    const key = `bn:compiled:market-intel:${productId}`;
+    return await this.storage.exists(key);
   }
 }
 

@@ -8,6 +8,7 @@
 import type { Product } from '../types/product';
 import { MARKETING_COMPILATION_PROMPT } from '../prompts/marketingPrompt';
 import { aiService } from './aiService';
+import { getStorageService } from './storage';
 
 export interface MarketingInputs {
   keyMessages: string;
@@ -99,7 +100,25 @@ export interface CompiledMarketingPage {
 }
 
 class MarketingCompilerService {
+  private storage = getStorageService();
 
+  /**
+   * Utility function to extract JSON from markdown-formatted responses
+   */
+  private extractJsonFromResponse(response: string): string {
+    // Remove markdown code blocks if present
+    let cleanedResponse = response.trim();
+    
+    // Remove ```json and ``` markers
+    cleanedResponse = cleanedResponse.replace(/^```json\s*/i, '');
+    cleanedResponse = cleanedResponse.replace(/^```\s*/i, '');
+    cleanedResponse = cleanedResponse.replace(/\s*```$/i, '');
+    
+    // Remove any leading/trailing whitespace
+    cleanedResponse = cleanedResponse.trim();
+    
+    return cleanedResponse;
+  }
 
   /**
    * Extract marketing inputs from product data
@@ -150,6 +169,15 @@ class MarketingCompilerService {
     product: Product, 
     inputs: MarketingInputs
   ): Promise<CompiledMarketingPage['content']> {
+    console.log('🔍 [Marketing Compiler] Starting generateSalesEnablementContent');
+    console.log('📦 [Marketing Compiler] Product:', { id: product.id, name: product.name, type: product.type });
+    console.log('📝 [Marketing Compiler] Inputs:', {
+      keyMessagesLength: inputs.keyMessages?.length || 0,
+      demoScriptLength: inputs.demoScript?.length || 0,
+      slideHeadlinesLength: inputs.slideHeadlines?.length || 0,
+      qaPrepLength: inputs.qaPrep?.length || 0
+    });
+
     // Prepare input data for AI compilation
     const inputData = `
 # PRODUCT INFORMATION
@@ -172,31 +200,68 @@ ${inputs.slideHeadlines || 'No slide headlines available'}
 ${inputs.qaPrep || 'No Q&A prep available'}
 `;
 
+    console.log('📤 [Marketing Compiler] Prepared input data for AI:', inputData.substring(0, 500) + '...');
+
     try {
+      console.log('🤖 [Marketing Compiler] Calling AI service...');
+      
       // Use the actual AI service with the external prompt
       const aiResponse = await aiService.generateCompiledContent(
         MARKETING_COMPILATION_PROMPT,
         inputData
       );
       
+      console.log('📥 [Marketing Compiler] Received AI response length:', aiResponse?.length || 0);
+      console.log('📥 [Marketing Compiler] Raw AI response preview:', aiResponse?.substring(0, 300) + '...');
+      
+      // Extract JSON from potential markdown formatting
+      const cleanedResponse = this.extractJsonFromResponse(aiResponse);
+      
+      console.log('🧹 [Marketing Compiler] Cleaned response length:', cleanedResponse?.length || 0);
+      console.log('🧹 [Marketing Compiler] Cleaned response preview:', cleanedResponse?.substring(0, 300) + '...');
+      
       // Parse the JSON response
-      const parsedContent = JSON.parse(aiResponse);
+      console.log('🔧 [Marketing Compiler] Attempting JSON parse...');
+      const parsedContent = JSON.parse(cleanedResponse);
+      
+      console.log('✅ [Marketing Compiler] JSON parse successful');
+      console.log('📊 [Marketing Compiler] Parsed content structure:', {
+        hasExecutiveSummary: !!parsedContent.executiveSummary,
+        hasMessagingFramework: !!parsedContent.messagingFramework,
+        hasSalesProcessGuide: !!parsedContent.salesProcessGuide,
+        hasObjectionHandling: !!parsedContent.objectionHandling,
+        hasMarketingAssets: !!parsedContent.marketingAssets,
+        hasTargetAudienceIntel: !!parsedContent.targetAudienceIntel,
+        hasImplementationGuide: !!parsedContent.implementationGuide
+      });
       
       // Validate the structure matches our interface
       if (!parsedContent.executiveSummary || !parsedContent.messagingFramework) {
+        console.error('❌ [Marketing Compiler] AI response missing required fields');
         throw new Error('AI response does not match expected structure');
       }
       
+      console.log('✅ [Marketing Compiler] Content validation passed');
       return parsedContent as CompiledMarketingPage['content'];
     } catch (error) {
-      console.error('AI compilation failed:', error);
+      console.error('❌ [Marketing Compiler] AI compilation failed:', error);
+      
+      // Provide more specific error information
+      if (error instanceof SyntaxError && error.message.includes('JSON')) {
+        // Note: aiResponse is not available in catch scope, so we can't show the raw response here
+        console.error('🔍 [Marketing Compiler] JSON parsing failed. Check the logs above for raw response details.');
+        throw new Error(`Marketing compilation failed: Invalid JSON response from AI. Please try again.`);
+      }
+      
       throw new Error(`Marketing compilation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
   /**
    * DEPRECATED: Old fake compilation method - keeping for reference
+   * @ts-ignore - Keeping for reference, not used in current implementation
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private generateSalesEnablementContentOld(
     product: Product, 
     inputs: MarketingInputs
@@ -702,15 +767,23 @@ ${content.implementationGuide.successMetrics.map(metric => `- ${metric}`).join('
    * Main compilation method - now using real AI compilation
    */
   async compileMarketingPage(product: Product): Promise<CompiledMarketingPage> {
+    console.log('🚀 [Marketing Compiler] Starting compileMarketingPage for product:', product.id);
+    
     try {
+      console.log('📋 [Marketing Compiler] Extracting marketing inputs...');
       // Extract inputs from product data
       const inputs = this.extractMarketingInputs(product);
+      console.log('✅ [Marketing Compiler] Inputs extracted successfully');
       
+      console.log('🤖 [Marketing Compiler] Generating AI-compiled structured content...');
       // Generate AI-compiled structured content using the external prompt
       const content = await this.generateSalesEnablementContent(product, inputs);
+      console.log('✅ [Marketing Compiler] Content generation completed');
       
+      console.log('📝 [Marketing Compiler] Generating markdown representation...');
       // Generate markdown representation of the structured content
       const rawMarkdown = this.generateSalesEnablementMarkdown(content, product);
+      console.log('✅ [Marketing Compiler] Markdown generation completed');
       
       const compiledPage: CompiledMarketingPage = {
         id: `compiled-${product.id}-${Date.now()}`,
@@ -720,35 +793,38 @@ ${content.implementationGuide.successMetrics.map(metric => `- ${metric}`).join('
         rawMarkdown
       };
       
-      // Save to localStorage
-      this.saveCompiledPage(compiledPage);
+      console.log('💾 [Marketing Compiler] Saving compiled page to storage...');
+      // Save to storage
+      await this.saveCompiledPage(compiledPage);
+      console.log('✅ [Marketing Compiler] Page saved to storage');
       
+      console.log('🎉 [Marketing Compiler] Compilation completed successfully');
       return compiledPage;
     } catch (error) {
-      console.error('Marketing compilation failed:', error);
+      console.error('❌ [Marketing Compiler] Marketing compilation failed:', error);
       throw new Error(`Failed to compile marketing page for ${product.name}: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
   /**
-   * Save compiled page to localStorage
+   * Save compiled page to storage
    */
-  saveCompiledPage(compiledPage: CompiledMarketingPage): void {
-    const key = `compiled-marketing-${compiledPage.productId}`;
-    localStorage.setItem(key, JSON.stringify(compiledPage));
+  async saveCompiledPage(compiledPage: CompiledMarketingPage): Promise<void> {
+    const key = `bn:compiled:marketing:${compiledPage.productId}`;
+    await this.storage.set(key, compiledPage);
     
     // Also increment the compilation count
-    this.incrementCompilationCount(compiledPage.productId);
+    await this.incrementCompilationCount(compiledPage.productId);
   }
 
   /**
    * Get compilation count for a product
    */
-  getCompilationCount(productId: string): number {
+  async getCompilationCount(productId: string): Promise<number> {
     try {
-      const key = `marketing-compilation-count-${productId}`;
-      const stored = localStorage.getItem(key);
-      return stored ? parseInt(stored, 10) : 0;
+      const key = `bn:count:marketing:${productId}`;
+      const count = await this.storage.get<number>(key);
+      return count || 0;
     } catch (error) {
       console.error('Failed to load compilation count:', error);
       return 0;
@@ -758,12 +834,10 @@ ${content.implementationGuide.successMetrics.map(metric => `- ${metric}`).join('
   /**
    * Increment compilation count for a product
    */
-  private incrementCompilationCount(productId: string): void {
+  private async incrementCompilationCount(productId: string): Promise<void> {
     try {
-      const currentCount = this.getCompilationCount(productId);
-      const newCount = currentCount + 1;
-      const key = `marketing-compilation-count-${productId}`;
-      localStorage.setItem(key, newCount.toString());
+      const key = `bn:count:marketing:${productId}`;
+      await this.storage.increment(key);
     } catch (error) {
       console.error('Failed to increment compilation count:', error);
     }
@@ -772,10 +846,10 @@ ${content.implementationGuide.successMetrics.map(metric => `- ${metric}`).join('
   /**
    * Reset compilation count for a product
    */
-  resetCompilationCount(productId: string): void {
+  async resetCompilationCount(productId: string): Promise<void> {
     try {
-      const key = `marketing-compilation-count-${productId}`;
-      localStorage.removeItem(key);
+      const key = `bn:count:marketing:${productId}`;
+      await this.storage.delete(key);
     } catch (error) {
       console.error('Failed to reset compilation count:', error);
     }
@@ -784,15 +858,13 @@ ${content.implementationGuide.successMetrics.map(metric => `- ${metric}`).join('
   /**
    * Get all compilation counts
    */
-  getAllCompilationCounts(): Record<string, number> {
+  async getAllCompilationCounts(): Promise<Record<string, number>> {
     const counts: Record<string, number> = {};
     try {
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && key.startsWith('marketing-compilation-count-')) {
-          const productId = key.replace('marketing-compilation-count-', '');
-          counts[productId] = this.getCompilationCount(productId);
-        }
+      const keys = await this.storage.keys('bn:count:marketing:*');
+      for (const key of keys) {
+        const productId = key.replace('bn:count:marketing:', '');
+        counts[productId] = await this.getCompilationCount(productId);
       }
     } catch (error) {
       console.error('Failed to load all compilation counts:', error);
@@ -801,17 +873,16 @@ ${content.implementationGuide.successMetrics.map(metric => `- ${metric}`).join('
   }
 
   /**
-   * Load compiled page from localStorage
+   * Load compiled page from storage
    */
-  loadCompiledPage(productId: string): CompiledMarketingPage | null {
+  async loadCompiledPage(productId: string): Promise<CompiledMarketingPage | null> {
     try {
-      const key = `compiled-marketing-${productId}`;
-      const stored = localStorage.getItem(key);
+      const key = `bn:compiled:marketing:${productId}`;
+      const stored = await this.storage.get<CompiledMarketingPage>(key);
       if (stored) {
-        const parsed = JSON.parse(stored);
         // Convert date strings back to Date objects
-        parsed.compiledAt = new Date(parsed.compiledAt);
-        return parsed;
+        stored.compiledAt = new Date(stored.compiledAt);
+        return stored;
       }
     } catch (error) {
       console.error('Failed to load compiled page:', error);
@@ -822,9 +893,9 @@ ${content.implementationGuide.successMetrics.map(metric => `- ${metric}`).join('
   /**
    * Check if a compiled page exists
    */
-  hasCompiledPage(productId: string): boolean {
-    const key = `compiled-marketing-${productId}`;
-    return localStorage.getItem(key) !== null;
+  async hasCompiledPage(productId: string): Promise<boolean> {
+    const key = `bn:compiled:marketing:${productId}`;
+    return await this.storage.exists(key);
   }
 }
 

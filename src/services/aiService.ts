@@ -193,11 +193,24 @@ Respond with valid JSON only.`;
 
   // Generate compiled content using prompts
   async generateCompiledContent(prompt: string, inputData: string): Promise<string> {
+    console.log('🤖 [AI Service] Starting generateCompiledContent');
+    console.log('🔑 [AI Service] API key configured:', !!this.apiKey);
+    
     if (!this.apiKey) {
+      console.error('❌ [AI Service] No API key configured');
       throw new Error('OpenAI API key not configured');
     }
 
     try {
+      console.log('📤 [AI Service] Making API request to OpenAI...');
+      console.log('📊 [AI Service] Request details:', {
+        model: 'gpt-4o',
+        temperature: 0.3,
+        max_tokens: 4000,
+        promptLength: prompt.length,
+        inputDataLength: inputData.length
+      });
+      
       const response = await fetch(this.baseUrl, {
         method: 'POST',
         headers: {
@@ -221,21 +234,37 @@ Respond with valid JSON only.`;
         })
       });
 
+      console.log('📥 [AI Service] Received response:', {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok
+      });
+
       if (!response.ok) {
+        console.error('❌ [AI Service] API request failed:', response.status, response.statusText);
         throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
       }
 
       const data = await response.json();
+      console.log('📊 [AI Service] Response data structure:', {
+        hasChoices: !!data.choices,
+        choicesLength: data.choices?.length || 0,
+        hasMessage: !!data.choices?.[0]?.message,
+        hasContent: !!data.choices?.[0]?.message?.content
+      });
+      
       const content = data.choices[0]?.message?.content;
 
       if (!content) {
+        console.error('❌ [AI Service] No content in response');
         throw new Error('No content received from OpenAI');
       }
 
+      console.log('✅ [AI Service] Successfully received content, length:', content.length);
       return content;
 
     } catch (error) {
-      console.error('AI compilation failed:', error);
+      console.error('❌ [AI Service] AI compilation failed:', error);
       throw error;
     }
   }

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compilation Debug Tool</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+        }
+        .section h2 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .status.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .status.error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .status.warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .status.info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background-color: #0056b3; }
+        button:disabled { background-color: #6c757d; cursor: not-allowed; }
+        
+        .log-container {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+        }
+        
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Compilation Debug Tool</h1>
+    
+    <div class="container">
+        <div class="section">
+            <h2>📊 System Status</h2>
+            <div id="systemStatus"></div>
+        </div>
+        
+        <div class="grid">
+            <div class="section">
+                <h2>🗄️ Storage Test</h2>
+                <button onclick="testStorage()">Test Storage</button>
+                <button onclick="clearStorage()">Clear Storage</button>
+                <div id="storageResult"></div>
+            </div>
+            
+            <div class="section">
+                <h2>🤖 AI Service Test</h2>
+                <button onclick="testAIService()">Test AI Service</button>
+                <div id="aiResult"></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>📝 Compilation Test</h2>
+            <button onclick="testCompilation()">Test Marketing Compilation</button>
+            <button onclick="testAllCompilations()">Test All Compilations</button>
+            <div id="compilationResult"></div>
+        </div>
+        
+        <div class="section">
+            <h2>📋 Debug Logs</h2>
+            <button onclick="clearLogs()">Clear Logs</button>
+            <button onclick="exportLogs()">Export Logs</button>
+            <div id="debugLogs" class="log-container"></div>
+        </div>
+    </div>
+
+    <script>
+        let logs = [];
+        
+        // Override console.log to capture logs
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+        
+        function addLog(level, ...args) {
+            const timestamp = new Date().toISOString();
+            const message = args.map(arg => 
+                typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
+            ).join(' ');
+            
+            logs.push(`[${timestamp}] ${level}: ${message}`);
+            updateLogDisplay();
+        }
+        
+        console.log = (...args) => {
+            originalLog(...args);
+            addLog('LOG', ...args);
+        };
+        
+        console.error = (...args) => {
+            originalError(...args);
+            addLog('ERROR', ...args);
+        };
+        
+        console.warn = (...args) => {
+            originalWarn(...args);
+            addLog('WARN', ...args);
+        };
+        
+        function updateLogDisplay() {
+            const logContainer = document.getElementById('debugLogs');
+            logContainer.textContent = logs.slice(-100).join('\n');
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+        
+        function clearLogs() {
+            logs = [];
+            updateLogDisplay();
+        }
+        
+        function exportLogs() {
+            const blob = new Blob([logs.join('\n')], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `compilation-debug-${new Date().toISOString().slice(0, 19)}.log`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        function showResult(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+        
+        function testStorage() {
+            try {
+                // Test localStorage
+                const testKey = 'debug-test-' + Date.now();
+                const testValue = { test: 'data', timestamp: new Date().toISOString() };
+                
+                localStorage.setItem(testKey, JSON.stringify(testValue));
+                const retrieved = JSON.parse(localStorage.getItem(testKey));
+                localStorage.removeItem(testKey);
+                
+                if (JSON.stringify(retrieved) === JSON.stringify(testValue)) {
+                    showResult('storageResult', '✅ localStorage working correctly', 'success');
+                } else {
+                    showResult('storageResult', '❌ localStorage data corruption detected', 'error');
+                }
+                
+                // Check storage usage
+                const totalSize = JSON.stringify(localStorage).length;
+                const maxSize = 5 * 1024 * 1024; // 5MB estimate
+                const usagePercent = (totalSize / maxSize) * 100;
+                
+                showResult('storageResult', 
+                    `✅ localStorage working correctly<br>
+                    📊 Storage usage: ${(totalSize / 1024).toFixed(1)}KB (${usagePercent.toFixed(1)}% of estimated limit)<br>
+                    🔑 Keys: ${Object.keys(localStorage).length}`, 
+                    usagePercent > 80 ? 'warning' : 'success'
+                );
+                
+            } catch (error) {
+                showResult('storageResult', `❌ Storage test failed: ${error.message}`, 'error');
+            }
+        }
+        
+        function clearStorage() {
+            if (confirm('Are you sure you want to clear all localStorage data? This cannot be undone.')) {
+                localStorage.clear();
+                showResult('storageResult', '🗑️ localStorage cleared', 'info');
+            }
+        }
+        
+        function testAIService() {
+            showResult('aiResult', '🔄 Testing AI service...', 'info');
+            
+            // Check if we're in the main app context
+            if (typeof window.aiService !== 'undefined') {
+                const testPrompt = 'Return only this JSON: {"test": "success", "timestamp": "' + new Date().toISOString() + '"}';
+                const testData = 'Test input data';
+                
+                window.aiService.generateCompiledContent(testPrompt, testData)
+                    .then(result => {
+                        try {
+                            const parsed = JSON.parse(result);
+                            if (parsed.test === 'success') {
+                                showResult('aiResult', '✅ AI service working correctly', 'success');
+                            } else {
+                                showResult('aiResult', '⚠️ AI service returned unexpected format', 'warning');
+                            }
+                        } catch (error) {
+                            showResult('aiResult', `❌ AI service returned invalid JSON: ${error.message}`, 'error');
+                        }
+                    })
+                    .catch(error => {
+                        showResult('aiResult', `❌ AI service failed: ${error.message}`, 'error');
+                    });
+            } else {
+                showResult('aiResult', '⚠️ AI service not available in this context. Run this from the main app.', 'warning');
+            }
+        }
+        
+        function testCompilation() {
+            showResult('compilationResult', '🔄 Testing marketing compilation...', 'info');
+            
+            // Check if we're in the main app context
+            if (typeof window.marketingCompiler !== 'undefined') {
+                // Create a test product
+                const testProduct = {
+                    id: 'debug-test-product',
+                    name: 'Debug Test Product',
+                    type: 'SERVICE',
+                    content: {
+                        description: 'A test product for debugging compilation'
+                    },
+                    richContent: {
+                        keyMessages: {
+                            sections: {
+                                'Generated Output': 'This is a test key message for debugging purposes.'
+                            }
+                        },
+                        demoScript: {
+                            sections: {
+                                'Generated Output': 'This is a test demo script for debugging purposes.'
+                            }
+                        },
+                        slideHeadlines: {
+                            sections: {
+                                'Generated Output': 'This is a test slide headline for debugging purposes.'
+                            }
+                        },
+                        qaPrep: {
+                            sections: {
+                                'Generated Output': 'This is a test Q&A prep for debugging purposes.'
+                            }
+                        }
+                    }
+                };
+                
+                window.marketingCompiler.compileMarketingPage(testProduct)
+                    .then(result => {
+                        showResult('compilationResult', 
+                            `✅ Marketing compilation successful<br>
+                            📄 ID: ${result.id}<br>
+                            📝 Content sections: ${Object.keys(result.content).length}<br>
+                            📊 Markdown length: ${result.rawMarkdown.length} chars`, 
+                            'success'
+                        );
+                    })
+                    .catch(error => {
+                        showResult('compilationResult', `❌ Marketing compilation failed: ${error.message}`, 'error');
+                    });
+            } else {
+                showResult('compilationResult', '⚠️ Marketing compiler not available in this context. Run this from the main app.', 'warning');
+            }
+        }
+        
+        function testAllCompilations() {
+            showResult('compilationResult', '🔄 Testing all compilation types...', 'info');
+            
+            if (typeof window.compilationService !== 'undefined') {
+                const testProductId = '01_ai_power_hour'; // Use existing product
+                
+                Promise.all([
+                    window.compilationService.compileMarketing(testProductId),
+                    window.compilationService.compileMarketIntelligence(testProductId),
+                    window.compilationService.compileProductStrategy(testProductId)
+                ])
+                .then(results => {
+                    const successCount = results.filter(r => r.success).length;
+                    const details = results.map((r, i) => {
+                        const types = ['Marketing', 'Market Intelligence', 'Product Strategy'];
+                        return `${types[i]}: ${r.success ? '✅' : '❌'} ${r.error || ''}`;
+                    }).join('<br>');
+                    
+                    showResult('compilationResult', 
+                        `📊 Compilation Results:<br>${details}<br><br>
+                        Overall: ${successCount}/3 successful`, 
+                        successCount === 3 ? 'success' : 'warning'
+                    );
+                })
+                .catch(error => {
+                    showResult('compilationResult', `❌ Compilation test failed: ${error.message}`, 'error');
+                });
+            } else {
+                showResult('compilationResult', '⚠️ Compilation service not available in this context. Run this from the main app.', 'warning');
+            }
+        }
+        
+        function checkSystemStatus() {
+            const status = [];
+            
+            // Check localStorage
+            try {
+                localStorage.setItem('test', 'test');
+                localStorage.removeItem('test');
+                status.push('✅ localStorage available');
+            } catch (error) {
+                status.push('❌ localStorage not available');
+            }
+            
+            // Check storage usage
+            const totalSize = JSON.stringify(localStorage).length;
+            const usagePercent = (totalSize / (5 * 1024 * 1024)) * 100;
+            status.push(`📊 Storage usage: ${(totalSize / 1024).toFixed(1)}KB (${usagePercent.toFixed(1)}%)`);
+            
+            // Check for existing data
+            const hasProducts = localStorage.getItem('products');
+            const hasCompiled = Object.keys(localStorage).some(key => key.includes('compiled'));
+            status.push(`📦 Products: ${hasProducts ? 'Found' : 'None'}`);
+            status.push(`📄 Compiled content: ${hasCompiled ? 'Found' : 'None'}`);
+            
+            // Check environment
+            status.push(`🌐 Environment: ${window.location.hostname === 'localhost' ? 'Development' : 'Production'}`);
+            
+            document.getElementById('systemStatus').innerHTML = status.map(s => 
+                `<div class="status info">${s}</div>`
+            ).join('');
+        }
+        
+        // Initialize
+        checkSystemStatus();
+        console.log('🔧 Debug tool initialized');
+    </script>
+</body>
+</html> 

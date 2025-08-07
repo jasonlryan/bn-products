@@ -19,6 +19,7 @@ import { getAllProductsAndServices, getProductById } from '../config';
 import { marketingCompiler } from '../services/marketingCompiler';
 import { marketIntelligenceCompiler } from '../services/marketIntelligenceCompiler';
 import { productStrategyCompiler } from '../services/productStrategyCompiler';
+import { useProducts, saveCompiledContent } from '../hooks';
 import { Button, Card } from '../components/ui';
 import { MARKETING_COMPILATION_PROMPT } from '../prompts/marketingPrompt';
 import { MARKET_INTELLIGENCE_COMPILATION_PROMPT } from '../prompts/marketIntelligencePrompt';
@@ -122,11 +123,11 @@ const AdminPage: React.FC = () => {
       const savedSettings = localStorage.getItem('admin-settings');
 
       // Get compilation counts from all compiler services
-      const marketingCounts = marketingCompiler.getAllCompilationCounts();
+      const marketingCounts = await marketingCompiler.getAllCompilationCounts();
       const marketIntelligenceCounts =
-        marketIntelligenceCompiler.getAllCompilationCounts();
+        await marketIntelligenceCompiler.getAllCompilationCounts();
       const productStrategyCounts =
-        productStrategyCompiler.getAllCompilationCounts();
+        await productStrategyCompiler.getAllCompilationCounts();
 
       if (savedSettings) {
         const parsed = JSON.parse(savedSettings);
@@ -308,14 +309,14 @@ const AdminPage: React.FC = () => {
 
       // Compile the market intelligence page
       const compiledPage =
-        marketIntelligenceCompiler.compileMarketIntelligence(product);
+        await marketIntelligenceCompiler.compileMarketIntelligencePage(product);
 
       // Save the compiled page (this will also increment the count)
-      marketIntelligenceCompiler.saveCompiledPage(compiledPage);
+      await marketIntelligenceCompiler.saveCompiledPage(compiledPage);
 
       // Get the updated count from the service
       const newCount =
-        marketIntelligenceCompiler.getCompilationCount(productId);
+        await marketIntelligenceCompiler.getCompilationCount(productId);
 
       // Update admin settings with success status
       const finalSettings = {
@@ -357,7 +358,7 @@ const AdminPage: React.FC = () => {
   const getMarketIntelligenceStatusText = (productId: string) => {
     if (!settings || !productId) return 'Not compiled';
 
-    const count = marketIntelligenceCompiler.getCompilationCount(productId);
+    const count = settings.marketIntelligenceCount?.[productId] || 0;
     const status = settings.marketIntelligenceStatus?.[productId] || 'idle';
     const lastCompiled = settings.marketIntelligenceLastCompiled?.[productId];
 
@@ -448,10 +449,11 @@ const AdminPage: React.FC = () => {
         await productStrategyCompiler.compileProductStrategy(product);
 
       // Save the compiled page (this will also increment the count)
-      productStrategyCompiler.saveCompiledPage(compiledStrategy);
+      await productStrategyCompiler.saveCompiledPage(compiledStrategy);
 
       // Get the updated count from the service
-      const newCount = productStrategyCompiler.getCompilationCount(productId);
+      const newCount =
+        await productStrategyCompiler.getCompilationCount(productId);
 
       // Update admin settings with success status
       const finalSettings = {
@@ -493,7 +495,7 @@ const AdminPage: React.FC = () => {
   const getProductStrategyStatusText = (productId: string) => {
     if (!settings || !productId) return 'Not compiled';
 
-    const count = productStrategyCompiler.getCompilationCount(productId);
+    const count = settings.productStrategyCount?.[productId] || 0;
     const status = settings.productStrategyStatus?.[productId] || 'idle';
     const lastCompiled = settings.productStrategyLastCompiled?.[productId];
 
@@ -560,10 +562,10 @@ const AdminPage: React.FC = () => {
         await marketingCompiler.compileMarketingPage(product);
 
       // Save the compiled page (this will also increment the count)
-      marketingCompiler.saveCompiledPage(compiledPage);
+      await marketingCompiler.saveCompiledPage(compiledPage);
 
       // Get the updated count from the service
-      const newCount = marketingCompiler.getCompilationCount(productId);
+      const newCount = await marketingCompiler.getCompilationCount(productId);
       const finalSettings = {
         ...newSettings,
         compilationStatus: {
@@ -617,7 +619,7 @@ const AdminPage: React.FC = () => {
   const getStatusText = (productId: string) => {
     if (!settings || !productId) return 'Not compiled';
 
-    const count = marketingCompiler.getCompilationCount(productId);
+    const count = settings.compilationCount?.[productId] || 0;
     const status = settings.compilationStatus?.[productId] || 'idle';
     const lastCompiled = settings.lastCompiled?.[productId];
 
@@ -1129,9 +1131,8 @@ const AdminPage: React.FC = () => {
                                   <span>View</span>
                                 </Button>
 
-                                {marketingCompiler.getCompilationCount(
-                                  product.id
-                                ) > 0 && (
+                                {(settings.compilationCount?.[product.id] ||
+                                  0) > 0 && (
                                   <Button
                                     variant="outline"
                                     size="sm"
@@ -1278,9 +1279,9 @@ const AdminPage: React.FC = () => {
                                   <span>View</span>
                                 </Button>
 
-                                {marketIntelligenceCompiler.getCompilationCount(
+                                {(settings.marketIntelligenceCount?.[
                                   product.id
-                                ) > 0 && (
+                                ] || 0) > 0 && (
                                   <Button
                                     variant="outline"
                                     size="sm"
@@ -1422,9 +1423,8 @@ const AdminPage: React.FC = () => {
                                   <span>View</span>
                                 </Button>
 
-                                {productStrategyCompiler.getCompilationCount(
-                                  product.id
-                                ) > 0 && (
+                                {(settings.productStrategyCount?.[product.id] ||
+                                  0) > 0 && (
                                   <Button
                                     variant="outline"
                                     size="sm"

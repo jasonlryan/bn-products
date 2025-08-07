@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Storage Services - BN Products</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0052a3; }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+        .result {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .section {
+            margin: 30px 0;
+            border-top: 2px solid #eee;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Storage Services Test Page</h1>
+        
+        <p>This page tests the Redis/localStorage dual storage system built for BN Products.</p>
+
+        <div class="section">
+            <h2>📦 Product Management Tests</h2>
+            <button onclick="testListProducts()">List All Products</button>
+            <button onclick="testGetProduct()">Get First Product</button>
+            <button onclick="testCreateProduct()">Create Test Product</button>
+            <div id="productResults" class="result"></div>
+        </div>
+
+        <div class="section">
+            <h2>📝 Content Management Tests</h2>
+            <button onclick="testGetContent()">Get Product Content</button>
+            <button onclick="testSetContent()">Set Sample Content</button>
+            <div id="contentResults" class="result"></div>
+        </div>
+
+        <div class="section">
+            <h2>⚙️ Settings Tests</h2>
+            <button onclick="testSettings()">Test Settings</button>
+            <button onclick="testEditMode()">Test Edit Mode</button>
+            <div id="settingsResults" class="result"></div>
+        </div>
+
+        <div class="section">
+            <h2>🔧 Storage Service Tests</h2>
+            <button onclick="testBasicOperations()">Test Basic Operations</button>
+            <button onclick="testBatchOperations()">Test Batch Operations</button>
+            <div id="storageResults" class="result"></div>
+        </div>
+
+        <div class="section">
+            <h2>📊 System Status</h2>
+            <button onclick="showSystemStatus()">Show System Status</button>
+            <div id="statusResults" class="result"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Mock the storage services for browser testing
+        class LocalStorageService {
+            async get(key) {
+                const value = localStorage.getItem(key);
+                return value ? JSON.parse(value) : null;
+            }
+
+            async set(key, value) {
+                localStorage.setItem(key, JSON.stringify(value));
+            }
+
+            async delete(key) {
+                localStorage.removeItem(key);
+            }
+
+            async exists(key) {
+                return localStorage.getItem(key) !== null;
+            }
+
+            async keys(pattern) {
+                const allKeys = Object.keys(localStorage);
+                const regex = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
+                return allKeys.filter(key => regex.test(key));
+            }
+
+            async increment(key) {
+                const current = await this.get(key) || 0;
+                const newValue = current + 1;
+                await this.set(key, newValue);
+                return newValue;
+            }
+        }
+
+        class ProductService {
+            constructor() {
+                this.storage = new LocalStorageService();
+            }
+
+            async listProducts() {
+                const ids = await this.storage.get('bn:product:list') || [];
+                const products = [];
+                for (const id of ids) {
+                    const product = await this.storage.get(`bn:product:definition:${id}`);
+                    if (product) products.push(product);
+                }
+                return products;
+            }
+
+            async getProduct(id) {
+                return await this.storage.get(`bn:product:definition:${id}`);
+            }
+
+            async createProduct(productData) {
+                const id = `test_${Date.now()}`;
+                const product = {
+                    ...productData,
+                    id,
+                    metadata: {
+                        createdAt: new Date().toISOString(),
+                        lastModified: new Date().toISOString(),
+                        version: '1.0.0'
+                    }
+                };
+
+                await this.storage.set(`bn:product:definition:${id}`, product);
+                
+                const list = await this.storage.get('bn:product:list') || [];
+                list.push(id);
+                await this.storage.set('bn:product:list', list);
+                
+                return id;
+            }
+
+            async getContent(productId, type) {
+                return await this.storage.get(`bn:content:${productId}:${type}`);
+            }
+
+            async setContent(productId, type, content) {
+                await this.storage.set(`bn:content:${productId}:${type}`, content);
+            }
+        }
+
+        // Initialize services
+        const storage = new LocalStorageService();
+        const productService = new ProductService();
+
+        // Make functions available globally
+        window.testListProducts = async function() {
+            const results = document.getElementById('productResults');
+            try {
+                results.textContent = 'Loading products...\n';
+                const products = await productService.listProducts();
+                results.textContent = `✅ Found ${products.length} products:\n\n${JSON.stringify(products, null, 2)}`;
+            } catch (error) {
+                results.textContent = `❌ Error: ${error.message}`;
+            }
+        };
+
+        window.testGetProduct = async function() {
+            const results = document.getElementById('productResults');
+            try {
+                const products = await productService.listProducts();
+                if (products.length === 0) {
+                    results.textContent = '⚠️ No products found. Run populate-storage.html first.';
+                    return;
+                }
+                
+                const product = products[0];
+                results.textContent = `✅ First product:\n\n${JSON.stringify(product, null, 2)}`;
+            } catch (error) {
+                results.textContent = `❌ Error: ${error.message}`;
+            }
+        };
+
+        window.testCreateProduct = async function() {
+            const results = document.getElementById('productResults');
+            try {
+                const testProduct = {
+                    name: "Test Product",
+                    type: "PRODUCT",
+                    pricing: { type: "fixed", display: "£1,000" },
+                    content: { description: "Test product for validation" },
+                    features: ["Test feature"],
+                    benefits: ["Test benefit"]
+                };
+
+                const productId = await productService.createProduct(testProduct);
+                results.textContent = `✅ Created test product with ID: ${productId}`;
+            } catch (error) {
+                results.textContent = `❌ Error: ${error.message}`;
+            }
+        };
+
+        window.testGetContent = async function() {
+            const results = document.getElementById('contentResults');
+            try {
+                const content = await productService.getContent('01_ai_power_hour', 'manifesto');
+                if (content) {
+                    results.textContent = `✅ Found content:\n\n${JSON.stringify(content, null, 2)}`;
+                } else {
+                    results.textContent = '⚠️ No content found. Run populate-storage.html first.';
+                }
+            } catch (error) {
+                results.textContent = `❌ Error: ${error.message}`;
+            }
+        };
+
+        window.testSetContent = async function() {
+            const results = document.getElementById('contentResults');
+            try {
+                const sampleContent = {
+                    title: 'Test Content',
+                    metadata: {
+                        productId: '01_ai_power_hour',
+                        contentType: 'test',
+                        lastGenerated: new Date().toISOString()
+                    },
+                    sections: {
+                        'Test Section': 'This is test content created by the test page.'
+                    },
+                    fullContent: 'Test content body',
+                    lastModified: new Date().toISOString(),
+                    version: '1.0.0'
+                };
+
+                await productService.setContent('01_ai_power_hour', 'test', sampleContent);
+                results.textContent = '✅ Successfully set test content';
+            } catch (error) {
+                results.textContent = `❌ Error: ${error.message}`;
+            }
+        };
+
+        window.testSettings = async function() {
+            const results = document.getElementById('settingsResults');
+            try {
+                const settings = await storage.get('bn:settings:admin'); 
+                results.textContent = `✅ Admin settings:\n\n${JSON.stringify(settings, null, 2)}`;
+            } catch (error) {
+                results.textContent = `❌ Error: ${error.message}`;
+            }
+        };
+
+        window.testEditMode = async function() {
+            const results = document.getElementById('settingsResults');
+            try {
+                const editMode = await storage.get('bn:settings:edit-mode');
+                await storage.set('bn:settings:edit-mode', !editMode);
+                const newMode = await storage.get('bn:settings:edit-mode');
+                results.textContent = `✅ Edit mode toggled: ${editMode} → ${newMode}`;
+            } catch (error) {
+                results.textContent = `❌ Error: ${error.message}`;
+            }
+        };
+
+        window.testBasicOperations = async function() {
+            const results = document.getElementById('storageResults');
+            try {
+                const testKey = 'bn:test:basic';
+                const testValue = { test: true, timestamp: Date.now() };
+
+                await storage.set(testKey, testValue);
+                const retrieved = await storage.get(testKey);
+                const exists = await storage.exists(testKey);
+                await storage.delete(testKey);
+                const existsAfter = await storage.exists(testKey);
+
+                results.textContent = `✅ Basic operations test:
+Set: ${JSON.stringify(testValue)}
+Get: ${JSON.stringify(retrieved)}
+Exists before delete: ${exists}
+Exists after delete: ${existsAfter}`;
+            } catch (error) {
+                results.textContent = `❌ Error: ${error.message}`;
+            }
+        };
+
+        window.testBatchOperations = async function() {
+            const results = document.getElementById('storageResults');
+            try {
+                // Test increment
+                const countKey = 'bn:test:counter';
+                await storage.delete(countKey); // Reset
+                
+                const count1 = await storage.increment(countKey);
+                const count2 = await storage.increment(countKey);
+                const count3 = await storage.increment(countKey);
+
+                // Test keys pattern matching
+                const keys = await storage.keys('bn:test:*');
+
+                results.textContent = `✅ Batch operations test:
+Increment results: ${count1}, ${count2}, ${count3}
+Keys matching 'bn:test:*': ${keys.join(', ')}`;
+            } catch (error) {
+                results.textContent = `❌ Error: ${error.message}`;
+            }
+        };
+
+        window.showSystemStatus = async function() {
+            const results = document.getElementById('statusResults');
+            try {
+                const allKeys = Object.keys(localStorage);
+                const bnKeys = allKeys.filter(k => k.startsWith('bn:'));
+                const productKeys = await storage.keys('bn:product:*');
+                const contentKeys = await storage.keys('bn:content:*');
+                const settingsKeys = await storage.keys('bn:settings:*');
+                const version = await storage.get('bn:version');
+
+                results.textContent = `📊 System Status:
+
+Total localStorage keys: ${allKeys.length}
+BN-namespaced keys: ${bnKeys.length}
+
+Key Categories:
+• Products: ${productKeys.length}
+• Content: ${contentKeys.length}  
+• Settings: ${settingsKeys.length}
+
+Version: ${version ? JSON.stringify(version, null, 2) : 'Not set'}
+
+All BN keys:
+${bnKeys.map(k => `• ${k}`).join('\n')}`;
+            } catch (error) {
+                results.textContent = `❌ Error: ${error.message}`;
+            }
+        };
+
+        // Initialize
+        console.log('🧪 Storage test page loaded');
+    </script>
+</body>
+</html>

@@ -26,6 +26,7 @@ import CompiledProductStrategyView from '../components/product-strategy/Compiled
 import { marketingCompiler } from '../services/marketingCompiler';
 import { marketIntelligenceCompiler } from '../services/marketIntelligenceCompiler';
 import { productStrategyCompiler } from '../services/productStrategyCompiler';
+import { functionalSpecService } from '../services/functionalSpecService';
 import { productToCSVProduct } from '../utils/productToCsvAdapter';
 import {
   DndContext,
@@ -74,6 +75,14 @@ export default function ProductPage() {
   const [activeView, setActiveView] = useState<ViewType>('home');
   const [contentPanels, setContentPanels] = useState<ContentPanel[]>([]);
   const [configVersion, setConfigVersion] = useState(0); // Force re-renders when config changes
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [isLoadingPanels, setIsLoadingPanels] = useState(false);
+  const [functionalSpecData, setFunctionalSpecData] = useState<{
+    content: string;
+    title: string;
+    lastModified: string;
+  } | null>(null);
+  const [isLoadingFunctionalSpec, setIsLoadingFunctionalSpec] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -93,11 +102,92 @@ export default function ProductPage() {
       window.removeEventListener('panelConfigChanged', handleConfigChange);
   }, []);
 
+  const loadFunctionalSpec = async () => {
+    if (!productData) return;
+
+    setIsLoadingFunctionalSpec(true);
+    try {
+      const specData = await functionalSpecService.getFunctionalSpec(
+        productData.id
+      );
+      if (specData) {
+        setFunctionalSpecData({
+          content: specData.content,
+          title: specData.title,
+          lastModified: specData.lastModified,
+        });
+      } else {
+        // Fallback to config data
+        const configContent =
+          productData.richContent?.functionalSpec?.sections?.[
+            'Generated Output'
+          ] || '';
+        setFunctionalSpecData({
+          content: configContent,
+          title:
+            productData.richContent?.functionalSpec?.title ||
+            'Functional Specification',
+          lastModified: new Date().toISOString(),
+        });
+      }
+    } catch (error) {
+      console.error('Error loading functional spec:', error);
+      // Fallback to config data
+      const configContent =
+        productData.richContent?.functionalSpec?.sections?.[
+          'Generated Output'
+        ] || '';
+      setFunctionalSpecData({
+        content: configContent,
+        title:
+          productData.richContent?.functionalSpec?.title ||
+          'Functional Specification',
+        lastModified: new Date().toISOString(),
+      });
+    } finally {
+      setIsLoadingFunctionalSpec(false);
+    }
+  };
+
+  // Load Functional Spec when functional-spec view is active
+  useEffect(() => {
+    if (activeView === 'functional-spec' && productData) {
+      loadFunctionalSpec();
+    }
+  }, [activeView, productData]);
+
+  // Generate panels when view or product changes
+  useEffect(() => {
+    const loadPanels = async () => {
+      if (!productData) return;
+
+      setIsLoadingPanels(true);
+      try {
+        console.log(
+          `🔄 [ProductPage] Loading panels for view: ${activeView}, product: ${productData.id}`
+        );
+        const panels = await generateContentPanels(activeView, productData);
+        const orderedPanels = applyPanelOrder(panels);
+        setContentPanels(orderedPanels);
+        console.log(
+          `✅ [ProductPage] Loaded ${panels.length} panels for ${activeView}`
+        );
+      } catch (error) {
+        console.error(`❌ [ProductPage] Error loading panels:`, error);
+        setContentPanels([]);
+      } finally {
+        setIsLoadingPanels(false);
+      }
+    };
+
+    loadPanels();
+  }, [activeView, productData, configVersion]);
+
   // Generate content panels based on the active view
-  const generateContentPanels = (
+  const generateContentPanels = async (
     view: ViewType,
     productParam: any
-  ): ContentPanel[] => {
+  ): Promise<ContentPanel[]> => {
     if (!productParam) return [];
 
     switch (view) {
@@ -106,11 +196,11 @@ export default function ProductPage() {
       case 'functional-spec':
         return generateFunctionalSpecPanels();
       case 'marketing-sales':
-        return generateMarketingSalesPanels(productParam);
+        return await generateMarketingSalesPanels(productParam);
       case 'market-intelligence':
-        return generateMarketIntelligencePanels(productParam);
+        return await generateMarketIntelligencePanels(productParam);
       case 'product-strategy':
-        return generateProductStrategyPanels(productParam);
+        return await generateProductStrategyPanels(productParam);
       case 'investment-growth':
         return generateInvestmentGrowthPanels(productParam);
       default:
@@ -150,21 +240,64 @@ export default function ProductPage() {
     return [];
   };
 
-  const generateMarketingSalesPanels = (product: any): ContentPanel[] => {
-    // Check if marketing page has been compiled and count > 0
-    const compilationCount = marketingCompiler.getCompilationCount(product.id);
-    if (compilationCount > 0 && marketingCompiler.hasCompiledPage(product.id)) {
-      // Show compiled marketing view as a single panel
-      const compiledPage = marketingCompiler.loadCompiledPage(product.id);
-      if (compiledPage) {
-        return [
-          {
-            id: 'compiled-marketing',
-            title: 'Compiled Marketing Page',
-            content: <CompiledMarketingView compiledPage={compiledPage} />,
-          },
-        ];
+  const generateMarketingSalesPanels = async (
+    product: any
+  ): Promise<ContentPanel[]> => {
+    try {
+      // Check if marketing page has been compiled and count > 0
+      const compilationCount = await marketingCompiler.getCompilationCount(
+        product.id
+      );
+      const hasCompiledPage = await marketingCompiler.hasCompiledPage(
+        product.id
+      );
+
+      console.log(
+        `🔍 [ProductPage] Marketing compilation check for ${product.id}:`,
+        {
+          compilationCount,
+          hasCompiledPage,
+          productId: product.id,
+        }
+      );
+
+      // If compiled content exists, ALWAYS show it instead of raw panels
+      if (compilationCount > 0 && hasCompiledPage) {
+        // Show compiled marketing view as a single panel
+        const compiledPage = await marketingCompiler.loadCompiledPage(
+          product.id
+        );
+        if (compiledPage) {
+          console.log(
+            `✅ [ProductPage] Loading compiled marketing page for ${product.id}`,
+            {
+              compiledPageId: compiledPage.id,
+              compiledAt: compiledPage.compiledAt,
+              contentSections: Object.keys(compiledPage.content),
+            }
+          );
+          return [
+            {
+              id: 'compiled-marketing',
+              title: 'Compiled Marketing Page',
+              content: <CompiledMarketingView compiledPage={compiledPage} />,
+            },
+          ];
+        } else {
+          console.warn(
+            `⚠️ [ProductPage] Compilation exists but failed to load for ${product.id}`
+          );
+        }
+      } else {
+        console.log(
+          `ℹ️ [ProductPage] No compiled marketing content found for ${product.id}, showing raw panels`
+        );
       }
+    } catch (error) {
+      console.error(
+        `❌ [ProductPage] Error checking marketing compilation for ${product.id}:`,
+        error
+      );
     }
 
     // If not compiled, show raw input panels
@@ -303,30 +436,65 @@ export default function ProductPage() {
     return panels;
   };
 
-  const generateMarketIntelligencePanels = (product: any): ContentPanel[] => {
-    // Check if market intelligence page has been compiled and count > 0
-    const compilationCount = marketIntelligenceCompiler.getCompilationCount(
-      product.id
-    );
-    if (
-      compilationCount > 0 &&
-      marketIntelligenceCompiler.hasCompiledPage(product.id)
-    ) {
-      // Show compiled market intelligence view as a single panel
-      const compiledPage = marketIntelligenceCompiler.loadCompiledPage(
+  const generateMarketIntelligencePanels = async (
+    product: any
+  ): Promise<ContentPanel[]> => {
+    try {
+      // Check if market intelligence page has been compiled and count > 0
+      const compilationCount =
+        await marketIntelligenceCompiler.getCompilationCount(product.id);
+      const hasCompiledPage = await marketIntelligenceCompiler.hasCompiledPage(
         product.id
       );
-      if (compiledPage) {
-        return [
-          {
-            id: 'compiled-market-intelligence',
-            title: 'Compiled Market Intelligence',
-            content: (
-              <CompiledMarketIntelligenceView compiledPage={compiledPage} />
-            ),
-          },
-        ];
+
+      console.log(
+        `🔍 [ProductPage] Market Intelligence compilation check for ${product.id}:`,
+        {
+          compilationCount,
+          hasCompiledPage,
+          productId: product.id,
+        }
+      );
+
+      // If compiled content exists, ALWAYS show it instead of raw panels
+      if (compilationCount > 0 && hasCompiledPage) {
+        // Show compiled market intelligence view as a single panel
+        const compiledPage = await marketIntelligenceCompiler.loadCompiledPage(
+          product.id
+        );
+        if (compiledPage) {
+          console.log(
+            `✅ [ProductPage] Loading compiled market intelligence page for ${product.id}`,
+            {
+              compiledPageId: compiledPage.id,
+              compiledAt: compiledPage.compiledAt,
+              contentSections: Object.keys(compiledPage.content),
+            }
+          );
+          return [
+            {
+              id: 'compiled-market-intelligence',
+              title: 'Compiled Market Intelligence',
+              content: (
+                <CompiledMarketIntelligenceView compiledPage={compiledPage} />
+              ),
+            },
+          ];
+        } else {
+          console.warn(
+            `⚠️ [ProductPage] Market Intelligence compilation exists but failed to load for ${product.id}`
+          );
+        }
+      } else {
+        console.log(
+          `ℹ️ [ProductPage] No compiled market intelligence content found for ${product.id}, showing raw panels`
+        );
       }
+    } catch (error) {
+      console.error(
+        `❌ [ProductPage] Error checking market intelligence compilation for ${product.id}:`,
+        error
+      );
     }
 
     // If not compiled, show raw input panels
@@ -514,32 +682,67 @@ export default function ProductPage() {
     return panels;
   };
 
-  const generateProductStrategyPanels = (product: any): ContentPanel[] => {
-    // Check if product strategy has been compiled and count > 0
-    const compilationCount = productStrategyCompiler.getCompilationCount(
-      product.id
-    );
-    if (
-      compilationCount > 0 &&
-      productStrategyCompiler.hasCompiledPage(product.id)
-    ) {
-      // Show compiled product strategy view as a single panel
-      const compiledStrategy = productStrategyCompiler.loadCompiledPage(
+  const generateProductStrategyPanels = async (
+    product: any
+  ): Promise<ContentPanel[]> => {
+    try {
+      // Check if product strategy has been compiled and count > 0
+      const compilationCount =
+        await productStrategyCompiler.getCompilationCount(product.id);
+      const hasCompiledPage = await productStrategyCompiler.hasCompiledPage(
         product.id
       );
-      if (compiledStrategy) {
-        return [
-          {
-            id: 'compiled-product-strategy',
-            title: 'Compiled Product Strategy',
-            content: (
-              <CompiledProductStrategyView
-                compiledStrategy={compiledStrategy}
-              />
-            ),
-          },
-        ];
+
+      console.log(
+        `🔍 [ProductPage] Product Strategy compilation check for ${product.id}:`,
+        {
+          compilationCount,
+          hasCompiledPage,
+          productId: product.id,
+        }
+      );
+
+      // If compiled content exists, ALWAYS show it instead of raw panels
+      if (compilationCount > 0 && hasCompiledPage) {
+        // Show compiled product strategy view as a single panel
+        const compiledStrategy = await productStrategyCompiler.loadCompiledPage(
+          product.id
+        );
+        if (compiledStrategy) {
+          console.log(
+            `✅ [ProductPage] Loading compiled product strategy page for ${product.id}`,
+            {
+              compiledPageId: compiledStrategy.id,
+              compiledAt: compiledStrategy.compiledAt,
+              contentSections: Object.keys(compiledStrategy.content),
+            }
+          );
+          return [
+            {
+              id: 'compiled-product-strategy',
+              title: 'Compiled Product Strategy',
+              content: (
+                <CompiledProductStrategyView
+                  compiledStrategy={compiledStrategy}
+                />
+              ),
+            },
+          ];
+        } else {
+          console.warn(
+            `⚠️ [ProductPage] Product Strategy compilation exists but failed to load for ${product.id}`
+          );
+        }
+      } else {
+        console.log(
+          `ℹ️ [ProductPage] No compiled product strategy content found for ${product.id}, showing raw panels`
+        );
       }
+    } catch (error) {
+      console.error(
+        `❌ [ProductPage] Error checking product strategy compilation for ${product.id}:`,
+        error
+      );
     }
 
     // If not compiled, show raw input panels
@@ -1011,15 +1214,6 @@ export default function ProductPage() {
     setProductData(newProduct);
   }, [id]);
 
-  // Update content panels when view or product changes
-  useEffect(() => {
-    if (productData) {
-      const panels = generateContentPanels(activeView, productData);
-      const orderedPanels = applyPanelOrder(panels);
-      setContentPanels(orderedPanels);
-    }
-  }, [activeView, productData, configVersion]);
-
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
@@ -1161,6 +1355,116 @@ export default function ProductPage() {
     console.log(`Updated ${field}:`, content);
   };
 
+  // Utility function to check compilation status for debugging
+  const checkCompilationStatus = async (productId: string) => {
+    console.log(
+      `🔍 [ProductPage] Checking compilation status for ${productId}`
+    );
+
+    try {
+      // Check marketing compilation
+      const marketingCount =
+        await marketingCompiler.getCompilationCount(productId);
+      const marketingExists =
+        await marketingCompiler.hasCompiledPage(productId);
+      const marketingPage = marketingExists
+        ? await marketingCompiler.loadCompiledPage(productId)
+        : null;
+
+      // Check market intelligence compilation
+      const marketIntelCount =
+        await marketIntelligenceCompiler.getCompilationCount(productId);
+      const marketIntelExists =
+        await marketIntelligenceCompiler.hasCompiledPage(productId);
+      const marketIntelPage = marketIntelExists
+        ? await marketIntelligenceCompiler.loadCompiledPage(productId)
+        : null;
+
+      // Check product strategy compilation
+      const productStrategyCount =
+        await productStrategyCompiler.getCompilationCount(productId);
+      const productStrategyExists =
+        await productStrategyCompiler.hasCompiledPage(productId);
+      const productStrategyPage = productStrategyExists
+        ? await productStrategyCompiler.loadCompiledPage(productId)
+        : null;
+
+      console.log(`📊 [ProductPage] Compilation Status for ${productId}:`, {
+        marketing: {
+          count: marketingCount,
+          exists: marketingExists,
+          pageId: marketingPage?.id,
+          compiledAt: marketingPage?.compiledAt,
+        },
+        marketIntelligence: {
+          count: marketIntelCount,
+          exists: marketIntelExists,
+          pageId: marketIntelPage?.id,
+          compiledAt: marketIntelPage?.compiledAt,
+        },
+        productStrategy: {
+          count: productStrategyCount,
+          exists: productStrategyExists,
+          pageId: productStrategyPage?.id,
+          compiledAt: productStrategyPage?.compiledAt,
+        },
+      });
+
+      return {
+        marketing: {
+          count: marketingCount,
+          exists: marketingExists,
+          page: marketingPage,
+        },
+        marketIntelligence: {
+          count: marketIntelCount,
+          exists: marketIntelExists,
+          page: marketIntelPage,
+        },
+        productStrategy: {
+          count: productStrategyCount,
+          exists: productStrategyExists,
+          page: productStrategyPage,
+        },
+      };
+    } catch (error) {
+      console.error(
+        `❌ [ProductPage] Error checking compilation status for ${productId}:`,
+        error
+      );
+      return null;
+    }
+  };
+
+  // Force refresh panels (for debugging)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const refreshPanels = async () => {
+    if (!productData) return;
+
+    console.log(
+      `🔄 [ProductPage] Force refreshing panels for ${productData.id}`
+    );
+    setIsLoadingPanels(true);
+
+    // Check compilation status
+    await checkCompilationStatus(productData.id);
+
+    // Reload panels
+    try {
+      const panels = await generateContentPanels(activeView, productData);
+      const orderedPanels = applyPanelOrder(panels);
+      setContentPanels(orderedPanels);
+      console.log(
+        `✅ [ProductPage] Refreshed ${panels.length} panels for ${activeView}`
+      );
+    } catch (error) {
+      console.error(`❌ [ProductPage] Error refreshing panels:`, error);
+      setContentPanels([]);
+    } finally {
+      setIsLoadingPanels(false);
+    }
+  };
+
   const tabs = [
     { id: 'home', label: 'Home', icon: Home },
     { id: 'functional-spec', label: 'Functional Spec', icon: FileText },
@@ -1173,6 +1477,77 @@ export default function ProductPage() {
     { id: 'product-strategy', label: 'Product Strategy', icon: Users },
     // { id: 'investment-growth', label: 'Investment & Growth', icon: DollarSign }, // Hidden for now
   ];
+
+  // Download functions for Functional Spec
+  const downloadFunctionalSpecAsMarkdown = () => {
+    const content =
+      functionalSpecData?.content ||
+      productData.richContent?.functionalSpec?.sections?.['Generated Output'] ||
+      '';
+    const blob = new Blob([content], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `functional_spec_${productData.id}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const saveFunctionalSpec = async (content: string) => {
+    if (!productData) return;
+
+    try {
+      await functionalSpecService.saveFunctionalSpec(productData.id, content);
+      // Update local state
+      setFunctionalSpecData((prev) =>
+        prev
+          ? {
+              ...prev,
+              content,
+              lastModified: new Date().toISOString(),
+            }
+          : null
+      );
+      console.log('✅ Functional spec saved to Redis');
+    } catch (error) {
+      console.error('❌ Error saving functional spec:', error);
+      alert('Failed to save functional spec. Please try again.');
+    }
+  };
+
+  const downloadFunctionalSpecAsJSON = () => {
+    const currentContent =
+      functionalSpecData?.content ||
+      productData.richContent?.functionalSpec?.sections?.['Generated Output'] ||
+      '';
+    const currentTitle =
+      functionalSpecData?.title ||
+      productData.richContent?.functionalSpec?.title ||
+      'Functional Specification';
+
+    const downloadData = {
+      productId: productData.id,
+      productName: productData.name,
+      title: currentTitle,
+      content: currentContent,
+      metadata: productData.richContent?.functionalSpec?.metadata || {},
+      downloadedAt: new Date().toISOString(),
+    };
+
+    const blob = new Blob([JSON.stringify(downloadData, null, 2)], {
+      type: 'application/json',
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `functional_spec_${productData.id}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -1359,7 +1734,15 @@ export default function ProductPage() {
         ) : activeView === 'functional-spec' ? (
           // Custom styled Functional Specification (no collapsible panel)
           <div className="space-y-8">
-            {productData.richContent?.functionalSpec ? (
+            {isLoadingFunctionalSpec ? (
+              <div className="text-center py-16">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                <p className="text-gray-600">
+                  Loading functional specification...
+                </p>
+              </div>
+            ) : functionalSpecData ||
+              productData.richContent?.functionalSpec ? (
               <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
                 {/* Header */}
                 <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-6">
@@ -1374,6 +1757,14 @@ export default function ProductPage() {
                       <p className="text-blue-100 text-sm mt-1">
                         Detailed technical requirements and implementation guide
                       </p>
+                      {functionalSpecData?.lastModified && (
+                        <p className="text-blue-200 text-xs mt-1">
+                          Last modified:{' '}
+                          {new Date(
+                            functionalSpecData.lastModified
+                          ).toLocaleString()}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -1382,13 +1773,13 @@ export default function ProductPage() {
                 <div className="p-8">
                   <EditableSection
                     title="Edit Content"
-                    onSave={(content) =>
-                      console.log('Updated functional spec:', content)
-                    }
+                    onSave={saveFunctionalSpec}
                     initialContent={
-                      productData.richContent.functionalSpec.sections?.[
+                      functionalSpecData?.content ||
+                      productData.richContent?.functionalSpec?.sections?.[
                         'Generated Output'
-                      ] || ''
+                      ] ||
+                      ''
                     }
                     placeholder="Enter functional specification..."
                     isTextArea
@@ -1398,14 +1789,37 @@ export default function ProductPage() {
                     <div className="prose prose-lg prose-gray max-w-none">
                       <MarkdownRenderer
                         content={
-                          productData.richContent.functionalSpec.sections?.[
+                          functionalSpecData?.content ||
+                          productData.richContent?.functionalSpec?.sections?.[
                             'Generated Output'
-                          ] || ''
+                          ] ||
+                          ''
                         }
                         skipFirstHeading={true}
                       />
                     </div>
                   </EditableSection>
+
+                  {/* Download Options */}
+                  <div className="mt-8 bg-blue-50 rounded-lg p-6">
+                    <h3 className="font-semibold text-blue-900 mb-4">
+                      📥 Download Functional Specification
+                    </h3>
+                    <div className="flex space-x-4">
+                      <button
+                        onClick={() => downloadFunctionalSpecAsMarkdown()}
+                        className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition-colors"
+                      >
+                        📄 Download as Markdown
+                      </button>
+                      <button
+                        onClick={() => downloadFunctionalSpecAsJSON()}
+                        className="flex items-center justify-center gap-2 px-4 py-2 bg-green-100 text-green-800 rounded-lg hover:bg-green-200 transition-colors"
+                      >
+                        📊 Download as JSON
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             ) : (
@@ -1424,8 +1838,13 @@ export default function ProductPage() {
               </div>
             )}
           </div>
+        ) : // Panel-based content for other tabs
+        isLoadingPanels ? (
+          <div className="text-center py-16">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading compiled content...</p>
+          </div>
         ) : (
-          // Panel-based content for other tabs
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}

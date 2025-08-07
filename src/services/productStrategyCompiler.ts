@@ -8,6 +8,7 @@
 import type { Product } from '../types/product';
 import { PRODUCT_STRATEGY_COMPILATION_PROMPT } from '../prompts/productStrategyPrompt';
 import { aiService } from './aiService';
+import { getStorageService } from './storage';
 
 export interface ProductStrategyInputs {
   productManifesto: string;
@@ -79,6 +80,25 @@ export interface CompiledProductStrategyPage {
 }
 
 class ProductStrategyCompilerService {
+  private storage = getStorageService();
+
+  /**
+   * Utility function to extract JSON from markdown-formatted responses
+   */
+  private extractJsonFromResponse(response: string): string {
+    // Remove markdown code blocks if present
+    let cleanedResponse = response.trim();
+    
+    // Remove ```json and ``` markers
+    cleanedResponse = cleanedResponse.replace(/^```json\s*/i, '');
+    cleanedResponse = cleanedResponse.replace(/^```\s*/i, '');
+    cleanedResponse = cleanedResponse.replace(/\s*```$/i, '');
+    
+    // Remove any leading/trailing whitespace
+    cleanedResponse = cleanedResponse.trim();
+    
+    return cleanedResponse;
+  }
 
   /**
    * Extract product strategy inputs from product data
@@ -159,8 +179,15 @@ ${inputs.functionalSpec || 'No functional specification available'}
         inputData
       );
       
+      // Extract JSON from potential markdown formatting
+      const cleanedResponse = this.extractJsonFromResponse(aiResponse);
+      
+      // Debug logging
+      console.log('Raw AI response:', aiResponse.substring(0, 200) + '...');
+      console.log('Cleaned response:', cleanedResponse.substring(0, 200) + '...');
+      
       // Parse the JSON response
-      const parsedContent = JSON.parse(aiResponse);
+      const parsedContent = JSON.parse(cleanedResponse);
       
       // Validate the structure matches our interface
       if (!parsedContent.executiveStrategySummary || !parsedContent.productDefinitionPositioning) {
@@ -170,6 +197,13 @@ ${inputs.functionalSpec || 'No functional specification available'}
       return parsedContent as CompiledProductStrategyPage['content'];
     } catch (error) {
       console.error('AI compilation failed:', error);
+      
+      // Provide more specific error information
+      if (error instanceof SyntaxError && error.message.includes('JSON')) {
+        console.error('JSON parsing failed. Raw response preview:', aiResponse?.substring(0, 500));
+        throw new Error(`Product Strategy compilation failed: Invalid JSON response from AI. Please try again.`);
+      }
+      
       throw new Error(`Product Strategy compilation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -309,11 +343,11 @@ ${content.strategicImplementationGuide.continuousImprovement}
       rawMarkdown
     };
 
-    // Save to localStorage
-    this.saveCompiledPage(compiledStrategy);
+    // Save to storage
+    await this.saveCompiledPage(compiledStrategy);
     
     // Increment compilation count
-    this.incrementCompilationCount(product.id);
+    await this.incrementCompilationCount(product.id);
 
     return compiledStrategy;
   }
@@ -321,54 +355,50 @@ ${content.strategicImplementationGuide.continuousImprovement}
   /**
    * Save compiled page to localStorage
    */
-  saveCompiledPage(compiledStrategy: CompiledProductStrategyPage): void {
-    const key = `compiled-product-strategy-${compiledStrategy.productId}`;
-    localStorage.setItem(key, JSON.stringify(compiledStrategy));
+  async saveCompiledPage(compiledStrategy: CompiledProductStrategyPage): Promise<void> {
+    const key = `bn:compiled:product-strategy:${compiledStrategy.productId}`;
+    await this.storage.set(key, compiledStrategy);
   }
 
   /**
    * Get compilation count for a product
    */
-  getCompilationCount(productId: string): number {
-    const key = `product-strategy-compilation-count-${productId}`;
-    const count = localStorage.getItem(key);
-    return count ? parseInt(count, 10) : 0;
+  async getCompilationCount(productId: string): Promise<number> {
+    const key = `bn:count:product-strategy:${productId}`;
+    const count = await this.storage.get<number>(key);
+    return count || 0;
   }
 
   /**
    * Increment compilation count
    */
-  private incrementCompilationCount(productId: string): void {
-    const key = `product-strategy-compilation-count-${productId}`;
-    const currentCount = this.getCompilationCount(productId);
-    localStorage.setItem(key, (currentCount + 1).toString());
+  private async incrementCompilationCount(productId: string): Promise<void> {
+    const key = `bn:count:product-strategy:${productId}`;
+    await this.storage.increment(key);
   }
 
   /**
    * Reset compilation count
    */
-  resetCompilationCount(productId: string): void {
-    const key = `product-strategy-compilation-count-${productId}`;
-    localStorage.removeItem(key);
+  async resetCompilationCount(productId: string): Promise<void> {
+    const key = `bn:count:product-strategy:${productId}`;
+    await this.storage.delete(key);
     
     // Also remove compiled page
-    const pageKey = `compiled-product-strategy-${productId}`;
-    localStorage.removeItem(pageKey);
+    const pageKey = `bn:compiled:product-strategy:${productId}`;
+    await this.storage.delete(pageKey);
   }
 
   /**
    * Get all compilation counts
    */
-  getAllCompilationCounts(): Record<string, number> {
+  async getAllCompilationCounts(): Promise<Record<string, number>> {
     const counts: Record<string, number> = {};
+    const keys = await this.storage.keys('bn:count:product-strategy:*');
     
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key?.startsWith('product-strategy-compilation-count-')) {
-        const productId = key.replace('product-strategy-compilation-count-', '');
-        const count = localStorage.getItem(key);
-        counts[productId] = count ? parseInt(count, 10) : 0;
-      }
+    for (const key of keys) {
+      const productId = key.replace('bn:count:product-strategy:', '');
+      counts[productId] = await this.getCompilationCount(productId);
     }
     
     return counts;
@@ -377,16 +407,20 @@ ${content.strategicImplementationGuide.continuousImprovement}
   /**
    * Load compiled page from localStorage
    */
-  loadCompiledPage(productId: string): CompiledProductStrategyPage | null {
-    const key = `compiled-product-strategy-${productId}`;
-    const data = localStorage.getItem(key);
+  async loadCompiledPage(productId: string): Promise<CompiledProductStrategyPage | null> {
+    const key = `bn:compiled:product-strategy:${productId}`;
+    const data = await this.storage.get<CompiledProductStrategyPage>(key);
     
     if (!data) {
       return null;
     }
     
     try {
-      return JSON.parse(data) as CompiledProductStrategyPage;
+      // Convert date strings back to Date objects
+      if (typeof data.compiledAt === 'string') {
+        data.compiledAt = new Date(data.compiledAt);
+      }
+      return data;
     } catch (error) {
       console.error('Failed to parse compiled product strategy:', error);
       return null;
@@ -396,8 +430,9 @@ ${content.strategicImplementationGuide.continuousImprovement}
   /**
    * Check if product has compiled page
    */
-  hasCompiledPage(productId: string): boolean {
-    return this.loadCompiledPage(productId) !== null;
+  async hasCompiledPage(productId: string): Promise<boolean> {
+    const key = `bn:compiled:product-strategy:${productId}`;
+    return await this.storage.exists(key);
   }
 }
 

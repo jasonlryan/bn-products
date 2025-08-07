@@ -1,54 +1,171 @@
-# React + TypeScript + Vite
+# BN Products - Redis-Powered Product Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A comprehensive product management platform built with React, TypeScript, and Vite, featuring a Redis-based storage architecture for scalable data persistence and real-time compilation workflows.
 
-Currently, two official plugins are available:
+## Architecture Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This application uses a dual-storage architecture that seamlessly migrates from localStorage to Redis (Vercel KV), providing both local development capabilities and production-scale persistence.
 
-## Expanding the ESLint configuration
+### Storage System
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **DualStorageService**: Automatically tries Redis first, falls back to localStorage
+- **RedisStorageService**: Production storage using Vercel KV
+- **LocalStorageService**: Development/fallback storage
+- **Key Namespace**: All Redis keys use `bn:` prefix for organization
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+### Compilation Workflow
+
+The system includes a sophisticated compilation service that processes product data and stores compiled content in Redis:
+
+- **Marketing Compilation**: `bn:compiled:marketing:{productId}`
+- **Market Intelligence**: `bn:compiled:market-intel:{productId}`
+- **Product Strategy**: `bn:compiled:product-strategy:{productId}`
+
+## Environment Setup
+
+Create a `.env` file with the following variables:
+
+```env
+# Redis/Vercel KV Configuration
+KV_REST_API_URL=your_vercel_kv_url
+KV_REST_API_TOKEN=your_vercel_kv_token
+
+# Optional: Enable Redis in development
+VITE_REDIS_ENABLED=true
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Installation & Development
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+# Install dependencies
+npm install
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
 ```
+
+## Key Features
+
+### 1. Product Management
+- Create, read, update products
+- Support for multiple product types
+- Rich content management with descriptions and metadata
+
+### 2. Redis Storage Integration
+- Seamless migration from localStorage to Redis
+- Automatic fallback mechanisms
+- Production-ready scalability with Vercel KV
+
+### 3. Compilation System
+- **CompilationService**: Handles all compilation workflows
+- **CompilationPanel**: Admin interface for managing compilations
+- **React Hooks**: `useCompilation` for state management
+- **SWR Integration**: Efficient data fetching and caching
+
+### 4. Testing & Development Tools
+- **populate-storage.html**: Populate Redis with sample data
+- **test-redis-compilation.html**: Test compilation workflows
+- Redis population utilities and migration tools
+
+## Project Structure
+
+```
+src/
+├── components/
+│   ├── admin/
+│   │   └── CompilationPanel.tsx    # Admin compilation interface
+│   └── ui/                         # Reusable UI components
+├── hooks/
+│   ├── useCompilation.ts           # Compilation workflow hooks
+│   ├── useProducts.ts              # Product data hooks
+│   └── useCompiledContent.ts       # Compiled content hooks
+├── services/
+│   ├── storage/
+│   │   ├── storageService.ts       # Dual storage implementation
+│   │   ├── redisStorageService.ts  # Redis/Vercel KV service
+│   │   └── localStorageService.ts  # localStorage fallback
+│   ├── compilationService.ts       # Compilation workflows
+│   └── compilers/                  # Individual compiler services
+└── utils/
+    └── populateRedis.ts           # Redis population utilities
+```
+
+## Storage Service Usage
+
+```typescript
+import { storageService } from './services/storage/storageService'
+
+// The service automatically handles Redis/localStorage switching
+await storageService.set('bn:products:123', productData)
+const product = await storageService.get('bn:products:123')
+```
+
+## Compilation Workflow
+
+```typescript
+import { useCompilation } from './hooks/useCompilation'
+
+function AdminPanel() {
+  const { compile, compileAll, isCompiling } = useCompilation()
+  
+  // Compile individual content type
+  await compile('product-123', 'marketing')
+  
+  // Compile all content types
+  await compileAll('product-123')
+}
+```
+
+## Deployment
+
+The application is configured for deployment on Vercel with:
+
+- **vercel.json**: Deployment configuration
+- **API Routes**: Serverless functions for Redis operations
+- **Environment Variables**: Automatic KV_* variable injection
+- **Build Optimization**: Vite-based bundling
+
+## Development vs Production
+
+### Development
+- Uses localStorage by default
+- Can enable Redis with `VITE_REDIS_ENABLED=true`
+- Includes test pages and debugging tools
+
+### Production (Vercel)
+- Automatically uses Vercel KV (Redis)
+- Serverless API routes for backend operations
+- Optimized builds with caching
+
+## Migration from localStorage
+
+The system automatically migrates existing localStorage data to Redis when deployed. The dual storage pattern ensures no data loss during the transition.
+
+## API Endpoints
+
+When deployed, the following API routes are available:
+
+- `GET /api/products` - List all products
+- `POST /api/compilation/marketing` - Compile marketing content
+- `POST /api/compilation/market-intel` - Compile market intelligence
+- `POST /api/compilation/product-strategy` - Compile product strategy
+- `GET /api/compilation/status` - Check compilation status
+- `POST /api/setup/populate` - Populate Redis with sample data
+
+## Testing
+
+Use the included test pages to verify Redis functionality:
+
+1. Navigate to `/populate-storage.html` to populate Redis
+2. Use `/test-redis-compilation.html` to test compilation workflows
+3. Check browser console for detailed logging
+
+## Contributing
+
+This project uses ESLint and TypeScript for code quality. Run `npm run lint` before committing changes.

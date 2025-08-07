@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Populate Storage - BN Products</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 10px 10px 0;
+        }
+        button:hover {
+            background: #0052a3;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .success {
+            color: #28a745;
+            margin: 10px 0;
+        }
+        .error {
+            color: #dc3545;
+            margin: 10px 0;
+        }
+        .info {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 BN Products Storage Population</h1>
+        
+        <div class="info">
+            <p><strong>This tool will populate your browser's localStorage with sample product data.</strong></p>
+            <p>This is a temporary solution for development until Redis is properly configured.</p>
+        </div>
+
+        <h2>Current Storage Status</h2>
+        <div id="status">Checking...</div>
+
+        <h2>Actions</h2>
+        <button id="populate" onclick="populateStorage()">🔄 Populate Sample Data</button>
+        <button id="clear" onclick="clearStorage()">🗑️ Clear All Data</button>
+        <button id="backup" onclick="backupStorage()">💾 Backup Data</button>
+        <button onclick="checkStatus()">📊 Refresh Status</button>
+
+        <h2>Log</h2>
+        <div id="log" class="log"></div>
+    </div>
+
+    <script>
+        let logElement = document.getElementById('log');
+        
+        function log(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            logElement.textContent += `[${timestamp}] ${message}\n`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+
+        function checkStatus() {
+            const keys = Object.keys(localStorage);
+            const productKeys = keys.filter(k => k.includes('product') || k.includes('compiled'));
+            
+            document.getElementById('status').innerHTML = `
+                <p><strong>Total localStorage keys:</strong> ${keys.length}</p>
+                <p><strong>Product-related keys:</strong> ${productKeys.length}</p>
+                <details>
+                    <summary>View all keys</summary>
+                    <div style="margin-top: 10px; font-family: monospace; font-size: 12px;">
+                        ${keys.map(k => `• ${k}`).join('<br>')}
+                    </div>
+                </details>
+            `;
+            
+            log(`Status checked: ${keys.length} total keys, ${productKeys.length} product keys`);
+        }
+
+        function populateStorage() {
+            log('🚀 Starting storage population...');
+            
+            // Sample products data
+            const sampleProducts = [
+                {
+                    id: "01_ai_power_hour",
+                    name: "AI Power Hour",
+                    type: "PRODUCT",
+                    pricing: {
+                        type: "fixed",
+                        display: "£2,500",
+                        value: 2500
+                    },
+                    content: {
+                        description: "Fast-track your AI adoption with expert-led intensive workshop designed for busy executives and teams who need practical AI implementation strategies.",
+                        perfectFor: "Senior leadership teams and decision-makers who want to understand AI's business impact and create actionable implementation plans.",
+                        keyBenefits: [
+                            "Rapid AI literacy for leadership teams",
+                            "Clear implementation roadmap",
+                            "Immediate practical applications"
+                        ]
+                    },
+                    features: [
+                        "60-minute intensive workshop",
+                        "Executive-focused content",
+                        "Practical implementation framework",
+                        "Follow-up action plan",
+                        "Industry-specific examples"
+                    ],
+                    benefits: [
+                        "Fast AI adoption",
+                        "Strategic clarity",
+                        "Team alignment",
+                        "Practical outcomes",
+                        "Expert guidance"
+                    ],
+                    marketing: {
+                        headline: "AI Power Hour: Executive AI Strategy in 60 Minutes",
+                        tagline: "From AI confusion to clarity in one focused hour",
+                        positioning: "The fastest way for executives to develop practical AI strategy"
+                    },
+                    metadata: {
+                        createdAt: new Date().toISOString(),
+                        lastModified: new Date().toISOString(),
+                        version: "1.0.0"
+                    }
+                },
+                {
+                    id: "02_ai_innovation_workshop",
+                    name: "AI Innovation Workshop",
+                    type: "PRODUCT",
+                    pricing: {
+                        type: "fixed",
+                        display: "£5,000",
+                        value: 5000
+                    },
+                    content: {
+                        description: "Comprehensive AI innovation workshop that transforms teams from AI-curious to AI-capable through hands-on learning and practical implementation.",
+                        perfectFor: "Innovation teams, product managers, and technical leaders who need to integrate AI into their products and processes."
+                    },
+                    features: [
+                        "Full-day workshop format",
+                        "Hands-on AI building",
+                        "Team-based learning",
+                        "Real project focus",
+                        "Expert mentorship"
+                    ],
+                    benefits: [
+                        "Practical AI skills",
+                        "Team transformation",
+                        "Tangible outcomes",
+                        "Ongoing support",
+                        "Innovation acceleration"
+                    ],
+                    marketing: {
+                        headline: "AI Innovation Workshop: Build AI Solutions in One Day",
+                        tagline: "Transform your team from AI-curious to AI-capable",
+                        positioning: "The most practical way to build AI capabilities in your team"
+                    },
+                    metadata: {
+                        createdAt: new Date().toISOString(),
+                        lastModified: new Date().toISOString(),
+                        version: "1.0.0"
+                    }
+                },
+                {
+                    id: "03_strategic_ai_consulting",
+                    name: "Strategic AI Consulting", 
+                    type: "SERVICE",
+                    pricing: {
+                        type: "custom",
+                        display: "Custom pricing"
+                    },
+                    content: {
+                        description: "Comprehensive AI strategy consulting for organizations ready to make AI a core competitive advantage through systematic transformation.",
+                        perfectFor: "Large organizations and enterprises that need comprehensive AI transformation strategy and implementation support."
+                    },
+                    features: [
+                        "Multi-month engagement",
+                        "C-suite advisory",
+                        "Enterprise architecture",
+                        "Change management",
+                        "ROI optimization"
+                    ],
+                    benefits: [
+                        "Strategic transformation",
+                        "Enterprise expertise",
+                        "Sustained impact",
+                        "Competitive advantage",
+                        "Scalable solutions"
+                    ],
+                    marketing: {
+                        headline: "Strategic AI Consulting: Enterprise AI Transformation",
+                        tagline: "Turn AI from buzzword to business advantage",
+                        positioning: "Enterprise AI transformation for sustainable competitive advantage"
+                    },
+                    metadata: {
+                        createdAt: new Date().toISOString(),
+                        lastModified: new Date().toISOString(),
+                        version: "1.0.0"
+                    }
+                }
+            ];
+
+            try {
+                // Store product list
+                localStorage.setItem('bn:product:list', JSON.stringify(sampleProducts.map(p => p.id)));
+                log(`✅ Stored product list with ${sampleProducts.length} products`);
+
+                // Store individual products
+                sampleProducts.forEach(product => {
+                    localStorage.setItem(`bn:product:definition:${product.id}`, JSON.stringify(product));
+                    log(`✅ Stored product: ${product.name}`);
+                });
+
+                // Add sample content for first product
+                const sampleContent = {
+                    title: 'AI Power Hour • Product Manifesto',
+                    metadata: {
+                        productId: '01_ai_power_hour',
+                        contentType: 'manifesto',
+                        lastGenerated: new Date().toISOString(),
+                        promptVersion: '1.0'
+                    },
+                    sections: {
+                        'Original Prompt': 'Create a product manifesto for AI Power Hour',
+                        'Product Context': 'Executive AI workshop for rapid strategy development',
+                        'Generated Output': `# AI Power Hour Manifesto
+
+## Our Belief
+We believe that AI transformation shouldn't be overwhelming, time-consuming, or theoretical. Leaders need practical, actionable AI strategies that can be implemented immediately.
+
+## Our Mission
+To transform executive teams from AI-confused to AI-confident in exactly 60 minutes, providing clear direction and practical next steps.
+
+## Our Promise
+Every participant leaves with:
+- Crystal-clear understanding of AI's business impact
+- Specific implementation roadmap for their organization
+- Confidence to lead AI initiatives
+- Practical tools for immediate action
+
+## Our Approach
+- Executive-focused, no technical jargon
+- Practical over theoretical  
+- Industry-specific examples
+- Immediate actionability
+- Expert guidance throughout`,
+                        'Context Used': 'Product definition, target audience, business model'
+                    },
+                    fullContent: 'Complete manifesto content...',
+                    lastModified: new Date().toISOString(),
+                    version: '1.0.0'
+                };
+
+                localStorage.setItem('bn:content:01_ai_power_hour:manifesto', JSON.stringify(sampleContent));
+                log('✅ Added sample manifesto content');
+
+                // Add settings
+                localStorage.setItem('bn:settings:admin', JSON.stringify({
+                    theme: 'light',
+                    language: 'en',
+                    features: {
+                        autoSave: true,
+                        notifications: true,
+                        analytics: false
+                    },
+                    lastUpdated: new Date().toISOString()
+                }));
+
+                localStorage.setItem('bn:settings:edit-mode', JSON.stringify(false));
+
+                localStorage.setItem('bn:version', JSON.stringify({
+                    version: '2.0.0-dev',
+                    migrationDate: new Date().toISOString(),
+                    features: ['localStorage-fallback', 'product-management', 'compilation-system']
+                }));
+
+                log('✅ Added application settings');
+                log('🎉 Population complete!');
+                checkStatus();
+
+            } catch (error) {
+                log(`❌ Error: ${error.message}`);
+            }
+        }
+
+        function clearStorage() {
+            if (!confirm('Are you sure you want to clear all product data?')) {
+                return;
+            }
+
+            log('🧹 Clearing storage...');
+            
+            const keys = Object.keys(localStorage);
+            let cleared = 0;
+            
+            keys.forEach(key => {
+                if (key.startsWith('bn:') || key.includes('product') || key.includes('compiled')) {
+                    localStorage.removeItem(key);
+                    cleared++;
+                }
+            });
+
+            log(`✅ Cleared ${cleared} keys`);
+            checkStatus();
+        }
+
+        function backupStorage() {
+            log('💾 Creating backup...');
+            
+            const backup = {};
+            const keys = Object.keys(localStorage);
+            
+            keys.forEach(key => {
+                if (key.startsWith('bn:') || key.includes('product') || key.includes('compiled')) {
+                    backup[key] = localStorage.getItem(key);
+                }
+            });
+
+            const blob = new Blob([JSON.stringify(backup, null, 2)], {
+                type: 'application/json'
+            });
+            
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `bn-products-backup-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            log(`✅ Backup downloaded with ${Object.keys(backup).length} keys`);
+        }
+
+        // Initialize
+        checkStatus();
+        log('🌟 Storage population tool ready');
+    </script>
+</body>
+</html>

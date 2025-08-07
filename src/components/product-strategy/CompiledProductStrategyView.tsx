@@ -12,10 +12,10 @@ import {
   CheckCircle,
 } from 'lucide-react';
 import MarkdownRenderer from '../MarkdownRenderer';
-import type { CompiledProductStrategy } from '../../services/productStrategyCompiler';
+import type { CompiledProductStrategyPage } from '../../services/productStrategyCompiler';
 
 interface CompiledProductStrategyViewProps {
-  compiledStrategy: CompiledProductStrategy;
+  compiledStrategy: CompiledProductStrategyPage;
   className?: string;
 }
 
@@ -42,6 +42,93 @@ const CompiledProductStrategyView: React.FC<
   };
 
   const { content } = compiledStrategy;
+
+  const downloadAsMarkdown = () => {
+    const blob = new Blob([compiledStrategy.rawMarkdown], {
+      type: 'text/markdown',
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `compiled_strategy_${compiledStrategy.productId}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const downloadAsJSON = () => {
+    const blob = new Blob([JSON.stringify(compiledStrategy, null, 2)], {
+      type: 'application/json',
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `compiled_strategy_${compiledStrategy.productId}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const downloadAsPDF = () => {
+    // This is a placeholder. In a real application, you'd use a library like pdfmake or jsPDF
+    // to generate a PDF from the markdown content.
+    alert('PDF download functionality is not yet implemented.');
+  };
+
+  const downloadSection = (section: string) => {
+    let contentToDownload = '';
+    switch (section) {
+      case 'executive':
+        contentToDownload =
+          content.executiveStrategySummary.productVision +
+          '\n\n' +
+          content.executiveStrategySummary.productMission +
+          '\n\n' +
+          content.executiveStrategySummary.marketPositioning +
+          '\n\n' +
+          content.executiveStrategySummary.strategicObjectives?.join('\n') +
+          '\n\n' +
+          content.executiveStrategySummary.successMetrics?.join('\n');
+        break;
+      case 'product':
+        contentToDownload =
+          content.productDefinitionPositioning.problemSolutionFit +
+          '\n\n' +
+          content.productDefinitionPositioning.uniqueValueProposition +
+          '\n\n' +
+          content.productDefinitionPositioning.magicMomentArticulation +
+          '\n\n' +
+          content.productDefinitionPositioning.competitiveDifferentiation?.join(
+            '\n'
+          );
+        break;
+      case 'implementation':
+        contentToDownload =
+          content.strategicImplementationGuide.resourceRequirements?.join(
+            '\n'
+          ) +
+          '\n\n' +
+          content.strategicImplementationGuide.teamStructure +
+          '\n\n' +
+          content.strategicImplementationGuide.keyDecisionPoints?.join('\n') +
+          '\n\n' +
+          content.strategicImplementationGuide.continuousImprovement;
+        break;
+      default:
+        contentToDownload = compiledStrategy.rawMarkdown;
+    }
+    const blob = new Blob([contentToDownload], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `compiled_strategy_${compiledStrategy.productId}_${section}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className={`max-w-4xl mx-auto ${className}`}>
@@ -113,13 +200,17 @@ const CompiledProductStrategyView: React.FC<
                   Strategic Objectives
                 </h3>
                 <ul className="space-y-2 mb-4">
-                  {content.executiveStrategySummary.strategicObjectives.map(
+                  {content.executiveStrategySummary.strategicObjectives?.map(
                     (objective, index) => (
                       <li key={index} className="flex items-start gap-2">
                         <CheckCircle className="w-4 h-4 text-purple-500 mt-0.5 flex-shrink-0" />
                         <span className="text-gray-700">{objective}</span>
                       </li>
                     )
+                  ) || (
+                    <li className="text-gray-500 italic">
+                      No strategic objectives defined
+                    </li>
                   )}
                 </ul>
 
@@ -127,13 +218,17 @@ const CompiledProductStrategyView: React.FC<
                   Success Metrics
                 </h3>
                 <ul className="space-y-2">
-                  {content.executiveStrategySummary.successMetrics.map(
+                  {content.executiveStrategySummary.successMetrics?.map(
                     (metric, index) => (
                       <li key={index} className="flex items-start gap-2">
                         <Award className="w-4 h-4 text-purple-500 mt-0.5 flex-shrink-0" />
                         <span className="text-gray-700">{metric}</span>
                       </li>
                     )
+                  ) || (
+                    <li className="text-gray-500 italic">
+                      No success metrics defined
+                    </li>
                   )}
                 </ul>
               </div>
@@ -198,13 +293,17 @@ const CompiledProductStrategyView: React.FC<
                   Competitive Differentiation
                 </h3>
                 <ul className="space-y-2">
-                  {content.productDefinitionPositioning.competitiveDifferentiation.map(
+                  {content.productDefinitionPositioning.competitiveDifferentiation?.map(
                     (diff, index) => (
                       <li key={index} className="flex items-start gap-2">
                         <CheckCircle className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
                         <span className="text-gray-700">{diff}</span>
                       </li>
                     )
+                  ) || (
+                    <li className="text-gray-500 italic">
+                      No competitive differentiation defined
+                    </li>
                   )}
                 </ul>
               </div>
@@ -237,34 +336,37 @@ const CompiledProductStrategyView: React.FC<
             <div className="space-y-6">
               <div>
                 <h3 className="font-semibold text-green-900 mb-4">
-                  User Persona Segmentation
+                  User Personas
                 </h3>
                 <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-4">
-                  {content.userExperienceStrategy.userPersonaSegmentation.map(
+                  {content.userExperienceStrategy.userPersonas?.map(
                     (persona, index) => (
                       <div
                         key={index}
                         className="bg-green-50 p-4 rounded-lg border border-green-200"
                       >
                         <h4 className="font-medium text-green-900 mb-2">
-                          {persona.persona}
+                          {persona.name}
                         </h4>
+                        <p className="text-gray-700 text-sm mb-3">
+                          {persona.description}
+                        </p>
                         <div className="space-y-2 text-sm">
                           <div>
                             <span className="font-medium">Needs:</span>{' '}
-                            {persona.needs.join(', ')}
-                          </div>
-                          <div>
-                            <span className="font-medium">Pain Points:</span>{' '}
-                            {persona.painPoints.join(', ')}
+                            {persona.needs?.join(', ') || 'Not specified'}
                           </div>
                           <div>
                             <span className="font-medium">Goals:</span>{' '}
-                            {persona.goals.join(', ')}
+                            {persona.goals?.join(', ') || 'Not specified'}
                           </div>
                         </div>
                       </div>
                     )
+                  ) || (
+                    <div className="text-gray-500 italic">
+                      No user personas defined
+                    </div>
                   )}
                 </div>
               </div>
@@ -282,31 +384,20 @@ const CompiledProductStrategyView: React.FC<
                 <h3 className="font-semibold text-green-900 mb-3">
                   Experience Prioritization
                 </h3>
-                <div className="space-y-3">
-                  {content.userExperienceStrategy.experiencePrioritization.map(
-                    (exp, index) => (
-                      <div key={index} className="bg-green-50 p-4 rounded-lg">
-                        <div className="flex items-center justify-between mb-2">
-                          <h4 className="font-medium text-green-900">
-                            {exp.experience}
-                          </h4>
-                          <span
-                            className={`px-2 py-1 rounded text-xs font-medium ${
-                              exp.priority === 'High'
-                                ? 'bg-red-100 text-red-800'
-                                : exp.priority === 'Medium'
-                                  ? 'bg-yellow-100 text-yellow-800'
-                                  : 'bg-gray-100 text-gray-800'
-                            }`}
-                          >
-                            {exp.priority} Priority
-                          </span>
-                        </div>
-                        <p className="text-gray-700 text-sm">{exp.rationale}</p>
-                      </div>
-                    )
-                  )}
-                </div>
+                <p className="text-gray-700 bg-green-50 p-4 rounded-lg">
+                  {content.userExperienceStrategy.experiencePrioritization ||
+                    'No experience prioritization defined'}
+                </p>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-green-900 mb-3">
+                  Feature User Alignment
+                </h3>
+                <p className="text-gray-700 bg-green-50 p-4 rounded-lg">
+                  {content.userExperienceStrategy.featureUserAlignment ||
+                    'No feature user alignment defined'}
+                </p>
               </div>
             </div>
           </div>
@@ -344,10 +435,10 @@ const CompiledProductStrategyView: React.FC<
                 </p>
 
                 <h3 className="font-semibold text-orange-900 mb-3">
-                  Pricing Rationale
+                  Revenue Strategy
                 </h3>
                 <p className="text-gray-700 mb-4">
-                  {content.businessModelFramework.pricingRationale}
+                  {content.businessModelFramework.revenueStrategy}
                 </p>
 
                 <h3 className="font-semibold text-orange-900 mb-3">
@@ -360,29 +451,26 @@ const CompiledProductStrategyView: React.FC<
 
               <div>
                 <h3 className="font-semibold text-orange-900 mb-3">
-                  Market Entry Approach
+                  Market Entry & Scaling
                 </h3>
                 <p className="text-gray-700 mb-4">
-                  {content.businessModelFramework.marketEntryApproach}
-                </p>
-
-                <h3 className="font-semibold text-orange-900 mb-3">
-                  Scaling Strategy
-                </h3>
-                <p className="text-gray-700 mb-4">
-                  {content.businessModelFramework.scalingStrategy}
+                  {content.businessModelFramework.marketEntryScaling}
                 </p>
 
                 <h3 className="font-semibold text-orange-900 mb-3">
                   Risk Assessment
                 </h3>
                 <ul className="space-y-1">
-                  {content.businessModelFramework.riskAssessment.map(
+                  {content.businessModelFramework.riskAssessment?.map(
                     (risk, index) => (
                       <li key={index} className="text-gray-700 text-sm">
                         • {risk}
                       </li>
                     )
+                  ) || (
+                    <li className="text-gray-500 italic text-sm">
+                      No risk assessment defined
+                    </li>
                   )}
                 </ul>
               </div>
@@ -417,38 +505,10 @@ const CompiledProductStrategyView: React.FC<
                 <h3 className="font-semibold text-indigo-900 mb-4">
                   Feature Prioritization
                 </h3>
-                <div className="space-y-3">
-                  {content.productDevelopmentRoadmap.featurePrioritization.map(
-                    (feature, index) => (
-                      <div key={index} className="bg-indigo-50 p-4 rounded-lg">
-                        <div className="flex items-center justify-between mb-2">
-                          <h4 className="font-medium text-indigo-900">
-                            {feature.feature}
-                          </h4>
-                          <span
-                            className={`px-2 py-1 rounded text-xs font-medium ${
-                              feature.priority === 'High'
-                                ? 'bg-red-100 text-red-800'
-                                : feature.priority === 'Medium'
-                                  ? 'bg-yellow-100 text-yellow-800'
-                                  : 'bg-gray-100 text-gray-800'
-                            }`}
-                          >
-                            {feature.priority} Priority
-                          </span>
-                        </div>
-                        <p className="text-gray-700 text-sm mb-2">
-                          {feature.rationale}
-                        </p>
-                        {feature.dependencies.length > 0 && (
-                          <p className="text-gray-600 text-xs">
-                            Dependencies: {feature.dependencies.join(', ')}
-                          </p>
-                        )}
-                      </div>
-                    )
-                  )}
-                </div>
+                <p className="text-gray-700 bg-indigo-50 p-4 rounded-lg">
+                  {content.productDevelopmentRoadmap.featurePrioritization ||
+                    'No feature prioritization defined'}
+                </p>
               </div>
 
               <div>
@@ -456,7 +516,7 @@ const CompiledProductStrategyView: React.FC<
                   Development Phases
                 </h3>
                 <div className="space-y-4">
-                  {content.productDevelopmentRoadmap.developmentPhases.map(
+                  {content.productDevelopmentRoadmap.developmentPhases?.map(
                     (phase, index) => (
                       <div key={index} className="bg-indigo-50 p-4 rounded-lg">
                         <div className="flex items-center justify-between mb-2">
@@ -468,13 +528,19 @@ const CompiledProductStrategyView: React.FC<
                           </span>
                         </div>
                         <p className="text-gray-700 text-sm mb-2">
-                          {phase.milestone}
+                          {phase.milestones?.join(', ') ||
+                            'No milestones defined'}
                         </p>
                         <p className="text-gray-600 text-xs">
-                          Deliverables: {phase.deliverables.join(', ')}
+                          Dependencies:{' '}
+                          {phase.dependencies?.join(', ') || 'No dependencies'}
                         </p>
                       </div>
                     )
+                  ) || (
+                    <div className="text-gray-500 italic">
+                      No development phases defined
+                    </div>
                   )}
                 </div>
               </div>
@@ -484,7 +550,18 @@ const CompiledProductStrategyView: React.FC<
                   Technical Architecture
                 </h3>
                 <p className="text-gray-700 bg-indigo-50 p-4 rounded-lg">
-                  {content.productDevelopmentRoadmap.technicalArchitecture}
+                  {content.productDevelopmentRoadmap.technicalArchitecture ||
+                    'No technical architecture defined'}
+                </p>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-indigo-900 mb-3">
+                  Implementation Timeline
+                </h3>
+                <p className="text-gray-700 bg-indigo-50 p-4 rounded-lg">
+                  {content.productDevelopmentRoadmap.implementationTimeline ||
+                    'No implementation timeline defined'}
                 </p>
               </div>
             </div>
@@ -523,46 +600,55 @@ const CompiledProductStrategyView: React.FC<
                 </p>
 
                 <h3 className="font-semibold text-pink-900 mb-3">
-                  Distribution Strategy
+                  Launch Strategy
                 </h3>
                 <p className="text-gray-700 mb-4">
-                  {content.goToMarketStrategy.distributionStrategy}
-                </p>
-
-                <h3 className="font-semibold text-pink-900 mb-3">
-                  Marketing Approach
-                </h3>
-                <p className="text-gray-700">
-                  {content.goToMarketStrategy.marketingApproach}
+                  {content.goToMarketStrategy.launchStrategy}
                 </p>
               </div>
 
               <div>
                 <h3 className="font-semibold text-pink-900 mb-3">
-                  Rollout Phases
+                  Distribution Channels
                 </h3>
                 <ul className="space-y-2 mb-4">
-                  {content.goToMarketStrategy.rolloutPhases.map(
-                    (phase, index) => (
+                  {content.goToMarketStrategy.distributionChannels?.map(
+                    (channel, index) => (
                       <li key={index} className="flex items-start gap-2">
                         <CheckCircle className="w-4 h-4 text-pink-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-700">{phase}</span>
+                        <span className="text-gray-700">{channel}</span>
                       </li>
                     )
+                  ) || (
+                    <li className="text-gray-500 italic">
+                      No distribution channels defined
+                    </li>
                   )}
                 </ul>
+
+                <h3 className="font-semibold text-pink-900 mb-3">
+                  Marketing Positioning
+                </h3>
+                <p className="text-gray-700 bg-pink-50 p-4 rounded-lg mb-4">
+                  {content.goToMarketStrategy.marketingPositioning ||
+                    'No marketing positioning defined'}
+                </p>
 
                 <h3 className="font-semibold text-pink-900 mb-3">
                   Success Measurement
                 </h3>
                 <ul className="space-y-2">
-                  {content.goToMarketStrategy.successMeasurement.map(
+                  {content.goToMarketStrategy.successMeasurement?.map(
                     (metric, index) => (
                       <li key={index} className="flex items-start gap-2">
                         <Award className="w-4 h-4 text-pink-500 mt-0.5 flex-shrink-0" />
                         <span className="text-gray-700">{metric}</span>
                       </li>
                     )
+                  ) || (
+                    <li className="text-gray-500 italic">
+                      No success metrics defined
+                    </li>
                   )}
                 </ul>
               </div>
@@ -598,12 +684,16 @@ const CompiledProductStrategyView: React.FC<
                   Resource Requirements
                 </h3>
                 <ul className="space-y-1 mb-4">
-                  {content.strategicImplementationGuide.resourceRequirements.map(
+                  {content.strategicImplementationGuide.resourceRequirements?.map(
                     (req, index) => (
                       <li key={index} className="text-gray-700">
                         • {req}
                       </li>
                     )
+                  ) || (
+                    <li className="text-gray-500 italic">
+                      No resource requirements defined
+                    </li>
                   )}
                 </ul>
 
@@ -620,12 +710,16 @@ const CompiledProductStrategyView: React.FC<
                   Key Decision Points
                 </h3>
                 <ul className="space-y-1 mb-4">
-                  {content.strategicImplementationGuide.keyDecisionPoints.map(
+                  {content.strategicImplementationGuide.keyDecisionPoints?.map(
                     (point, index) => (
                       <li key={index} className="text-gray-700">
                         • {point}
                       </li>
                     )
+                  ) || (
+                    <li className="text-gray-500 italic">
+                      No key decision points defined
+                    </li>
                   )}
                 </ul>
 
@@ -648,6 +742,60 @@ const CompiledProductStrategyView: React.FC<
         </h3>
         <div className="bg-white border border-gray-200 rounded-lg p-4 max-h-96 overflow-y-auto">
           <MarkdownRenderer content={compiledStrategy.rawMarkdown} />
+        </div>
+      </div>
+
+      {/* Download Options */}
+      <div className="mt-8 bg-blue-50 rounded-lg p-6">
+        <h3 className="font-semibold text-blue-900 mb-4">
+          📥 Download Compiled Content
+        </h3>
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="space-y-3">
+            <h4 className="font-medium text-blue-800">
+              Complete Strategy Document
+            </h4>
+            <button
+              onClick={() => downloadAsMarkdown()}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition-colors"
+            >
+              📄 Download as Markdown
+            </button>
+            <button
+              onClick={() => downloadAsJSON()}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-green-100 text-green-800 rounded-lg hover:bg-green-200 transition-colors"
+            >
+              📊 Download as JSON
+            </button>
+            <button
+              onClick={() => downloadAsPDF()}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-100 text-red-800 rounded-lg hover:bg-red-200 transition-colors"
+            >
+              📋 Download as PDF
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            <h4 className="font-medium text-blue-800">Individual Sections</h4>
+            <button
+              onClick={() => downloadSection('executive')}
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-purple-100 text-purple-800 rounded-lg hover:bg-purple-200 transition-colors text-sm"
+            >
+              🎯 Executive Summary
+            </button>
+            <button
+              onClick={() => downloadSection('product')}
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-indigo-100 text-indigo-800 rounded-lg hover:bg-indigo-200 transition-colors text-sm"
+            >
+              📦 Product Definition
+            </button>
+            <button
+              onClick={() => downloadSection('implementation')}
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors text-sm"
+            >
+              ⚙️ Implementation Guide
+            </button>
+          </div>
         </div>
       </div>
     </div>

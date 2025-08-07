@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Compilation Status</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .status {
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .warning { background-color: #fff3cd; color: #856404; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        .log {
+            max-height: 300px;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Compilation Status Test</h1>
+        
+        <div class="section">
+            <h2>Storage Test</h2>
+            <button onclick="testStorage()">Test Storage Operations</button>
+            <div id="storageResult"></div>
+        </div>
+
+        <div class="section">
+            <h2>Compilation Status Check</h2>
+            <input type="text" id="productId" placeholder="Enter product ID (e.g., 01_ai_power_hour)" value="01_ai_power_hour" style="width: 300px; padding: 8px; margin-right: 10px;">
+            <button onclick="checkCompilationStatus()">Check Status</button>
+            <div id="compilationResult"></div>
+        </div>
+
+        <div class="section">
+            <h2>Debug Logs</h2>
+            <button onclick="clearLogs()">Clear Logs</button>
+            <div id="logs" class="log"></div>
+        </div>
+    </div>
+
+    <script>
+        // Capture console logs
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+        
+        function addLog(message, type = 'info') {
+            const logsDiv = document.getElementById('logs');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `<span style="color: #666;">[${timestamp}]</span> <span style="color: ${type === 'error' ? '#dc3545' : type === 'warn' ? '#ffc107' : '#007bff'};">${message}</span>`;
+            logsDiv.appendChild(logEntry);
+            logsDiv.scrollTop = logsDiv.scrollHeight;
+        }
+
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addLog(args.join(' '), 'info');
+        };
+
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addLog(args.join(' '), 'error');
+        };
+
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            addLog(args.join(' '), 'warn');
+        };
+
+        function clearLogs() {
+            document.getElementById('logs').innerHTML = '';
+        }
+
+        function showResult(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        async function testStorage() {
+            showResult('storageResult', 'Testing storage operations...', 'info');
+            
+            try {
+                // Test localStorage
+                const testKey = 'test-compilation-key';
+                const testData = { test: 'data', timestamp: new Date().toISOString() };
+                
+                localStorage.setItem(testKey, JSON.stringify(testData));
+                const retrieved = JSON.parse(localStorage.getItem(testKey));
+                localStorage.removeItem(testKey);
+                
+                if (retrieved.test === 'data') {
+                    showResult('storageResult', '✅ localStorage working correctly', 'success');
+                } else {
+                    showResult('storageResult', '❌ localStorage test failed', 'error');
+                }
+            } catch (error) {
+                showResult('storageResult', `❌ Storage test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function checkCompilationStatus() {
+            const productId = document.getElementById('productId').value;
+            if (!productId) {
+                showResult('compilationResult', 'Please enter a product ID', 'warning');
+                return;
+            }
+
+            showResult('compilationResult', 'Checking compilation status...', 'info');
+            
+            try {
+                // Check for compiled content in localStorage
+                const marketingKey = `compiled-marketing-${productId}`;
+                const marketIntelKey = `compiled-market-intel-${productId}`;
+                const productStrategyKey = `compiled-product-strategy-${productId}`;
+                
+                const marketingCountKey = `marketing-compilation-count-${productId}`;
+                const marketIntelCountKey = `market-intelligence-compilation-count-${productId}`;
+                const productStrategyCountKey = `product-strategy-compilation-count-${productId}`;
+
+                const results = {
+                    marketing: {
+                        count: localStorage.getItem(marketingCountKey) || '0',
+                        exists: !!localStorage.getItem(marketingKey),
+                        data: localStorage.getItem(marketingKey) ? JSON.parse(localStorage.getItem(marketingKey)) : null
+                    },
+                    marketIntelligence: {
+                        count: localStorage.getItem(marketIntelCountKey) || '0',
+                        exists: !!localStorage.getItem(marketIntelKey),
+                        data: localStorage.getItem(marketIntelKey) ? JSON.parse(localStorage.getItem(marketIntelKey)) : null
+                    },
+                    productStrategy: {
+                        count: localStorage.getItem(productStrategyCountKey) || '0',
+                        exists: !!localStorage.getItem(productStrategyKey),
+                        data: localStorage.getItem(productStrategyKey) ? JSON.parse(localStorage.getItem(productStrategyKey)) : null
+                    }
+                };
+
+                console.log('Compilation Status Results:', results);
+
+                let resultHtml = '<div style="margin-top: 10px;">';
+                
+                // Marketing
+                resultHtml += `<div class="status ${results.marketing.exists ? 'success' : 'warning'}">`;
+                resultHtml += `Marketing: Count=${results.marketing.count}, Exists=${results.marketing.exists}`;
+                if (results.marketing.data) {
+                    resultHtml += `, Compiled: ${new Date(results.marketing.data.compiledAt).toLocaleString()}`;
+                }
+                resultHtml += '</div>';
+
+                // Market Intelligence
+                resultHtml += `<div class="status ${results.marketIntelligence.exists ? 'success' : 'warning'}">`;
+                resultHtml += `Market Intelligence: Count=${results.marketIntelligence.count}, Exists=${results.marketIntelligence.exists}`;
+                if (results.marketIntelligence.data) {
+                    resultHtml += `, Compiled: ${new Date(results.marketIntelligence.data.compiledAt).toLocaleString()}`;
+                }
+                resultHtml += '</div>';
+
+                // Product Strategy
+                resultHtml += `<div class="status ${results.productStrategy.exists ? 'success' : 'warning'}">`;
+                resultHtml += `Product Strategy: Count=${results.productStrategy.count}, Exists=${results.productStrategy.exists}`;
+                if (results.productStrategy.data) {
+                    resultHtml += `, Compiled: ${new Date(results.productStrategy.data.compiledAt).toLocaleString()}`;
+                }
+                resultHtml += '</div>';
+
+                resultHtml += '</div>';
+
+                // Show detailed data if exists
+                if (results.marketing.data || results.marketIntelligence.data || results.productStrategy.data) {
+                    resultHtml += '<h3>Compiled Content Preview:</h3>';
+                    resultHtml += '<pre>' + JSON.stringify(results, null, 2) + '</pre>';
+                }
+
+                document.getElementById('compilationResult').innerHTML = resultHtml;
+
+            } catch (error) {
+                showResult('compilationResult', `❌ Error checking compilation status: ${error.message}`, 'error');
+                console.error('Error:', error);
+            }
+        }
+
+        // Auto-check on load
+        window.addEventListener('load', () => {
+            console.log('Compilation Status Test Page Loaded');
+            testStorage();
+        });
+    </script>
+</body>
+</html> 
