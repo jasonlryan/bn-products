@@ -104,12 +104,12 @@ export default function Dashboard() {
         <div className="text-center mb-12">
           <h2 className="text-4xl font-semibold text-gray-900 mb-4">
             {activeTab === 'products'
-              ? 'Our Product Suite'
+              ? 'Our Service Portfolio'
               : 'Our Service Portfolio'}
           </h2>
           <p className="text-lg text-gray-600">
             {activeTab === 'products'
-              ? 'Choose the perfect AI product for your business needs'
+              ? 'Comprehensive AI services to transform your organization'
               : 'Comprehensive AI services to transform your organization'}
           </p>
         </div>
