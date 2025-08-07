@@ -126,7 +126,10 @@ export async function generatePDF(content: PDFContent): Promise<Blob> {
  */
 export async function downloadPDF(content: PDFContent, filename?: string): Promise<void> {
   try {
+    console.log('🔄 [PDF] Generating PDF...');
     const pdfBlob = await generatePDF(content);
+    console.log('✅ [PDF] PDF generated successfully');
+    
     const url = URL.createObjectURL(pdfBlob);
     const a = document.createElement('a');
     a.href = url;
@@ -135,8 +138,10 @@ export async function downloadPDF(content: PDFContent, filename?: string): Promi
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    
+    console.log(`📄 [PDF] PDF downloaded: ${a.download}`);
   } catch (error) {
-    console.error('Error generating PDF:', error);
+    console.error('❌ [PDF] Error generating PDF:', error);
     throw new Error('Failed to generate PDF');
   }
 }
