@@ -197,40 +197,8 @@ Respond with valid JSON only.`;
     console.log('🔑 [AI Service] API key configured:', !!this.apiKey);
     
     if (!this.apiKey) {
-      console.log('⚠️ [AI Service] No API key configured - using fallback content');
-      // Return a structured fallback response instead of throwing
-      return JSON.stringify({
-        executiveSummary: {
-          productOverview: "AI-powered solution for business transformation",
-          targetMarket: "Organizations seeking digital innovation",
-          uniqueValueProp: "Transformative AI capabilities with proven results",
-          keyMetrics: "Strong market opportunity with growing demand"
-        },
-        messagingFramework: {
-          primaryValueProps: [
-            {
-              title: "Transformative AI Solutions",
-              description: "Deliver exceptional results through innovative AI technology",
-              evidence: "Proven success across multiple client engagements"
-            }
-          ],
-          elevatorPitches: {
-            thirtySecond: "Transform your business with AI-powered solutions.",
-            sixtySecond: "Our AI platform delivers comprehensive solutions with measurable outcomes.",
-            twoMinute: "Address business challenges with our proven AI methodology and expert guidance."
-          },
-          keyDifferentiators: [
-            "Unique methodology and approach",
-            "Expert team with proven track record",
-            "Customized solutions for specific needs"
-          ],
-          proofPoints: [
-            "Client testimonials demonstrate success",
-            "Industry expertise and specialization",
-            "Proven methodology and frameworks"
-          ]
-        }
-      }, null, 2);
+      console.error('❌ [AI Service] No API key configured');
+      throw new Error('OpenAI API key not configured');
     }
 
     try {
