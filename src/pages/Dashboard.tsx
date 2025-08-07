@@ -1,16 +1,15 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Settings } from 'lucide-react';
+import { Settings, MessageSquare } from 'lucide-react';
 import { getAllProducts, getAllServices } from '../config';
 import { Card, Button } from '../components/ui';
-import AIConfigModal from '../components/AIConfigModal';
 import { cleanProductName, cleanDescription } from '../utils/textCleaner';
+import FeedbackWidget from '../components/FeedbackWidget';
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<'products' | 'services'>(
     'products'
   );
-  const [showAIConfig, setShowAIConfig] = useState(false);
   const navigate = useNavigate();
 
   // Get data from new configuration
@@ -48,13 +47,8 @@ export default function Dashboard() {
             <div className="flex items-center space-x-3">
               <button
                 onClick={() => navigate('/admin')}
-                className="text-gray-500 hover:text-gray-700 text-sm font-medium px-3 py-2 rounded-md hover:bg-gray-100 transition-colors"
-              >
-                Admin
-              </button>
-              <button
-                onClick={() => setShowAIConfig(true)}
                 className="text-gray-500 hover:text-gray-700"
+                title="Admin Panel"
               >
                 <Settings className="h-6 w-6" />
               </button>
@@ -99,8 +93,6 @@ export default function Dashboard() {
             Services ({services.length})
           </Button>
         </div>
-
-
 
         {/* Product/Service Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -220,49 +212,35 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Call to Action Section */}
-      <section className="bg-primary py-16">
+      {/* Feedback CTA Footer */}
+      <footer className="bg-primary py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-semibold mb-4 text-white">
-            Ready to Get Started?
-          </h2>
-          <p className="text-lg mb-8 text-white opacity-90">
-            Transform your business with our AI solutions.
+          <h3 className="text-2xl font-semibold text-white mb-4">
+            Help Us Improve
+          </h3>
+          <p className="text-lg text-white opacity-90 mb-6 max-w-2xl mx-auto">
+            Share your thoughts and suggestions about this page.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              size="lg"
-              variant="secondary"
-              className="!bg-white !text-primary hover:!bg-gray-100 hover:!text-primary !border-0"
-            >
-              Learn More
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="!border-2 !border-white !text-white !bg-transparent hover:!bg-white hover:!text-primary"
-            >
-              Contact Sales
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-100 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-gray-600">
-            © 2025 BrilliantNoise. All rights reserved.
-          </p>
+          <button
+            onClick={() => {
+              // Trigger the feedback widget
+              const feedbackButton = document.querySelector(
+                '[aria-label="Give feedback"]'
+              ) as HTMLButtonElement;
+              if (feedbackButton) {
+                feedbackButton.click();
+              }
+            }}
+            className="inline-flex items-center px-6 py-3 bg-white text-primary font-medium rounded-lg hover:bg-gray-100 transition-colors"
+          >
+            <MessageSquare className="w-5 h-5 mr-2" />
+            Give Feedback
+          </button>
         </div>
       </footer>
 
-      {showAIConfig && (
-        <AIConfigModal
-          isOpen={showAIConfig}
-          onClose={() => setShowAIConfig(false)}
-        />
-      )}
+      {/* Hidden Feedback Widget */}
+      <FeedbackWidget page="dashboard" />
     </div>
   );
 }

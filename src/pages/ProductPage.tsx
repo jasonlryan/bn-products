@@ -11,11 +11,11 @@ import {
   Sliders,
   Home,
   FileText,
+  MessageSquare,
 } from 'lucide-react';
 import { getProductById, getAllProductsAndServices } from '../config';
 import { Button } from '../components/ui';
 import EditableSection from '../components/EditableSection';
-import AIConfigModal from '../components/AIConfigModal';
 import PanelConfigModal from '../components/PanelConfigModal';
 import MarkdownRenderer from '../components/MarkdownRenderer';
 import TabPanel from '../components/TabPanel';
@@ -28,8 +28,7 @@ import { marketIntelligenceCompiler } from '../services/marketIntelligenceCompil
 import { productStrategyCompiler } from '../services/productStrategyCompiler';
 import { functionalSpecService } from '../services/functionalSpecService';
 import { productToCSVProduct } from '../utils/productToCsvAdapter';
-
-
+import FeedbackWidget from '../components/FeedbackWidget';
 
 type ViewType =
   | 'home'
@@ -56,7 +55,6 @@ export default function ProductPage() {
   const totalProducts = allProducts.length;
 
   const [productData, setProductData] = useState(product);
-  const [showAIConfig, setShowAIConfig] = useState(false);
   const [showPanelConfig, setShowPanelConfig] = useState(false);
   const [activeView, setActiveView] = useState<ViewType>('home');
   const [contentPanels, setContentPanels] = useState<ContentPanel[]>([]);
@@ -1289,8 +1287,6 @@ export default function ProductPage() {
     console.log(`Updated ${field}:`, content);
   };
 
-
-
   // Force refresh panels (for debugging)
 
   const tabs = [
@@ -1435,18 +1431,18 @@ export default function ProductPage() {
                     <Sliders className="w-4 h-4" />
                     <span className="hidden sm:inline">Panels</span>
                   </button>
-
-                  {/* AI Configuration Button */}
-                  <button
-                    onClick={() => setShowAIConfig(true)}
-                    className="flex items-center space-x-2 px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-                    title="AI Configuration"
-                  >
-                    <Settings className="w-4 h-4" />
-                    <span className="hidden sm:inline">AI Configuration</span>
-                  </button>
                 </>
               )}
+
+              {/* Admin Button - Available on all pages */}
+              <button
+                onClick={() => navigate('/admin')}
+                className="flex items-center space-x-2 px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                title="Admin Panel"
+              >
+                <Settings className="w-4 h-4" />
+                <span className="hidden sm:inline">Admin</span>
+              </button>
             </div>
           </div>
         </div>
@@ -1703,14 +1699,6 @@ export default function ProductPage() {
           )}
       </div>
 
-      {/* AI Configuration Modal */}
-      {showAIConfig && (
-        <AIConfigModal
-          isOpen={showAIConfig}
-          onClose={() => setShowAIConfig(false)}
-        />
-      )}
-
       {/* Panel Configuration Modal */}
       <PanelConfigModal
         isOpen={showPanelConfig}
@@ -1718,6 +1706,36 @@ export default function ProductPage() {
         productId={productData?.id}
         currentTab={activeView}
       />
+
+      {/* Feedback CTA Footer */}
+      <footer className="bg-primary py-12 mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h3 className="text-2xl font-semibold text-white mb-4">
+            Help Us Improve
+          </h3>
+          <p className="text-lg text-white opacity-90 mb-6 max-w-2xl mx-auto">
+            Share your thoughts and suggestions about this page.
+          </p>
+          <button
+            onClick={() => {
+              // Trigger the feedback widget
+              const feedbackButton = document.querySelector(
+                '[aria-label="Give feedback"]'
+              ) as HTMLButtonElement;
+              if (feedbackButton) {
+                feedbackButton.click();
+              }
+            }}
+            className="inline-flex items-center px-6 py-3 bg-white text-primary font-medium rounded-lg hover:bg-gray-100 transition-colors"
+          >
+            <MessageSquare className="w-5 h-5 mr-2" />
+            Give Feedback
+          </button>
+        </div>
+      </footer>
+
+      {/* Hidden Feedback Widget */}
+      <FeedbackWidget page="product" productId={productData?.id} />
     </div>
   );
 }

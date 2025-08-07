@@ -6,4 +6,15 @@ export default defineConfig({
   plugins: [react({
     jsxRuntime: 'automatic'
   })],
+  define: {
+    global: 'globalThis',
+  },
+  resolve: {
+    alias: {
+      process: 'process/browser',
+    },
+  },
+  optimizeDeps: {
+    include: ['process'],
+  },
 })
