@@ -1,23 +1,25 @@
 import type { StorageService } from './types'
 import { LocalStorageService } from './localStorageService'
 
-/* Unused DualStorageService - keeping for reference
 class DualStorageService implements StorageService {
-  private redis: any
+  private redis: StorageService | null
   private localStorage: LocalStorageService
 
   constructor() {
     this.localStorage = new LocalStorageService()
-    // Only initialize Redis if we're on the server side
-    if (typeof window === 'undefined') {
-      try {
-        const { RedisStorageService } = require('./redisStorageService')
-        this.redis = new RedisStorageService()
-      } catch (error) {
-        console.warn('Redis storage not available, using localStorage only')
-        this.redis = null
-      }
-    } else {
+    this.redis = null
+    // Initialize Redis asynchronously
+    this.initRedis()
+  }
+
+  private async initRedis() {
+    try {
+      // Dynamic import to avoid SSR issues
+      const { RedisStorageService } = await import('./redisStorageService')
+      this.redis = new RedisStorageService()
+      console.log('✅ [Storage] Redis initialized successfully')
+    } catch (error) {
+      console.warn('⚠️ [Storage] Redis not available, using localStorage only:', error)
       this.redis = null
     }
   }
@@ -178,7 +180,7 @@ class DualStorageService implements StorageService {
             results.push(redisResults[i])
           } else {
             // Try localStorage for missing values
-            const localValue = await this.localStorage.get(keys[i])
+            const localValue = await this.localStorage.get<T>(keys[i])
             results.push(localValue)
             if (localValue !== null) {
               // Sync to Redis
@@ -250,39 +252,14 @@ class DualStorageService implements StorageService {
     }
   }
 }
-*/
 
 // Export singleton instance
 let storageService: StorageService
 
 export function getStorageService(): StorageService {
   if (!storageService) {
-    // Check if we're in a browser environment
-    const isBrowser = typeof window !== 'undefined'
-    
-    if (isBrowser) {
-      // In browser, only use localStorage to avoid server-side dependencies
-      storageService = new LocalStorageService()
-    } else {
-      // On server, use environment variable to determine which service to use
-      const storageMode = process.env.NEXT_PUBLIC_STORAGE_MODE || 'local'
-      
-      switch (storageMode) {
-        case 'redis':
-          try {
-            const { RedisStorageService } = require('./redisStorageService')
-            storageService = new RedisStorageService()
-          } catch (error) {
-            console.warn('Redis storage not available, falling back to localStorage')
-            storageService = new LocalStorageService()
-          }
-          break
-        case 'local':
-        default:
-          storageService = new LocalStorageService()
-          break
-      }
-    }
+    // Always use DualStorageService for proper Redis/localStorage handling
+    storageService = new DualStorageService()
   }
   
   return storageService
