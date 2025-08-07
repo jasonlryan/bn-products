@@ -1,6 +1,7 @@
 import type { StorageService } from './types'
 import { LocalStorageService } from './localStorageService'
 
+/* Unused DualStorageService - keeping for reference
 class DualStorageService implements StorageService {
   private redis: any
   private localStorage: LocalStorageService
@@ -28,7 +29,7 @@ class DualStorageService implements StorageService {
       if (this.redis) {
         console.log(`🔍 [Storage] Redis available, trying Redis first...`);
         // Try Redis first
-        const redisValue = await this.redis.get<T>(key)
+        const redisValue = await this.redis.get(key)
         if (redisValue !== null) {
           console.log(`✅ [Storage] Found in Redis: ${key}`);
           return redisValue
@@ -177,7 +178,7 @@ class DualStorageService implements StorageService {
             results.push(redisResults[i])
           } else {
             // Try localStorage for missing values
-            const localValue = await this.localStorage.get<T>(keys[i])
+            const localValue = await this.localStorage.get(keys[i])
             results.push(localValue)
             if (localValue !== null) {
               // Sync to Redis
@@ -249,6 +250,7 @@ class DualStorageService implements StorageService {
     }
   }
 }
+*/
 
 // Export singleton instance
 let storageService: StorageService

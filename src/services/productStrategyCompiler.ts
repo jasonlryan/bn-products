@@ -172,9 +172,10 @@ ${inputs.businessModel || 'No business model available'}
 ${inputs.functionalSpec || 'No functional specification available'}
 `;
 
+    let aiResponse: string;
     try {
       // Use the actual AI service with the external prompt
-      const aiResponse = await aiService.generateCompiledContent(
+      aiResponse = await aiService.generateCompiledContent(
         PRODUCT_STRATEGY_COMPILATION_PROMPT,
         inputData
       );
@@ -200,7 +201,7 @@ ${inputs.functionalSpec || 'No functional specification available'}
       
       // Provide more specific error information
       if (error instanceof SyntaxError && error.message.includes('JSON')) {
-        console.error('JSON parsing failed. Raw response preview:', aiResponse?.substring(0, 500));
+        console.error('JSON parsing failed. Raw response preview:', aiResponse ? aiResponse.substring(0, 500) : 'No response available');
         throw new Error(`Product Strategy compilation failed: Invalid JSON response from AI. Please try again.`);
       }
       

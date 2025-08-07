@@ -79,27 +79,27 @@ const CompiledMarketingView: React.FC<CompiledMarketingViewProps> = ({
           '\n\n' +
           content.executiveSummary.targetMarket +
           '\n\n' +
-          content.executiveSummary.valueProposition +
+          (content.executiveSummary.uniqueValueProp || (content.executiveSummary as any).valueProposition) +
           '\n\n' +
-          content.executiveSummary.keyBenefits?.join('\n');
+          ((content.executiveSummary as any).keyBenefits?.join?.('\n') || '');
         break;
       case 'messaging':
         contentToDownload =
-          content.messagingFramework.coreMessage +
+          ((content.messagingFramework as any).coreMessage || content.messagingFramework.primaryValueProps.map(p => p.title).join(', ')) +
           '\n\n' +
-          content.messagingFramework.keyMessages?.join('\n') +
+          ((content.messagingFramework as any).keyMessages?.join?.('\n') || content.messagingFramework.primaryValueProps.map(p => p.description).join('\n')) +
           '\n\n' +
-          content.messagingFramework.elevatorPitch +
+          (content.messagingFramework.elevatorPitches?.thirtySecond || (content.messagingFramework as any).elevatorPitch) +
           '\n\n' +
-          content.messagingFramework.differentiators?.join('\n');
+          (content.messagingFramework.keyDifferentiators?.join?.('\n') || (content.messagingFramework as any).differentiators?.join?.('\n') || '');
         break;
       case 'sales':
         contentToDownload =
-          content.salesProcess.qualificationQuestions?.join('\n') +
+          ((content as any).salesProcess?.qualificationQuestions?.join?.('\n') || (content as any).salesEnablement?.discoveryQuestions?.join?.('\n') || '') +
           '\n\n' +
-          content.salesProcess.demonstrationSteps?.join('\n') +
+          ((content as any).salesProcess?.demonstrationSteps?.join?.('\n') || '') +
           '\n\n' +
-          content.salesProcess.closingTechniques?.join('\n');
+          ((content as any).salesProcess?.closingTechniques?.join?.('\n') || (content as any).salesEnablement?.closingTechniques || '');
         break;
       default:
         contentToDownload = compiledPage.rawMarkdown;

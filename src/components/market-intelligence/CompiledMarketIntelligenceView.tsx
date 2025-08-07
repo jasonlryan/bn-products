@@ -80,29 +80,25 @@ const CompiledMarketIntelligenceView: React.FC<
           '\n\n' +
           content.marketOverview.marketSize +
           '\n\n' +
-          content.marketOverview.keyDrivers?.join('\n') +
+          (typeof content.marketOverview.keyDrivers === 'string' ? content.marketOverview.keyDrivers : (content.marketOverview.keyDrivers as string[])?.join('\n') || '') +
           '\n\n' +
-          content.marketOverview.marketChallenges?.join('\n');
+          content.marketOverview.successFactors;
         break;
       case 'competitive':
         contentToDownload =
-          content.competitiveLandscape.competitiveOverview +
+          content.competitiveLandscape.marketMap +
           '\n\n' +
-          content.competitiveLandscape.keyCompetitors?.join('\n') +
-          '\n\n' +
-          content.competitiveLandscape.competitiveAdvantages?.join('\n') +
-          '\n\n' +
-          content.competitiveLandscape.marketPositioning;
+          content.competitiveLandscape.threatAssessment;
         break;
       case 'customer':
         contentToDownload =
-          content.customerIntelligence.customerSegments?.join('\n') +
+          ((content.customerIntelligence as any).customerSegments?.join?.('\n') || content.customerIntelligence.customerJourney) +
           '\n\n' +
-          content.customerIntelligence.buyingBehavior +
+          ((content.customerIntelligence as any).buyingBehavior || content.customerIntelligence.budgetProcurement) +
           '\n\n' +
-          content.customerIntelligence.customerNeeds?.join('\n') +
+          ((content.customerIntelligence as any).customerNeeds?.join?.('\n') || '') +
           '\n\n' +
-          content.customerIntelligence.customerPainPoints?.join('\n');
+          ((content.customerIntelligence as any).customerPainPoints?.join?.('\n') || '');
         break;
       default:
         contentToDownload = compiledPage.rawMarkdown;
@@ -343,7 +339,7 @@ const CompiledMarketIntelligenceView: React.FC<
                             Motivations
                           </h5>
                           <ul className="text-gray-600 space-y-1">
-                            {persona.motivations.map((motivation, i) => (
+                            {((persona as any).motivations || []).map((motivation: any, i: number) => (
                               <li key={i} className="flex items-start">
                                 <span className="text-green-500 mr-1">•</span>
                                 {motivation}
@@ -442,13 +438,13 @@ const CompiledMarketIntelligenceView: React.FC<
                         <h5 className="font-medium text-green-800 mb-1">
                           Approach
                         </h5>
-                        <p className="text-gray-700 mb-2">{segment.approach}</p>
+                        <p className="text-gray-700 mb-2">{(segment as any).approach || segment.description}</p>
 
                         <h5 className="font-medium text-green-800 mb-1">
                           Key Needs
                         </h5>
                         <ul className="text-gray-600 space-y-1">
-                          {segment.needs.map((need, i) => (
+                          {((segment as any).needs || []).map((need: any, i: number) => (
                             <li key={i} className="flex items-start">
                               <span className="text-green-500 mr-1">•</span>
                               {need}
@@ -598,8 +594,8 @@ const CompiledMarketIntelligenceView: React.FC<
                     Partnership Opportunities
                   </h3>
                   <ul className="text-gray-700 text-sm space-y-1">
-                    {content.opportunityAnalysis.partnerships.map(
-                      (partnership, index) => (
+                    {(content.opportunityAnalysis.partnershipOpportunities || []).map(
+                      (partnership: any, index: number) => (
                         <li key={index} className="flex items-start">
                           <span className="text-blue-500 mr-2">•</span>
                           {partnership}
@@ -632,8 +628,8 @@ const CompiledMarketIntelligenceView: React.FC<
                     Expansion Opportunities
                   </h3>
                   <ul className="text-gray-700 text-sm space-y-1">
-                    {content.opportunityAnalysis.expansion.map(
-                      (expansion, index) => (
+                    {((content.opportunityAnalysis as any).expansion || []).map(
+                      (expansion: any, index: number) => (
                         <li key={index} className="flex items-start">
                           <span className="text-purple-500 mr-2">•</span>
                           {expansion}
@@ -676,14 +672,14 @@ const CompiledMarketIntelligenceView: React.FC<
                     Entry Strategy
                   </h3>
                   <p className="text-gray-700 text-sm mb-4">
-                    {content.strategicRecommendations.entryStrategy}
+                    {content.strategicRecommendations.marketEntryStrategy}
                   </p>
 
                   <h3 className="font-semibold text-gray-900 mb-2">
                     Positioning Strategy
                   </h3>
                   <p className="text-gray-700 text-sm">
-                    {content.strategicRecommendations.positioning}
+                    {content.strategicRecommendations.positioningStrategy}
                   </p>
                 </div>
 
@@ -692,8 +688,8 @@ const CompiledMarketIntelligenceView: React.FC<
                     Investment Priorities
                   </h3>
                   <ul className="text-gray-700 text-sm space-y-1 mb-4">
-                    {content.strategicRecommendations.investments.map(
-                      (investment, index) => (
+                    {(content.strategicRecommendations.investmentPriorities || []).map(
+                      (investment: any, index: number) => (
                         <li key={index} className="flex items-start">
                           <span className="text-indigo-500 mr-2">•</span>
                           {investment}
@@ -809,7 +805,7 @@ const CompiledMarketIntelligenceView: React.FC<
                     Intelligence Gaps
                   </h3>
                   <ul className="text-gray-700 text-sm space-y-1">
-                    {content.intelligenceSources.gaps.map((gap, index) => (
+                    {(content.intelligenceSources.intelligenceGaps || []).map((gap: any, index: number) => (
                       <li key={index} className="flex items-start">
                         <span className="text-red-500 mr-2">•</span>
                         {gap}
