@@ -18,7 +18,7 @@ import EditableSection from '../components/EditableSection';
 import AIConfigModal from '../components/AIConfigModal';
 import PanelConfigModal from '../components/PanelConfigModal';
 import MarkdownRenderer from '../components/MarkdownRenderer';
-import DraggableTabPanel from '../components/DraggableTabPanel';
+import TabPanel from '../components/TabPanel';
 import { LandingPageView } from '../components/landing/LandingPageView';
 import CompiledMarketingView from '../components/marketing/CompiledMarketingView';
 import CompiledMarketIntelligenceView from '../components/market-intelligence/CompiledMarketIntelligenceView';
@@ -28,21 +28,7 @@ import { marketIntelligenceCompiler } from '../services/marketIntelligenceCompil
 import { productStrategyCompiler } from '../services/productStrategyCompiler';
 import { functionalSpecService } from '../services/functionalSpecService';
 import { productToCSVProduct } from '../utils/productToCsvAdapter';
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
-import type { DragEndEvent } from '@dnd-kit/core';
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
+
 import { panelConfigManager } from '../utils/panelConfig';
 
 type ViewType =
@@ -84,12 +70,7 @@ export default function ProductPage() {
   } | null>(null);
   const [isLoadingFunctionalSpec, setIsLoadingFunctionalSpec] = useState(false);
 
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
+
 
   // Listen for panel config changes
   useEffect(() => {
@@ -167,8 +148,7 @@ export default function ProductPage() {
           `🔄 [ProductPage] Loading panels for view: ${activeView}, product: ${productData.id}`
         );
         const panels = await generateContentPanels(activeView, productData);
-        const orderedPanels = applyPanelOrder(panels);
-        setContentPanels(orderedPanels);
+        setContentPanels(panels);
         console.log(
           `✅ [ProductPage] Loaded ${panels.length} panels for ${activeView}`
         );
@@ -208,27 +188,7 @@ export default function ProductPage() {
     }
   };
 
-  // Apply saved panel order from config
-  const applyPanelOrder = (panels: ContentPanel[]): ContentPanel[] => {
-    if (!productData?.id) return panels;
 
-    const defaultPanelIds = panels.map((p) => p.id);
-    const orderedIds = panelConfigManager.getOrderedPanelIds(
-      productData.id,
-      activeView,
-      defaultPanelIds
-    );
-
-    // Reorder panels according to saved configuration
-    const orderedPanels = orderedIds
-      .map((id) => panels.find((p) => p.id === id))
-      .filter(Boolean) as ContentPanel[];
-
-    // Add any new panels that weren't in the saved order
-    const newPanels = panels.filter((p) => !orderedIds.includes(p.id));
-
-    return [...orderedPanels, ...newPanels];
-  };
 
   const generateHomePanels = (): ContentPanel[] => {
     // Home tab doesn't use panels - it renders the landing page directly
@@ -1214,27 +1174,7 @@ export default function ProductPage() {
     setProductData(newProduct);
   }, [id]);
 
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
 
-    if (over && active.id !== over.id && productData?.id) {
-      const oldIndex = contentPanels.findIndex(
-        (panel) => panel.id === active.id
-      );
-      const newIndex = contentPanels.findIndex((panel) => panel.id === over.id);
-
-      const newPanels = arrayMove(contentPanels, oldIndex, newIndex);
-      setContentPanels(newPanels);
-
-      // Save the new order to config
-      const newPanelIds = newPanels.map((panel) => panel.id);
-      panelConfigManager.updatePanelOrder(
-        productData.id,
-        activeView,
-        newPanelIds
-      );
-    }
-  };
 
   if (!productData) {
     return (
@@ -1820,30 +1760,19 @@ export default function ProductPage() {
             <p className="text-gray-600">Loading compiled content...</p>
           </div>
         ) : (
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext
-              items={contentPanels.map((panel) => panel.id)}
-              strategy={verticalListSortingStrategy}
-            >
-              <div className="space-y-6">
-                {contentPanels.map((panel) => (
-                  <DraggableTabPanel
-                    key={panel.id}
-                    id={panel.id}
-                    title={panel.title}
-                    productId={productData?.id || ''}
-                    tabId={activeView}
-                  >
-                    {panel.content}
-                  </DraggableTabPanel>
-                ))}
-              </div>
-            </SortableContext>
-          </DndContext>
+          <div className="space-y-6">
+            {contentPanels.map((panel) => (
+              <TabPanel
+                key={panel.id}
+                id={panel.id}
+                title={panel.title}
+                productId={productData?.id || ''}
+                tabId={activeView}
+              >
+                {panel.content}
+              </TabPanel>
+            ))}
+          </div>
         )}
 
         {activeView !== 'home' &&
