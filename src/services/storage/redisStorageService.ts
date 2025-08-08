@@ -8,8 +8,13 @@ try {
   kv = null
 }
 
+const API_BASE = (typeof window !== 'undefined' && (import.meta as any)?.env?.VITE_API_BASE_URL)
+  ? (import.meta as any).env.VITE_API_BASE_URL
+  : ''
+
 async function callApi(body: any) {
-  const response = await fetch('/api/storage', {
+  const url = `${API_BASE}/api/storage`
+  const response = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
