@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Settings, MessageSquare } from 'lucide-react';
 import { productService } from '../services/storage/productService';
 import { getAllProducts, getAllServices } from '../config';
-import { Card, Button } from '../components/ui';
+import { Card, Button, SearchInput, QuickViewModal } from '../components/ui';
 import { cleanProductName, cleanDescription } from '../utils/textCleaner';
 import FeedbackWidget from '../components/FeedbackWidget';
 import type { Product } from '../types/product';
@@ -15,6 +15,9 @@ export default function Dashboard() {
   const [products, setProducts] = useState<Product[]>([]);
   const [services, setServices] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
+  const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
   const navigate = useNavigate();
 
   // Load data from Redis on component mount
@@ -60,6 +63,24 @@ export default function Dashboard() {
   const handleServiceClick = (serviceId: string) => {
     navigate(`/service/${serviceId}`);
   };
+
+  // Filter products/services based on search query
+  const filteredItems = useMemo(() => {
+    const items = activeTab === 'products' ? products : services;
+    
+    if (!searchQuery) return items;
+    
+    const query = searchQuery.toLowerCase();
+    return items.filter((item) => {
+      const matchesName = cleanProductName(item.name).toLowerCase().includes(query);
+      const matchesDescription = cleanDescription(item.content.description).toLowerCase().includes(query);
+      const matchesPerfectFor = cleanDescription(item.content.perfectFor).toLowerCase().includes(query);
+      const matchesFeatures = item.features.some(feature => feature.toLowerCase().includes(query));
+      const matchesBenefits = item.benefits.some(benefit => benefit.toLowerCase().includes(query));
+      
+      return matchesName || matchesDescription || matchesPerfectFor || matchesFeatures || matchesBenefits;
+    });
+  }, [activeTab, products, services, searchQuery]);
 
   if (loading) {
     return (
@@ -121,8 +142,17 @@ export default function Dashboard() {
         </div>
       </section>
 
-      {/* Tab Navigation */}
+      {/* Tab Navigation and Search */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Search Input */}
+        <div className="mb-6">
+          <SearchInput
+            onSearch={setSearchQuery}
+            placeholder={`Search ${activeTab}...`}
+            className="max-w-md mx-auto"
+          />
+        </div>
+
         <div className="flex space-x-1 bg-white p-1 rounded-lg mb-8 max-w-md mx-auto shadow-sm border border-gray-200">
           <Button
             variant={activeTab === 'products' ? 'primary' : 'ghost'}
@@ -143,17 +173,60 @@ export default function Dashboard() {
         </div>
 
         {/* Product/Service Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {(activeTab === 'products' ? products : services).map((item) => (
+        {filteredItems.length === 0 && searchQuery ? (
+          <div className="text-center py-12">
+            <div className="mb-4">
+              <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <p className="text-gray-500 text-lg mb-2">
+              No {activeTab} found matching "{searchQuery}"
+            </p>
+            <p className="text-gray-400 text-sm mb-4">
+              Try searching for features, benefits, or keywords
+            </p>
+            <button
+              onClick={() => setSearchQuery('')}
+              className="text-primary hover:text-primary-dark font-medium"
+            >
+              Clear search
+            </button>
+          </div>
+        ) : filteredItems.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-gray-500 text-lg">
+              No {activeTab} available
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* Results Counter */}
+            <div className="mb-6 text-center">
+              <p className="text-sm text-gray-600">
+                {searchQuery ? (
+                  <>
+                    Showing <span className="font-semibold">{filteredItems.length}</span> of {activeTab === 'products' ? products.length : services.length} {activeTab}
+                    {searchQuery && (
+                      <>
+                        {' '}matching "<span className="font-semibold">{searchQuery}</span>"
+                      </>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <span className="font-semibold">{filteredItems.length}</span> {activeTab} available
+                  </>
+                )}
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {filteredItems.map((item) => (
             <Card
               key={item.id}
               hover={true}
               className="group cursor-pointer"
-              onClick={() =>
-                activeTab === 'products'
-                  ? handleProductClick(item.id)
-                  : handleServiceClick(item.id)
-              }
             >
               {/* Product Header */}
               <div className="flex items-start justify-between mb-4">
@@ -231,14 +304,33 @@ export default function Dashboard() {
               </div>
 
               {/* CTA */}
-              <div className="pt-4 border-t border-gray-100">
-                <span className="text-primary font-medium text-sm group-hover:text-primary-dark transition-colors">
-                  Learn More →
-                </span>
+              <div className="pt-4 border-t border-gray-100 flex items-center justify-between">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setQuickViewProduct(item);
+                    setIsQuickViewOpen(true);
+                  }}
+                  className="text-primary font-medium text-sm hover:text-primary-dark transition-colors"
+                >
+                  Quick View
+                </button>
+                <button
+                  onClick={() =>
+                    activeTab === 'products'
+                      ? handleProductClick(item.id)
+                      : handleServiceClick(item.id)
+                  }
+                  className="text-primary font-medium text-sm hover:text-primary-dark transition-colors"
+                >
+                  Full Details →
+                </button>
               </div>
             </Card>
           ))}
-        </div>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Feedback CTA Footer */}
@@ -270,6 +362,19 @@ export default function Dashboard() {
 
       {/* Hidden Feedback Widget */}
       <FeedbackWidget page="dashboard" />
+
+      {/* Quick View Modal */}
+      <QuickViewModal
+        product={quickViewProduct}
+        isOpen={isQuickViewOpen}
+        onClose={() => {
+          setIsQuickViewOpen(false);
+          setQuickViewProduct(null);
+        }}
+        onViewDetails={(productId) => {
+          navigate(`/${activeTab === 'products' ? 'product' : 'service'}/${productId}`);
+        }}
+      />
     </div>
   );
 }

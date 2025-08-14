@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storage Debug Tool</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 20px; }
+        .section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .key-list { max-height: 300px; overflow-y: auto; background: #f5f5f5; padding: 10px; border-radius: 4px; }
+        .key-item { padding: 5px; margin: 2px 0; background: white; border-radius: 4px; cursor: pointer; }
+        .key-item:hover { background: #e3f2fd; }
+        .content { margin-top: 10px; padding: 10px; background: #f9f9f9; border-radius: 4px; font-family: monospace; white-space: pre-wrap; max-height: 400px; overflow-y: auto; }
+        button { padding: 8px 16px; margin: 4px; background: #2196f3; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #1976d2; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin: 10px 0; }
+        .stat-box { padding: 10px; background: #e3f2fd; border-radius: 4px; text-align: center; }
+    </style>
+</head>
+<body>
+    <h1>BN Products Storage Debug Tool</h1>
+    
+    <div class="section">
+        <h2>Storage Overview</h2>
+        <div class="stats" id="stats"></div>
+        <button onclick="refreshStats()">Refresh Stats</button>
+        <button onclick="exportAll()">Export All Data</button>
+    </div>
+
+    <div class="section">
+        <h2>Compiled Content</h2>
+        <div class="key-list" id="compiled-keys"></div>
+    </div>
+
+    <div class="section">
+        <h2>Product Data</h2>
+        <div class="key-list" id="product-keys"></div>
+    </div>
+
+    <div class="section">
+        <h2>Other Storage</h2>
+        <div class="key-list" id="other-keys"></div>
+    </div>
+
+    <div class="section">
+        <h2>Content Viewer</h2>
+        <div class="content" id="content-viewer">Select a key above to view its content</div>
+    </div>
+
+    <script>
+        function getAllStorageKeys() {
+            const keys = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                keys.push(localStorage.key(i));
+            }
+            return keys.sort();
+        }
+
+        function categorizeKeys(keys) {
+            const compiled = keys.filter(key => key.includes('compiled-') || key.includes('bn:compiled'));
+            const products = keys.filter(key => key.includes('products') && !key.includes('compiled'));
+            const other = keys.filter(key => !compiled.includes(key) && !products.includes(key));
+            
+            return { compiled, products, other };
+        }
+
+        function displayKeys(keys, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            if (keys.length === 0) {
+                container.innerHTML = '<div class="key-item">No keys found</div>';
+                return;
+            }
+
+            keys.forEach(key => {
+                const div = document.createElement('div');
+                div.className = 'key-item';
+                div.textContent = key;
+                div.onclick = () => showContent(key);
+                container.appendChild(div);
+            });
+        }
+
+        function showContent(key) {
+            const content = localStorage.getItem(key);
+            const viewer = document.getElementById('content-viewer');
+            
+            try {
+                // Try to parse as JSON for better formatting
+                const parsed = JSON.parse(content);
+                viewer.textContent = JSON.stringify(parsed, null, 2);
+            } catch {
+                // If not JSON, show as plain text
+                viewer.textContent = content;
+            }
+            
+            // Add key info at the top
+            const keyInfo = `Key: ${key}\nSize: ${content?.length || 0} characters\nType: ${typeof content}\n\n`;
+            viewer.textContent = keyInfo + viewer.textContent;
+        }
+
+        function refreshStats() {
+            const keys = getAllStorageKeys();
+            const { compiled, products, other } = categorizeKeys(keys);
+            
+            // Calculate storage size
+            let totalSize = 0;
+            keys.forEach(key => {
+                const item = localStorage.getItem(key);
+                if (item) totalSize += item.length;
+            });
+
+            const statsHtml = `
+                <div class="stat-box">
+                    <strong>Total Keys</strong><br>
+                    ${keys.length}
+                </div>
+                <div class="stat-box">
+                    <strong>Compiled Content</strong><br>
+                    ${compiled.length} items
+                </div>
+                <div class="stat-box">
+                    <strong>Product Data</strong><br>
+                    ${products.length} items
+                </div>
+                <div class="stat-box">
+                    <strong>Storage Size</strong><br>
+                    ${(totalSize / 1024 / 1024).toFixed(2)} MB
+                </div>
+            `;
+            
+            document.getElementById('stats').innerHTML = statsHtml;
+            
+            // Update key lists
+            displayKeys(compiled, 'compiled-keys');
+            displayKeys(products, 'product-keys');
+            displayKeys(other, 'other-keys');
+        }
+
+        function exportAll() {
+            const keys = getAllStorageKeys();
+            const data = {};
+            
+            keys.forEach(key => {
+                const value = localStorage.getItem(key);
+                try {
+                    data[key] = JSON.parse(value);
+                } catch {
+                    data[key] = value;
+                }
+            });
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `bn-products-storage-${new Date().toISOString().slice(0, 19)}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Auto-refresh on page load
+        refreshStats();
+        
+        // Add some helpful info
+        console.log('BN Products Storage Debug Tool loaded');
+        console.log('Available functions: refreshStats(), exportAll(), showContent(key)');
+        
+        // Check for specific compiled content keys
+        const compiledKeys = getAllStorageKeys().filter(key => 
+            key.includes('compiled-marketing') || 
+            key.includes('compiled-market-intel') || 
+            key.includes('compiled-product-strategy')
+        );
+        
+        if (compiledKeys.length > 0) {
+            console.log('Found compiled content keys:', compiledKeys);
+        } else {
+            console.log('No compiled content found in localStorage');
+        }
+    </script>
+</body>
+</html>

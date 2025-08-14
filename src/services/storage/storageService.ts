@@ -65,16 +65,19 @@ class DualStorageService implements StorageService {
         console.log(`⚠️ [Storage] Redis not available, using localStorage only`);
       }
 
-      // Only try localStorage if Redis is not available or key not found in Redis
-      if (!this.redis) {
-        console.log(`🔍 [Storage] Trying localStorage: ${key}`);
-        const localValue = await this.localStorage.get<T>(key)
-        if (localValue !== null) {
-          console.log(`✅ [Storage] Found in localStorage: ${key}`);
-          return localValue
-        } else {
-          console.log(`❌ [Storage] Not found in localStorage: ${key}`);
+      // Try localStorage as fallback if Redis didn't have the key OR if Redis is not available
+      console.log(`🔍 [Storage] Trying localStorage as fallback: ${key}`);
+      const localValue = await this.localStorage.get<T>(key)
+      if (localValue !== null) {
+        console.log(`✅ [Storage] Found in localStorage: ${key}`);
+        // If we have data in localStorage but not in Redis, sync it to Redis
+        if (this.redis) {
+          console.log(`🔄 [Storage] Syncing localStorage data to Redis: ${key}`);
+          await this.redis.set(key, localValue).catch(console.error)
         }
+        return localValue
+      } else {
+        console.log(`❌ [Storage] Not found in localStorage: ${key}`);
       }
       
       console.log(`❌ [Storage] Key not found in any storage: ${key}`);
