@@ -106,7 +106,7 @@ export async function generatePDF(content: PDFContent): Promise<Blob> {
 
     // Add additional pages if needed
     while (heightLeft >= 0) {
-      position = heightLeft - imgHeight;
+      position -= pageHeight;
       pdf.addPage();
       pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
       heightLeft -= pageHeight;
