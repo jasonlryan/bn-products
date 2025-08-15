@@ -1,3 +1,12 @@
+<!--
+Metadata:
+Last Reviewed: 2025-08-15  
+Reviewer: Claude Code Assistant
+Action: MINOR UPDATE - Updated source content references to match new 14-stage pipeline
+Status: Current
+Review Notes: Updated content type references, removed outdated content types
+-->
+
 # Compilation System
 
 ## Overview
@@ -31,7 +40,6 @@ The compilation system transforms multiple AI-generated content pieces into unif
 - Competitor Analysis (`richContent.competitorAnalysis`)
 - Market Sizing (`richContent.marketSizing`)
 - Audience ICPs (`richContent.audienceICPs`)
-- Investor Deck (`richContent.investorDeck`)
 
 **Output Structure**:
 - Market Overview
@@ -44,10 +52,10 @@ The compilation system transforms multiple AI-generated content pieces into unif
 **Purpose**: Defines product vision and roadmap
 
 **Source Content**:
-- Product Manifesto (`richContent.manifesto`)
+- Executive Positioning (`richContent.manifesto`)
 - User Stories (`richContent.userStories`)
-- Functional Spec (`richContent.functionalSpec`)
-- PRD Skeleton (`richContent.prdSkeleton`)
+- Functional Specification (`richContent.functionalSpec`)
+- Product Capabilities (`richContent.productCapabilities`)
 
 **Output Structure**:
 - Product Vision

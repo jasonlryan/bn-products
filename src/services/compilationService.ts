@@ -293,8 +293,8 @@ export class CompilationService {
       benefits: product.benefits || [],
       marketing: product.marketing || {},
       pricing: product.pricing,
-      // Add rich content from Redis if available
-      richContent: {}
+      // Include the actual richContent from the product
+      richContent: product.richContent || {}
     } as Product
   }
 

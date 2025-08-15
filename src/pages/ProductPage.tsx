@@ -240,14 +240,32 @@ export default function ProductPage() {
           productId: product.id,
         }
       );
+      
+      // DEBUG: Additional logging for Redis persistence diagnosis
+      console.log('🔧 [DEBUG] Redis persistence check for marketing:', {
+        redisKey: `bn:compiled:marketing:${product.id}`,
+        countKey: `bn:count:marketing:${product.id}`,
+        hasCompiled: hasCompiledPage,
+        count: compilationCount
+      });
 
       // If compiled content exists, ALWAYS show it instead of raw panels
       if (compilationCount > 0 && hasCompiledPage) {
         // Show compiled marketing view as a single panel and surface staleness
+        console.log('🔧 [DEBUG] Attempting to load compiled content from Redis...');
         const [compiledPage, stale] = await Promise.all([
           getCompiledContent(product.id, 'marketing'),
           isCompiledStale(product.id, 'marketing').catch(() => false),
         ]);
+        
+        console.log('🔧 [DEBUG] Compiled content result:', {
+          hasCompiledPage: !!compiledPage,
+          compiledPageId: compiledPage?.id,
+          compiledAt: compiledPage?.compiledAt,
+          hasContent: !!compiledPage?.content,
+          contentSections: compiledPage?.content ? Object.keys(compiledPage.content) : []
+        });
+        
         if (compiledPage) {
           console.log(
             `✅ [ProductPage] Loading compiled marketing page for ${product.id}`,

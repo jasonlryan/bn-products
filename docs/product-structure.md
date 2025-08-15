@@ -1,8 +1,17 @@
+<!--
+Metadata:
+Last Reviewed: 2025-08-15
+Reviewer: Claude Code Assistant  
+Action: MAJOR UPDATE - Updated to reflect new 14-stage pipeline and reorganized content structure
+Status: Current
+Review Notes: Updated for new canonical pipeline (00→01→02→03), new prompt structure, and current file organization
+-->
+
 # Product Structure
 
 ## Product Overview
 
-The system manages **8 products** (4 Products + 4 Services) representing AI consultancy offerings. Each product has comprehensive content generated across **15 different content types**.
+The system manages **8 products** (4 Products + 4 Services) representing AI consultancy offerings. Each product has comprehensive content generated across **14 different content types** using the canonical 4-stage pipeline.
 
 ## Product List
 
@@ -18,114 +27,118 @@ The system manages **8 products** (4 Products + 4 Services) representing AI cons
 3. **AI Consultancy Retainer** - £12,000/month ongoing support
 4. **Social Intelligence Dashboard** - Market analysis platform
 
-## Content Type Breakdown
+## Content Generation Pipeline
 
-Each product has 15 AI-generated content pieces covering the complete product development lifecycle:
+Each product has 14 AI-generated content pieces created through the canonical 4-stage processing pipeline:
 
-### Foundation Phase (3 types)
-1. **Product Manifesto** (`01_big_idea_product_manifesto`)
-   - Problem definition
-   - Target audience
+**Pipeline:** `00_clean_csv.py` → `01_csv_to_products.py` → `02_products_to_config.py` → `03_config_to_redis.py`
+
+### Foundation & Product (5 types)
+1. **Executive Positioning** (`01_executive_positioning`)
+   - Market problem definition
    - Solution approach
-   - Magic moment
-   - Why we're excited
+   - Target executive buyer
+   - Unique market position
+   - Business impact statement
 
-2. **Functional Spec** (`02_idea_exploration_functional_spec`)
-   - Overview
-   - Inputs required
-   - Process description
-   - Expected outputs
-   - Limitations
+2. **Product Capabilities** (`02_product_capabilities`)
+   - Core functionality overview
+   - Technical capabilities
+   - Integration possibilities
+   - Scalability features
 
-3. **Audience ICPs** (`03_idea_exploration_audience_icps`)
+3. **Audience ICPs** (`03_audience_icps`)
    - 3 Ideal Customer Profiles
    - Motivations and pain points
-   - Typical day descriptions
    - Success definitions
+   - Budget authority and buying process
 
-### Planning Phase (3 types)
-4. **User Stories** (`04_idea_exploration_user_stories`)
+4. **User Stories** (`04_user_stories`)
    - As a [role] I want [goal] so that [benefit]
    - Acceptance criteria
    - Priority levels
 
-5. **Competitor Analysis** (`05_plan_competitor_sweep`)
-   - 3-5 competing products
-   - Value propositions
-   - Pricing models
-   - Strengths/weaknesses
-   - Gaps we exploit
-
-6. **Market Sizing** (`06_plan_tam_sizing`)
-   - Total Addressable Market calculation
-   - Assumptions and equations
-   - Market opportunity assessment
-
-### Research Phase (2 types)
-7. **PRD Skeleton** (`07_research_prd_skeleton`)
-   - Goal definition
-   - User personas
-   - MVP requirements
+5. **Functional Specification** (`05_functional_specification`)
+   - Detailed process description
+   - Inputs and outputs
    - Success metrics
-   - Risk assessment
+   - Implementation requirements
 
-8. **UI Prompt** (`08_research_prd_ui_prompt`)
-   - Interface design requirements
-   - User experience guidelines
-   - Visual design direction
+### Market Intelligence (2 types)
+6. **Competitor Analysis** (`06_competitor_analysis`)
+   - 5 direct and indirect competitors
+   - Value propositions and pricing
+   - Strengths/weaknesses analysis
+   - Market gaps we exploit
 
-### Build Phase (3 types)
-9. **Screen Generation** (`09_build_generate_screens`)
-   - Key application screens
-   - User interface mockups
-   - Interaction flows
+7. **Market Sizing** (`07_market_sizing`)
+   - Total Addressable Market calculation
+   - Market assumptions and equations
+   - Growth opportunity assessment
 
-10. **Landing Page Copy** (`10_build_ui_landing_page_copy`)
-    - Hero headlines
-    - Feature descriptions
-    - Call-to-action text
-    - Benefit statements
+### Sales Enablement (4 types)
+8. **Key Messages** (`08_key_messages`)
+   - Core value propositions
+   - Messaging framework
+   - Audience-specific messaging
 
-11. **Key Messages** (`11_build_ui_key_messages`)
-    - Core value propositions
-    - Messaging hierarchy
-    - Audience-specific messaging
+9. **Demo Script** (`09_demo_script`)
+   - Demonstration flow
+   - Key talking points
+   - Feature highlights
+   - Closing techniques
 
-### Demo Phase (4 types)
-12. **Investor Deck** (`12_demo_investor_deck`)
-    - Pitch deck structure
-    - Key slides content
-    - Financial projections
-    - Investment ask
+10. **Presentation Structure** (`10_presentation_structure`)
+    - Slide structure and headlines
+    - Story narrative flow
+    - Compelling presentation framework
 
-13. **Demo Script** (`13_demo_demo_script`)
-    - Demonstration flow
-    - Key talking points
-    - Feature highlights
-    - Closing techniques
+11. **Discovery Qualification** (`11_discovery_qualification`)
+    - Qualification framework
+    - Discovery questions
+    - Buying criteria assessment
 
-14. **Slide Headlines** (`14_demo_slide_headlines`)
-    - Presentation structure
-    - Compelling headlines
-    - Story narrative
-
-15. **Q&A Prep** (`15_demo_qa_prep`)
+### Strategic Planning (3 types)
+12. **Q&A Prep** (`12_qa_prep`)
     - Anticipated questions
     - Prepared responses
     - Objection handling
 
-## File Naming Convention
+13. **Pricing & ROI** (`13_pricing_roi`)
+    - ROI calculations
+    - Pricing justification
+    - Value demonstration
 
-All content files follow this pattern:
+14. **Go-to-Market Strategy** (`14_gtm_strategy`)
+    - Market entry strategy
+    - Channel approach
+    - Launch planning
+
+## File Organization Structure
+
+Content is organized in product-specific directories with structured naming:
+
 ```
-{product_number}_{product_slug}_{content_number}_{content_type}.md
+products/
+├── {product_id}/
+│   ├── product_context.json           # Product metadata and context
+│   ├── generation_metadata.json       # Generation tracking and stats
+│   ├── 01_executive_positioning.md
+│   ├── 02_product_capabilities.md
+│   ├── ...
+│   └── 14_gtm_strategy.md
 ```
 
-Examples:
+### File Naming Pattern
 ```
-01_ai_power_hour_01_big_idea_product_manifesto.md
-02_ai_b_c_05_plan_competitor_sweep.md
-08_social_intelligence_dashboard_15_demo_qa_prep.md
+{content_number}_{content_type}.md
+```
+
+### Examples
+```
+products/01_ai_power_hour/01_executive_positioning.md
+products/02_ai_b_c/06_competitor_analysis.md  
+products/08_social_intelligence_dashboard/14_gtm_strategy.md
 ```
 
 ## Product ID Schema
@@ -147,24 +160,39 @@ Current IDs:
 
 ## Content Generation Metadata
 
-Each content file includes generation metadata:
-
+### Product Context (product_context.json)
 ```json
 {
-  "file_metadata": {
-    "file_path": "01_ai_power_hour_01_big_idea_product_manifesto.md",
-    "generated_date": "2025-06-10 12:26:40",
-    "model": "GPT-4o (creative)",
-    "status": "draft"
-  },
-  "generation_metadata": {
-    "prompt_used": "You are a startup co-founder. Draft a Product Manifesto...",
-    "context_used": [
-      "Product data from CSV",
-      "No previous outputs (first prompt)"
-    ],
-    "previous_outputs": 3
-  }
+  "id": "01_ai_power_hour",
+  "name": "AI Power Hour",
+  "type": "PRODUCT",
+  "price": "£300",
+  "primaryDeliverables": "60-minute breakthrough session + personalized AI roadmap + implementation toolkit",
+  "description": "Get unstuck on your biggest AI challenge in 60 minutes...",
+  "keyFeatures": "- One-on-one expert guidance\n- Real-world solutions\n- Personalized roadmap",
+  "benefits": "- Skip 3-6 months of research\n- Build confidence\n- See results within days",
+  "extractedAt": "2025-08-15 14:30:00",
+  "source": "CSV"
+}
+```
+
+### Generation Metadata (generation_metadata.json)
+```json
+{
+  "generatedAt": "2025-08-15 14:30:00",
+  "totalPrompts": 14,
+  "model": "gpt-5-mini",
+  "prompts": [
+    {
+      "prompt_number": 1,
+      "prompt_name": "executive_positioning",
+      "prompt_file": "01_executive_positioning.md",
+      "generated_at": "2025-08-15 14:30:15",
+      "content_length": 2847,
+      "filename": "01_executive_positioning.md",
+      "context_used": 0
+    }
+  ]
 }
 ```
 
@@ -174,39 +202,34 @@ Each content file includes generation metadata:
 ```markdown
 # Product Name • Content Type
 
-**Generated using:** Stage • Content Type
-**Model:** GPT-4o (variant)
-**Date:** January 2025
-**Product:** Product Name (£Price)
+[AI-generated content directly - clean format without metadata headers]
 
----
+## Key Section Headers
+- ## 🎯 Problem (for Executive Positioning)
+- ## 💡 Solution  
+- ## ✨ Magic Moment
+- ## ICP 1 — [Title] (for Audience ICPs)
+- Competitor 1 — [Name] (for Competitor Analysis)
 
-## Original Prompt
-[The prompt used to generate this content]
-
----
-
-## Product Context
-[Relevant product information provided to AI]
-
----
-
-## Generated Output
-[The actual AI-generated content]
-
----
-
-## Context Used
-[Information about what context was available]
 ```
 
-### Structured Content Sections
-Each rich content file has consistent sections:
+### Rich Content Structure in Config
+Each content file is stored in the master config as:
 
-1. **Original Prompt** - The instruction given to AI
-2. **Product Context** - Product information provided
-3. **Generated Output** - Main AI-generated content
-4. **Context Used** - Metadata about generation context
+```typescript
+interface RichContentFile {
+  metadata: {
+    title: string
+    contentType: string  
+    source: string
+    extractedAt: string
+  }
+  sections: {
+    [key: string]: string  // Parsed content sections
+  }
+  fullContent: string     // Complete markdown content
+}
+```
 
 ## Pricing Structure
 
@@ -249,19 +272,27 @@ Each rich content file has consistent sections:
 ## Content Quality Metrics
 
 ### Completeness
-- All 15 content types generated for each product
-- Rich metadata for traceability
-- Structured format consistency
+- All 14 content types generated for each product
+- Rich metadata for traceability (product_context.json, generation_metadata.json)
+- Structured format consistency across pipeline
+
+### Processing Pipeline
+- **Stage 0**: CSV cleaning and validation (`00_clean_csv.py`)
+- **Stage 1**: CSV to product files with LLM generation (`01_csv_to_products.py`)
+- **Stage 2**: Product files to master config JSON (`02_products_to_config.py`)  
+- **Stage 3**: Config to Redis deployment (`03_config_to_redis.py`)
+
+### Data Quality
+- Smart list extraction prevents feature splitting ("Real-world solutions" stays intact)
+- Proper markdown parsing for sections (Problem, Solution, Magic Moment, ICPs, Competitors)
+- Frontend parsing handles new markdown structure correctly
+- Improved error handling and validation throughout pipeline
 
 ### Relevance
 - Content aligned with product positioning
 - Audience-appropriate language
 - Industry-specific examples
-
-### Usability
-- Clear section breaks
-- Scannable format
-- Actionable insights
+- Context-aware generation using previous prompts
 
 ## Future Enhancements
 

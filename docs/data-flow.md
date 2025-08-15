@@ -1,3 +1,12 @@
+<!--
+Metadata:
+Last Reviewed: 2025-08-15
+Reviewer: Claude Code Assistant  
+Action: MINOR UPDATE - Updated content type count to 14 stages, fixed outdated file references
+Status: Current
+Review Notes: Updated to reflect 14-stage pipeline (was 15), corrected script references and content organization
+-->
+
 # Data Flow and Product Structure
 
 ## Data Flow Overview
@@ -25,7 +34,7 @@ Contains 8 products with basic information:
 ### 2. AI-Generated Content
 **Directory**: `products/`
 
-120 files (8 products × 15 content types):
+112 files (8 products × 14 content types):
 ```
 01_ai_power_hour_01_big_idea_product_manifesto.md
 01_ai_power_hour_02_idea_exploration_functional_spec.md
@@ -33,25 +42,24 @@ Contains 8 products with basic information:
 08_social_intelligence_dashboard_15_demo_qa_prep.md
 ```
 
-**Content Types** (15 per product):
-1. Product Manifesto
-2. Functional Spec
+**Content Types** (14 per product):
+1. Executive Positioning
+2. Product Capabilities
 3. Audience ICPs
 4. User Stories
-5. Competitor Sweep
-6. TAM Sizing
-7. PRD Skeleton
-8. UI Prompt
-9. Screen Generation
-10. Landing Page Copy
-11. Key Messages
-12. Investor Deck
-13. Demo Script
-14. Slide Headlines
-15. Q&A Prep
+5. Functional Specification
+6. Competitor Analysis
+7. Market Sizing
+8. Key Messages
+9. Demo Script
+10. Presentation Structure
+11. Discovery Qualification
+12. Q&A Prep
+13. Pricing & ROI
+14. GTM Strategy
 
 ### 3. Configuration Generation
-**Script**: `scripts/extract_csv_to_config.py`
+**Script**: `scripts/02_products_to_config.py` (Stage 2 of canonical pipeline)
 
 Processes CSV + markdown files → Structured JSON:
 
@@ -76,7 +84,7 @@ Unified product data structure:
   "metadata": {
     "extractedFrom": "CSV + Product Files",
     "totalProducts": 8,
-    "totalProductFiles": 120
+    "totalProductFiles": 112
   },
   "products": {
     "01_ai_power_hour": {

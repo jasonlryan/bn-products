@@ -1,4 +1,13 @@
-# API Specification - Full Product Management
+<!--
+Metadata:
+Last Reviewed: 2025-08-15
+Reviewer: Claude Code Assistant  
+Action: ARCHIVED - Outdated API planning document not reflecting current system implementation
+Status: Archived
+Review Notes: This document describes planned API endpoints that don't exist in current system. Current system uses dual storage (Redis + localStorage) via existing API routes at /api/storage. This document should be kept for future API development reference.
+-->
+
+# API Specification - Full Product Management [ARCHIVED]
 
 ## Overview
 

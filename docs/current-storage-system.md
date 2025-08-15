@@ -1,8 +1,17 @@
-# Current Storage System (localStorage)
+<!--
+Metadata:
+Last Reviewed: 2025-08-15
+Reviewer: Claude Code Assistant  
+Action: MAJOR UPDATE - Updated to reflect current dual storage architecture (Redis + localStorage)
+Status: Current
+Review Notes: Completely rewritten to document the actual dual storage implementation rather than localStorage-only system
+-->
+
+# Current Storage System (Dual Storage: Redis + localStorage)
 
 ## Overview
 
-The application currently uses browser localStorage for all data persistence. This approach provides simplicity but has limitations for production use.
+The application uses a **dual storage architecture** with Redis (Vercel KV) as the primary storage and localStorage as a fallback. This approach provides production-grade persistence while maintaining development simplicity and offline capability.
 
 ## Storage Architecture
 

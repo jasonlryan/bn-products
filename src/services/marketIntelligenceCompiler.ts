@@ -158,6 +158,15 @@ class MarketIntelligenceCompilerService {
     product: Product, 
     inputs: MarketIntelligenceInputs
   ): Promise<CompiledMarketIntelligencePage['content']> {
+    console.log('🔍 [Market Intel Compiler] Starting generateMarketIntelligenceContent');
+    console.log('📦 [Market Intel Compiler] Product:', { id: product.id, name: product.name, type: product.type });
+    console.log('📝 [Market Intel Compiler] Inputs:', {
+      marketOpportunityLength: inputs.marketOpportunity?.length || 0,
+      competitiveAnalysisLength: inputs.competitiveAnalysis?.length || 0,
+      targetMarketAnalysisLength: inputs.targetMarketAnalysis?.length || 0,
+      industryTrendsLength: inputs.industryTrends?.length || 0
+    });
+
     // Prepare input data for AI compilation
     const inputData = `
 # PRODUCT INFORMATION
@@ -180,6 +189,8 @@ ${inputs.targetMarketAnalysis || 'No target market analysis available'}
 ${inputs.industryTrends || 'No industry trends data available'}
 `;
 
+    console.log('📤 [Market Intel Compiler] Prepared input data length:', inputData.length);
+
     let aiResponse: string;
     try {
       // Use the actual AI service with the external prompt
@@ -192,14 +203,31 @@ ${inputs.industryTrends || 'No industry trends data available'}
       const cleanedResponse = this.extractJsonFromResponse(aiResponse);
       
       // Debug logging
-      console.log('Raw AI response:', aiResponse.substring(0, 200) + '...');
-      console.log('Cleaned response:', cleanedResponse.substring(0, 200) + '...');
+      console.log('📥 [Market Intel Compiler] Raw AI response length:', aiResponse?.length || 0);
+      console.log('📥 [Market Intel Compiler] Raw AI response preview:', aiResponse?.substring(0, 300) + '...');
+      console.log('🧹 [Market Intel Compiler] Cleaned response length:', cleanedResponse?.length || 0);
+      console.log('🧹 [Market Intel Compiler] Cleaned response preview:', cleanedResponse?.substring(0, 300) + '...');
       
       // Parse the JSON response
+      console.log('🔧 [Market Intel Compiler] Attempting JSON parse...');
       const parsedContent = JSON.parse(cleanedResponse);
+      
+      console.log('✅ [Market Intel Compiler] JSON parse successful');
+      console.log('📊 [Market Intel Compiler] Parsed content structure:', {
+        hasMarketOverview: !!parsedContent.marketOverview,
+        hasCompetitiveLandscape: !!parsedContent.competitiveLandscape,
+        hasCustomerIntelligence: !!parsedContent.customerIntelligence,
+        hasMarketSegmentation: !!parsedContent.marketSegmentation,
+        hasIndustryTrends: !!parsedContent.industryTrends,
+        hasOpportunityAnalysis: !!parsedContent.opportunityAnalysis,
+        hasStrategicRecommendations: !!parsedContent.strategicRecommendations,
+        hasIntelligenceSources: !!parsedContent.intelligenceSources
+      });
       
       // Validate the structure matches our interface
       if (!parsedContent.marketOverview || !parsedContent.competitiveLandscape) {
+        console.error('❌ [Market Intel Compiler] AI response missing required fields');
+        console.error('Parsed content keys:', Object.keys(parsedContent));
         throw new Error('AI response does not match expected structure');
       }
       
@@ -362,19 +390,35 @@ ${content.intelligenceSources.intelligenceGaps.map(gap => `- ${gap}`).join('\n')
    * Compile market intelligence page from product data using AI
    */
   async compileMarketIntelligencePage(product: Product): Promise<CompiledMarketIntelligencePage> {
-    const inputs = this.extractMarketIntelligenceInputs(product);
-    const content = await this.generateMarketIntelligenceContent(product, inputs);
-    const rawMarkdown = this.generateMarketIntelligenceMarkdown(content, product);
-
-    const compiledPage: CompiledMarketIntelligencePage = {
-      id: `market-intelligence-${product.id}-${Date.now()}`,
-      productId: product.id,
-      compiledAt: new Date(),
-      content,
-      rawMarkdown
-    };
-
-    return compiledPage;
+    console.log('🚀 [Market Intel Compiler] Starting compileMarketIntelligencePage for product:', product.id);
+    
+    try {
+      console.log('📋 [Market Intel Compiler] Extracting market intelligence inputs...');
+      const inputs = this.extractMarketIntelligenceInputs(product);
+      console.log('✅ [Market Intel Compiler] Inputs extracted successfully');
+      
+      console.log('🤖 [Market Intel Compiler] Generating AI-compiled structured content...');
+      const content = await this.generateMarketIntelligenceContent(product, inputs);
+      console.log('✅ [Market Intel Compiler] Content generation completed');
+      
+      console.log('📝 [Market Intel Compiler] Generating markdown representation...');
+      const rawMarkdown = this.generateMarketIntelligenceMarkdown(content, product);
+      console.log('✅ [Market Intel Compiler] Markdown generation completed');
+      
+      const compiledPage: CompiledMarketIntelligencePage = {
+        id: `market-intelligence-${product.id}-${Date.now()}`,
+        productId: product.id,
+        compiledAt: new Date(),
+        content,
+        rawMarkdown
+      };
+      
+      console.log('🎉 [Market Intel Compiler] Compilation completed successfully');
+      return compiledPage;
+    } catch (error) {
+      console.error('❌ [Market Intel Compiler] Market intelligence compilation failed:', error);
+      throw new Error(`Failed to compile market intelligence for ${product.name}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   }
 
   /**

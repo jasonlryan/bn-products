@@ -48,8 +48,12 @@ export class RedisStorageService implements StorageService {
           const { value } = await callApi({ action: 'get', key })
           return value as T | null
         } catch (apiError) {
-          console.warn(`Redis API call failed for key ${key}:`, (apiError as Error).message)
           // In development, API might not be available - this is expected
+          if (process.env.NODE_ENV === 'development') {
+            console.log(`🔧 [Redis] Dev mode: API not available for key ${key}, using localStorage fallback`)
+          } else {
+            console.warn(`Redis API call failed for key ${key}:`, (apiError as Error).message)
+          }
           return null
         }
       }
@@ -70,8 +74,12 @@ export class RedisStorageService implements StorageService {
           await callApi({ action: 'set', key, value, ttl })
           return
         } catch (apiError) {
-          console.warn(`Redis API call failed for key ${key}:`, (apiError as Error).message)
           // In development, API might not be available - this is expected, just fail silently
+          if (process.env.NODE_ENV === 'development') {
+            console.log(`🔧 [Redis] Dev mode: API not available for set ${key}, using localStorage only`)
+          } else {
+            console.warn(`Redis API call failed for key ${key}:`, (apiError as Error).message)
+          }
           throw apiError
         }
       }
@@ -101,8 +109,18 @@ export class RedisStorageService implements StorageService {
     try {
       const kvInstance = await getKv()
       if (typeof window !== 'undefined' || !kvInstance) {
-        const { exists } = await callApi({ action: 'exists', key })
-        return !!exists
+        try {
+          const { exists } = await callApi({ action: 'exists', key })
+          return !!exists
+        } catch (apiError) {
+          // In development, API might not be available - this is expected
+          if (process.env.NODE_ENV === 'development') {
+            console.log(`🔧 [Redis] Dev mode: API not available for exists ${key}, using localStorage fallback`)
+          } else {
+            console.warn(`Redis API call failed for key ${key}:`, (apiError as Error).message)
+          }
+          return false
+        }
       }
       const result = await kvInstance.exists(key)
       return result > 0

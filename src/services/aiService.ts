@@ -16,10 +16,13 @@ interface AIUpgradeResponse {
 class AIService {
   private apiKey: string | null = null;
   private baseUrl = 'https://api.openai.com/v1/chat/completions';
+  private model: string;
 
   constructor() {
     // Get API key from environment or localStorage
     this.apiKey = import.meta.env.VITE_OPENAI_API_KEY || localStorage.getItem('openai_api_key');
+    // Get model from environment or default
+    this.model = import.meta.env.DEFAULT_OPENAI_MODEL || 'gpt-4o-mini';
   }
 
   setApiKey(apiKey: string) {
@@ -141,7 +144,7 @@ Respond with valid JSON only.`;
           'Authorization': `Bearer ${this.apiKey}`
         },
         body: JSON.stringify({
-          model: 'gpt-4o-mini',
+          model: this.model,
           messages: [
             {
               role: 'system',
@@ -204,7 +207,7 @@ Respond with valid JSON only.`;
     try {
       console.log('📤 [AI Service] Making API request to OpenAI...');
       console.log('📊 [AI Service] Request details:', {
-        model: 'gpt-4o',
+        model: this.model,
         temperature: 0.3,
         max_tokens: 4000,
         promptLength: prompt.length,
@@ -218,7 +221,7 @@ Respond with valid JSON only.`;
           'Authorization': `Bearer ${this.apiKey}`
         },
         body: JSON.stringify({
-          model: 'gpt-4o',
+          model: this.model,
           messages: [
             {
               role: 'system',
