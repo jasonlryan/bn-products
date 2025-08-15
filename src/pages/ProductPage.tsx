@@ -1067,51 +1067,68 @@ export default function ProductPage() {
     if (!richContent?.sections?.['Generated Output']) return [];
 
     const content = richContent.sections['Generated Output'];
-    const profiles = content
-      .split(/\*\*Ideal Customer Profile \d+:\*\*/)
+    
+    // Split by ICP headers (## ICP 1 — ...)
+    const icpSections = content.split(/## ICP \d+ —/);
+    
+    const profiles = icpSections
       .filter((section: string) => section.trim().length > 0)
       .map((section: string) => {
-        const lines = section.split('\n').filter((line: string) => line.trim());
+        const lines = section.split('\n');
         const profile: any = {
           profile: '',
           motivations: '',
           painPoints: '',
-          typicalDay: '',
           successLooksLike: '',
         };
 
+        // Extract title from first line if present
+        const titleLine = lines[0]?.trim();
+        if (titleLine && !titleLine.startsWith('**')) {
+          profile.title = titleLine;
+        }
+
         let currentField = '';
-        let currentContent = '';
+        let currentContent: string[] = [];
 
         lines.forEach((line: string) => {
-          if (line.includes('**Profile:**')) {
-            if (currentField) profile[currentField] = currentContent.trim();
+          const trimmedLine = line.trim();
+          
+          if (trimmedLine.startsWith('**Profile**')) {
+            if (currentField && currentContent.length > 0) {
+              profile[currentField] = currentContent.join('\n').trim();
+            }
             currentField = 'profile';
-            currentContent = line.replace('**Profile:**', '').trim();
-          } else if (line.includes('**Motivations:**')) {
-            if (currentField) profile[currentField] = currentContent.trim();
+            currentContent = [];
+          } else if (trimmedLine.startsWith('**Motivations**')) {
+            if (currentField && currentContent.length > 0) {
+              profile[currentField] = currentContent.join('\n').trim();
+            }
             currentField = 'motivations';
-            currentContent = line.replace('**Motivations:**', '').trim();
-          } else if (line.includes('**Pain Points:**')) {
-            if (currentField) profile[currentField] = currentContent.trim();
+            currentContent = [];
+          } else if (trimmedLine.startsWith('**Pain Points**')) {
+            if (currentField && currentContent.length > 0) {
+              profile[currentField] = currentContent.join('\n').trim();
+            }
             currentField = 'painPoints';
-            currentContent = line.replace('**Pain Points:**', '').trim();
-          } else if (line.includes('**Typical Day:**')) {
-            if (currentField) profile[currentField] = currentContent.trim();
-            currentField = 'typicalDay';
-            currentContent = line.replace('**Typical Day:**', '').trim();
-          } else if (line.includes('**What Success Looks Like:**')) {
-            if (currentField) profile[currentField] = currentContent.trim();
+            currentContent = [];
+          } else if (trimmedLine.startsWith('**Success Looks Like**')) {
+            if (currentField && currentContent.length > 0) {
+              profile[currentField] = currentContent.join('\n').trim();
+            }
             currentField = 'successLooksLike';
-            currentContent = line
-              .replace('**What Success Looks Like:**', '')
-              .trim();
-          } else if (currentField && line.trim()) {
-            currentContent += ' ' + line.trim();
+            currentContent = [];
+          } else if (currentField && trimmedLine) {
+            // Add content to current field
+            currentContent.push(line);
           }
         });
 
-        if (currentField) profile[currentField] = currentContent.trim();
+        // Don't forget the last field
+        if (currentField && currentContent.length > 0) {
+          profile[currentField] = currentContent.join('\n').trim();
+        }
+        
         return profile;
       });
 
@@ -1123,11 +1140,20 @@ export default function ProductPage() {
     if (!richContent?.sections?.['Generated Output']) return [];
 
     const content = richContent.sections['Generated Output'];
-    const competitors = content
-      .split(/\*\*Competing Product \d+:/)
+    
+    // First, skip the introductory paragraph by finding the first competitor
+    const firstCompetitorIndex = content.search(/Competitor \d+ —/);
+    if (firstCompetitorIndex === -1) return [];
+    
+    const competitorsContent = content.substring(firstCompetitorIndex);
+    
+    // Split by competitor headers (Competitor 1 — ...)
+    const competitorSections = competitorsContent.split(/Competitor \d+ —/);
+    
+    const competitors = competitorSections
       .filter((section: string) => section.trim().length > 0)
       .map((section: string) => {
-        const lines = section.split('\n').filter((line: string) => line.trim());
+        const lines = section.split('\n');
         const competitor: any = {
           name: '',
           valueProposition: '',
@@ -1138,34 +1164,55 @@ export default function ProductPage() {
         };
 
         // Extract name from first line
-        if (lines[0]) {
-          competitor.name = lines[0].replace(/\*\*/g, '').trim();
+        const firstLine = lines[0]?.trim();
+        if (firstLine && !firstLine.startsWith('-')) {
+          competitor.name = firstLine;
         }
 
-        // Parse each field
-        lines.forEach((line: string) => {
-          if (line.includes('- **Value Proposition:**')) {
-            competitor.valueProposition = line
-              .replace('- **Value Proposition:**', '')
-              .trim();
-          } else if (line.includes('- **Pricing:**')) {
-            competitor.pricing = line.replace('- **Pricing:**', '').trim();
-          } else if (line.includes('- **Strength:**')) {
-            competitor.strengths = [line.replace('- **Strength:**', '').trim()];
-          } else if (line.includes('- **Weakness:**')) {
-            competitor.weaknesses = [
-              line.replace('- **Weakness:**', '').trim(),
-            ];
-          } else if (line.includes('- **Gap we exploit:**')) {
-            competitor.gapWeExploit = line
-              .replace('- **Gap we exploit:**', '')
-              .trim();
+        let currentField = '';
+        let isInNextLine = false;
+
+        for (let i = 0; i < lines.length; i++) {
+          const line = lines[i];
+          const trimmedLine = line.trim();
+          const nextLine = lines[i + 1]?.trim() || '';
+          
+          if (trimmedLine.startsWith('- Value Proposition')) {
+            currentField = 'valueProposition';
+            isInNextLine = true;
+          } else if (trimmedLine.startsWith('- Pricing Model')) {
+            currentField = 'pricing';
+            isInNextLine = true;
+          } else if (trimmedLine.startsWith('- Strengths')) {
+            currentField = 'strengths';
+            competitor.strengths = [];
+          } else if (trimmedLine.startsWith('- Weaknesses')) {
+            currentField = 'weaknesses';
+            competitor.weaknesses = [];
+          } else if (trimmedLine.startsWith('- Gap We Exploit')) {
+            currentField = 'gapWeExploit';
+            isInNextLine = true;
+          } else if (isInNextLine && currentField && trimmedLine) {
+            // Capture the content from the next line
+            if (currentField === 'valueProposition') {
+              competitor.valueProposition = trimmedLine;
+            } else if (currentField === 'pricing') {
+              competitor.pricing = trimmedLine;
+            } else if (currentField === 'gapWeExploit') {
+              competitor.gapWeExploit = trimmedLine;
+            }
+            isInNextLine = false;
+          } else if ((currentField === 'strengths' || currentField === 'weaknesses') && trimmedLine.match(/^\d+\.\s+/)) {
+            // Collect numbered list items
+            const item = trimmedLine.replace(/^\d+\.\s+/, '');
+            competitor[currentField].push(item);
           }
-        });
+        }
 
         return competitor;
-      });
-
+      })
+      .filter((comp: any) => comp.name); // Only return competitors with names
+      
     return competitors;
   };
 
@@ -1182,22 +1229,72 @@ export default function ProductPage() {
       whyExcited: '',
     };
 
-    // Extract sections from the manifesto content
-    const sections = content.split(
-      /\*\*(Problem|Audience|Solution|Magic Moment|Why Excited):\*\*/
-    );
-
-    for (let i = 1; i < sections.length; i += 2) {
-      const sectionName = sections[i].toLowerCase().replace(' ', '');
-      const sectionContent = sections[i + 1]?.trim().split('\n')[0] || '';
-
-      if (sectionName === 'problem') manifesto.problem = sectionContent;
-      else if (sectionName === 'audience') manifesto.audience = sectionContent;
-      else if (sectionName === 'solution') manifesto.solution = sectionContent;
-      else if (sectionName === 'magicmoment')
-        manifesto.magicMoment = sectionContent;
-      else if (sectionName === 'whyexcited')
-        manifesto.whyExcited = sectionContent;
+    // Try to extract sections using the new markdown header format (## 🎯 Problem)
+    const lines = content.split('\n');
+    let currentSection = '';
+    let sectionContent: string[] = [];
+    
+    for (const line of lines) {
+      const trimmedLine = line.trim();
+      
+      // Check for section headers
+      if (trimmedLine.startsWith('## 🎯 Problem')) {
+        if (currentSection && sectionContent.length > 0) {
+          manifesto[currentSection] = sectionContent.join('\n').trim();
+        }
+        currentSection = 'problem';
+        sectionContent = [];
+      } else if (trimmedLine.startsWith('## 💡 Solution')) {
+        if (currentSection && sectionContent.length > 0) {
+          manifesto[currentSection] = sectionContent.join('\n').trim();
+        }
+        currentSection = 'solution';
+        sectionContent = [];
+      } else if (trimmedLine.startsWith('## ✨ Magic Moment')) {
+        if (currentSection && sectionContent.length > 0) {
+          manifesto[currentSection] = sectionContent.join('\n').trim();
+        }
+        currentSection = 'magicMoment';
+        sectionContent = [];
+      } else if (trimmedLine.startsWith('## Audience')) {
+        if (currentSection && sectionContent.length > 0) {
+          manifesto[currentSection] = sectionContent.join('\n').trim();
+        }
+        currentSection = 'audience';
+        sectionContent = [];
+      } else if (trimmedLine.startsWith('## Why We\'re Excited') || trimmedLine.startsWith("## Why We're Excited")) {
+        if (currentSection && sectionContent.length > 0) {
+          manifesto[currentSection] = sectionContent.join('\n').trim();
+        }
+        currentSection = 'whyExcited';
+        sectionContent = [];
+      } else if (currentSection && trimmedLine && !trimmedLine.startsWith('##')) {
+        // Add content to current section
+        sectionContent.push(line);
+      }
+    }
+    
+    // Don't forget the last section
+    if (currentSection && sectionContent.length > 0) {
+      manifesto[currentSection] = sectionContent.join('\n').trim();
+    }
+    
+    // Fallback to old format if new format didn't work
+    if (!manifesto.problem && !manifesto.solution) {
+      const sections = content.split(
+        /\*\*(Problem|Audience|Solution|Magic Moment|Why Excited):\*\*/
+      );
+      for (let i = 1; i < sections.length; i += 2) {
+        const sectionName = sections[i].toLowerCase().replace(' ', '');
+        const sectionContent = sections[i + 1]?.trim() || '';
+        if (sectionName === 'problem') manifesto.problem = sectionContent;
+        else if (sectionName === 'audience') manifesto.audience = sectionContent;
+        else if (sectionName === 'solution') manifesto.solution = sectionContent;
+        else if (sectionName === 'magicmoment')
+          manifesto.magicMoment = sectionContent;
+        else if (sectionName === 'whyexcited')
+          manifesto.whyExcited = sectionContent;
+      }
     }
 
     return manifesto;

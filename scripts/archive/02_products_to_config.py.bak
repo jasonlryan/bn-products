@@ -1,0 +1,338 @@
+#!/usr/bin/env python3
+"""
+STAGE 2: Products to Config Pipeline
+Converts product markdown files into JSON configuration for React app.
+
+Usage:
+  python3 02_products_to_config.py --all                    # Process all products
+  python3 02_products_to_config.py --product 01_ai_power_hour  # Process specific product
+  python3 02_products_to_config.py --list                   # List available products
+"""
+
+import os
+import re
+import json
+import glob
+import argparse
+from datetime import datetime
+from pathlib import Path
+from typing import Dict, List, Optional
+
+class ProductsToConfigProcessor:
+    def __init__(self, products_dir="../products", 
+                 output_file="../config/product-config-master.json",
+                 csv_path="../data/BN Products List   - 2025.csv"):
+        self.products_dir = Path(products_dir)
+        self.output_file = Path(output_file)
+        self.csv_path = Path(csv_path)
+        
+        # Ensure output directory exists
+        self.output_file.parent.mkdir(parents=True, exist_ok=True)
+        
+        # Content type mapping - Optimized 14-prompt pipeline
+        self.content_types = {
+            # Executive & Product (4)
+            "01_executive_positioning": "manifesto",
+            "02_product_capabilities": "productCapabilities", 
+            "03_functional_specification": "functionalSpec",
+            "04_use_cases_scenarios": "userStories",
+            
+            # Market Intelligence (3)
+            "05_audience_icps": "audienceICPs",
+            "06_competitor_analysis": "competitorAnalysis",
+            "07_market_sizing": "marketSizing",
+            
+            # Sales Enablement (4)
+            "08_key_messages": "keyMessages",
+            "09_demo_script": "demoScript",
+            "10_presentation_structure": "slideHeadlines",
+            "11_discovery_qualification": "discoveryQualification",
+            
+            # Strategic Planning (3)
+            "12_qa_prep": "qaPrep",
+            "13_pricing_roi": "pricingStrategy",
+            "14_gtm_strategy": "gtmStrategy"
+        }
+
+    def load_existing_config(self):
+        """Load existing config file if it exists"""
+        if self.output_file.exists():
+            try:
+                with open(self.output_file, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+            except json.JSONDecodeError:
+                print(f"⚠️  Invalid JSON in {self.output_file}. Starting fresh.")
+        
+        return {
+            "metadata": {
+                "extractedFrom": "Product Files",
+                "extractedAt": datetime.now().isoformat(),
+                "totalProducts": 0,
+                "totalProductFiles": 0,
+                "source": str(self.products_dir),
+                "version": "4.0"
+            },
+            "products": {}
+        }
+
+    def get_available_products(self):
+        """Get list of all products with files in products directory"""
+        if not self.products_dir.exists():
+            return []
+        
+        md_files = glob.glob(str(self.products_dir / "*.md"))
+        products = set()
+        
+        for file_path in md_files:
+            filename = os.path.basename(file_path)
+            # Extract product ID from filename (e.g., "01_ai_power_hour_01_big_idea..." -> "01_ai_power_hour")
+            parts = filename.split('_')
+            if len(parts) >= 2:
+                # Find where content type starts
+                for i in range(2, len(parts)):
+                    remaining = '_'.join(parts[i:])
+                    content_type_found = False
+                    
+                    for content_key in self.content_types.keys():
+                        if remaining.startswith(content_key):
+                            product_id = '_'.join(parts[:i])
+                            products.add(product_id)
+                            content_type_found = True
+                            break
+                    
+                    if content_type_found:
+                        break
+        
+        return sorted(list(products))
+
+    def parse_markdown_file(self, file_path):
+        """Parse a markdown file and extract structured content"""
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            
+            # Extract metadata from the header
+            lines = content.split('\n')
+            
+            # Find the title (first # line)
+            title = ""
+            for line in lines:
+                if line.startswith('# '):
+                    title = line[2:].strip()
+                    break
+            
+            # Extract structured sections
+            sections = {}
+            current_section = None
+            current_content = []
+            
+            for line in lines:
+                if line.startswith('## '):
+                    # Save previous section
+                    if current_section:
+                        sections[current_section] = '\n'.join(current_content).strip()
+                    
+                    # Start new section
+                    current_section = line[3:].strip()
+                    current_content = []
+                elif current_section:
+                    current_content.append(line)
+            
+            # Save last section
+            if current_section:
+                sections[current_section] = '\n'.join(current_content).strip()
+            
+            return {
+                "title": title,
+                "sections": sections,
+                "fullContent": content,
+                "lastModified": datetime.now().isoformat()
+            }
+            
+        except Exception as e:
+            print(f"⚠️  Could not parse {file_path}: {e}")
+            return None
+
+    def get_product_files(self, product_id):
+        """Get all markdown files for a specific product"""
+        pattern = str(self.products_dir / f"{product_id}_*.md")
+        files = glob.glob(pattern)
+        
+        product_files = {}
+        
+        for file_path in files:
+            filename = os.path.basename(file_path)
+            
+            # Parse filename to extract content type
+            parts = filename.replace('.md', '').split('_')
+            
+            # Find content type in filename
+            for i in range(len(parts)):
+                remaining = '_'.join(parts[i:])
+                
+                for content_key, content_value in self.content_types.items():
+                    if remaining.startswith(content_key):
+                        parsed_content = self.parse_markdown_file(file_path)
+                        if parsed_content:
+                            product_files[content_value] = parsed_content
+                        break
+        
+        return product_files
+
+    def extract_basic_product_info(self, product_id):
+        """Extract basic product info from first available file"""
+        files = self.get_product_files(product_id)
+        
+        if not files:
+            return {
+                "id": product_id,
+                "name": product_id.replace('_', ' ').title(),
+                "type": "PRODUCT",
+                "pricing": {"type": "contact", "display": "Contact for Pricing"},
+                "content": {"description": "Product description not available"}
+            }
+        
+        # Try to get info from manifesto or any available file
+        first_file = list(files.values())[0]
+        
+        # Extract product name from title
+        name = first_file.get("title", "").split("•")[0].strip() or product_id.replace('_', ' ').title()
+        
+        # Try to extract pricing and type from content
+        full_content = first_file.get("fullContent", "")
+        pricing_match = re.search(r'\*\*Price:\*\*\s*([^*\n]+)', full_content)
+        type_match = re.search(r'\*\*Type:\*\*\s*([^*\n]+)', full_content)
+        desc_match = re.search(r'\*\*Description\*\*\s*\n([^#]*?)(?=\n##|\n\*\*|$)', full_content, re.DOTALL)
+        
+        pricing_text = pricing_match.group(1).strip() if pricing_match else "Contact for Pricing"
+        product_type = type_match.group(1).strip() if type_match else "PRODUCT"
+        description = desc_match.group(1).strip() if desc_match else "Product description available in detailed content."
+        
+        # Parse pricing
+        pricing = {"type": "contact", "display": pricing_text}
+        if "£" in pricing_text:
+            pricing["type"] = "fixed"
+        
+        return {
+            "id": product_id,
+            "name": name,
+            "type": product_type.upper(),
+            "pricing": pricing,
+            "content": {
+                "heroTitle": f"Transform Your Business with {name}",
+                "description": description[:200] + "..." if len(description) > 200 else description,
+                "primaryDeliverables": "Detailed deliverables available in product content"
+            }
+        }
+
+    def process_product(self, product_id):
+        """Process a specific product into config format"""
+        print(f"\n🎯 Processing product: {product_id}")
+        
+        # Check if product files exist
+        files = self.get_product_files(product_id)
+        if not files:
+            print(f"❌ No files found for product {product_id}")
+            return False
+        
+        print(f"📁 Found {len(files)} content files")
+        
+        # Load existing config
+        config = self.load_existing_config()
+        
+        # Extract basic product info
+        basic_info = self.extract_basic_product_info(product_id)
+        
+        # Create product entry
+        product_data = {
+            **basic_info,
+            "richContent": files,
+            "metadata": {
+                "extractedAt": datetime.now().isoformat(),
+                "source": "Product Files",
+                "editable": True,
+                "lastModified": datetime.now().isoformat(),
+                "richContentFiles": len(files)
+            }
+        }
+        
+        # Add to config
+        config["products"][product_id] = product_data
+        
+        # Update metadata
+        config["metadata"]["extractedAt"] = datetime.now().isoformat()
+        config["metadata"]["totalProducts"] = len(config["products"])
+        config["metadata"]["totalProductFiles"] = sum(
+            len(p.get("richContent", {})) for p in config["products"].values()
+        )
+        
+        # Save config
+        with open(self.output_file, 'w', encoding='utf-8') as f:
+            json.dump(config, f, indent=2, ensure_ascii=False)
+        
+        print(f"✅ Updated config with {product_id}")
+        return True
+
+    def process_all_products(self):
+        """Process all available products"""
+        products = self.get_available_products()
+        
+        if not products:
+            print("❌ No products found in products directory")
+            return False
+        
+        print(f"\n🚀 Processing {len(products)} products")
+        
+        success_count = 0
+        for product_id in products:
+            if self.process_product(product_id):
+                success_count += 1
+        
+        print(f"\n✅ Successfully processed {success_count}/{len(products)} products")
+        print(f"📁 Config saved to: {self.output_file}")
+        return success_count == len(products)
+
+    def list_products(self):
+        """List all available products"""
+        products = self.get_available_products()
+        
+        print("\n📋 Available Products:")
+        for i, product_id in enumerate(products, 1):
+            files = self.get_product_files(product_id)
+            basic_info = self.extract_basic_product_info(product_id)
+            print(f"   {i:2d}. {product_id} - {basic_info['name']} ({len(files)} files)")
+        
+        print(f"\nTotal: {len(products)} products")
+        return products
+
+def main():
+    parser = argparse.ArgumentParser(description='STAGE 2: Convert product files to JSON config')
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('--all', action='store_true', help='Process all products')
+    group.add_argument('--product', type=str, help='Process specific product (e.g., 01_ai_power_hour)')
+    group.add_argument('--list', action='store_true', help='List available products')
+    
+    parser.add_argument('--output', type=str, 
+                       default="../config/product-config-master.json",
+                       help='Output config file path')
+    
+    args = parser.parse_args()
+    
+    processor = ProductsToConfigProcessor(output_file=args.output)
+    
+    try:
+        if args.list:
+            processor.list_products()
+        elif args.all:
+            processor.process_all_products()
+        elif args.product:
+            processor.process_product(args.product)
+    
+    except Exception as e:
+        print(f"❌ Error: {e}")
+        return 1
+    
+    return 0
+
+if __name__ == "__main__":
+    exit(main())

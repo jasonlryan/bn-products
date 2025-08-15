@@ -1,0 +1,16 @@
+{
+  "id": "01_ai_power_hour",
+  "name": "AI Power Hour",
+  "type": "PRODUCT",
+  "price": "\u00a3300",
+  "primaryDeliverables": "60-minute breakthrough session + personalized AI roadmap + implementation toolkit",
+  "description": "Get unstuck on your biggest AI challenge in 60 minutes. You'll walk away with 3 specific solutions you can implement immediately plus a personalized roadmap that skips months of trial-and-error.",
+  "perfectFor": "Senior leaders stuck on specific AI challenges who need breakthrough clarity fast",
+  "whatClientBuys": "Confidence to lead AI initiatives + immediate solutions for your exact challenge + skip 3-6 months of research",
+  "idealClient": "- Senior leaders responsible for transformation, innovation, marketing, customer experience, or operations\n- Anyone feeling overwhelmed by AI possibilities who needs focused direction\n- Executives who learn best through personalized coaching",
+  "keyFeatures": "- One-on-one expert guidance tailored to your exact challenge\n- Real-world solutions you can start implementing today\n- Personalized follow-up materials and roadmap",
+  "benefits": "- Skip 3-6 months of AI research and trial-and-error\n- Get solutions designed for your exact challenge and industry\n- Build confidence to lead AI initiatives in your organization\n- Start seeing measurable results within days, not months",
+  "nextProduct": "AI-B-C\u2122",
+  "extractedAt": "2025-08-14 13:21:01",
+  "source": "CSV"
+}

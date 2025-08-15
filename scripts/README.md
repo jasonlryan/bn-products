@@ -1,266 +1,104 @@
 # Scripts Directory
 
-This directory contains all the Python scripts for the BN Product development workflow.
+This directory contains the canonical content pipeline for BN Product.
 
-## Scripts Overview
+## Canonical Pipeline (Essential)
 
-### Core Scripts
+These are the authoritative scripts used end‑to‑end. Run them in sequence for the complete pipeline.
 
-1. **`analyze_products.py`** - Product Analysis Tool
+0. `00_clean_csv.py` — Stage 0: CSV cleaning and validation
+   
+   - Cleans and validates the input CSV file before processing.
+   - Handles common CSV issues like line breaks, escaping, and field validation.
+   - Usage:
+     ```bash
+     python3 00_clean_csv.py                    # Clean default CSV
+     python3 00_clean_csv.py --check-only       # Just check for issues
+     python3 00_clean_csv.py --auto             # Auto-clean without prompts
+     ```
 
-   - Analyzes generated product files and creates summary reports
-   - Usage: `python3 analyze_products.py`
-   - Outputs: CSV reports and JSON summaries in `../reports/`
+1. `01_csv_to_products.py` — Stage 1: CSV ➜ Product files (LLM)
 
-2. **`generate_product_prompts.py`** - Product Prompt Generator with LLM Integration
+   - Generates 15 stage markdown files per product from `../data/BN Products List   - 2025.csv` and `../prompts`.
+   - Usage:
+     ```bash
+     cd scripts
+     python3 01_csv_to_products.py --all
+     # or
+     python3 01_csv_to_products.py --product 01_ai_power_hour
+     ```
 
-   - Generates markdown files for each product-prompt combination using OpenAI API
-   - Usage: `python3 generate_product_prompts.py`
-   - Requires: `OPENAI_API_KEY` environment variable
-   - Outputs: Generated product files in `../products/`
+2. `02_products_to_config.py` — Stage 2: Product files ➜ Master config JSON
 
-3. **`launch_dashboard.py`** - Dashboard Launcher
-   - Runs analysis and opens the reports dashboard
-   - Usage: `python3 launch_dashboard.py`
-   - Opens: Browser dashboard with latest reports
+   - Parses files in `../products` and produces `../config/product-config-master.json` for the app.
+   - Usage:
+     ```bash
+     python3 02_products_to_config.py --all
+     # or
+     python3 02_products_to_config.py --product 01_ai_power_hour
+     ```
 
-### Utility Scripts
+3. `03_config_to_redis.py` — Stage 3: Config JSON ➜ Redis (optional deploy)
+   - Loads the master config into Redis for runtime consumption.
+   - Usage:
+     ```bash
+     python3 03_config_to_redis.py
+     ```
 
-4. **`fix_failed_files.py`** - Failed Files Recovery
+### Quick Start (Canonical)
 
-   - Regenerates files that failed due to token limits using reduced context
-   - Usage: `python3 fix_failed_files.py`
-   - Requires: `OPENAI_API_KEY` environment variable
+```bash
+cd scripts
+export OPENAI_API_KEY=...               # required for Stage 1
+export DEFAULT_OPENAI_MODEL=gpt-5-mini  # optional, defaults to gpt-5-mini
 
-5. **`generate_product_pages.py`** - Product Landing Pages Generator
+# Full pipeline
+python3 00_clean_csv.py --auto          # Clean and validate CSV
+python3 01_csv_to_products.py --all     # Generate product files
+python3 02_products_to_config.py --all  # Build master config
+python3 03_config_to_redis.py           # Deploy to Redis (optional)
+```
 
-   - Creates individual HTML landing pages for each product
-   - Usage: `python3 generate_product_pages.py`
-   - Outputs: HTML files in `../UI/`
+## Archive
 
-6. **`generate_with_claude.py`** - Manual LLM Processing
+Non-essential scripts have been moved to `archive/` to keep the main directory clean. These include:
 
-   - Alternative workflow for manual content generation with Claude
-   - Usage: `python3 generate_with_claude.py`
-   - Creates: Processing queue for manual LLM interaction
+- Legacy generators and alternative workflows
+- Developer utilities and debugging tools  
+- Node.js Redis loaders
+- Data extraction and analysis tools
 
-7. **`extract_dashboard_data.py`** - Dashboard Data Extractor
-   - Extracts marketing-ready content from dashboard HTML files
-   - Usage: `python3 extract_dashboard_data.py`
-   - Requires: `beautifulsoup4` package (`pip install beautifulsoup4`)
-   - Outputs: Updates `../dashboard-react/config/product-config.json`
-   - Purpose: Consolidates dashboard HTML content into React dashboard data source
-
-## Quick Start
-
-1. **Generate product content:**
-
-   ```bash
-   cd scripts
-   python3 generate_product_prompts.py
-   ```
-
-2. **Analyze and view results:**
-
-   ```bash
-   python3 launch_dashboard.py
-   ```
-
-3. **Fix any failed files:**
-   ```bash
-   python3 fix_failed_files.py
-   ```
+Access archived scripts if needed for debugging or alternative workflows.
 
 ## Dependencies
 
-- Python 3.7+
-- Required packages: `csv`, `pathlib`, `json`, `re`, `time`, `subprocess`, `webbrowser`
-- Optional: `openai` package for LLM integration
-- Optional: `python-dotenv` for environment variable management
+- Python 3.9+
+- Packages: `python-dotenv` (for env), `openai` (for LLM), plus stdlib modules noted in scripts
+- Optional: `beautifulsoup4` for HTML extraction utilities
 
 ## Environment Variables
 
-- `OPENAI_API_KEY` - Required for LLM-powered scripts
+- `OPENAI_API_KEY` — Required for any script that calls the OpenAI API (Stage 1)
+- `DEFAULT_OPENAI_MODEL` — Optional (defaults to `gpt-5-mini`); used by Stage 1 and related tools
 
-## File Structure
-
-All scripts work with the following directory structure:
+## Project Structure Reference
 
 ```
 bn_product/
 ├── scripts/          # This directory
-├── data/            # CSV product data
-├── prompts/         # Prompt templates
-├── products/        # Generated product files
-├── reports/         # Analysis reports
-└── UI/              # Generated web interface
+├── data/             # CSV product data
+├── prompts/          # Prompt templates (15 stages)
+├── products/         # Generated product files (per product x stage)
+├── reports/          # Analysis reports
+└── config/           # Generated configuration JSON
 ```
 
-# Product Configuration Generator
+## Stages (15 prompts)
 
-This script generates and maintains a structured JSON configuration file from product markdown files. It supports both creating new product configurations and updating existing ones.
+The canonical Stage 1 script generates content across these categories:
 
-## Features
-
-- Automatically detects and processes all product MD files
-- Maintains existing configurations when updating
-- Extracts metadata and content from MD files
-- Validates against JSON schema
-- Supports all 15 product development stages
-- Prevents duplicate products
-- Detailed logging
-
-## Usage
-
-### Basic Usage
-
-```bash
-# Generate config using default paths
-python3 generate_product_config.py
-
-# Specify custom paths
-python3 generate_product_config.py \
-  --products-dir ../products \
-  --output ../config/product-config.json \
-  --schema ../config/product-config.schema.json
-```
-
-### Arguments
-
-- `--products-dir`: Directory containing product MD files (default: 'products')
-- `--output`: Output configuration file path (default: 'product-config.json')
-- `--schema`: JSON schema file path (default: 'product-config.schema.json')
-
-## File Structure
-
-The script expects the following file structure:
-
-```
-project/
-├── products/
-│   ├── 01_product_name_01_stage.md
-│   ├── 01_product_name_02_stage.md
-│   └── ...
-├── config/
-│   ├── product-config.json
-│   └── product-config.schema.json
-└── scripts/
-    ├── generate_product_config.py
-    └── README.md
-```
-
-## Stage Categories
-
-The script categorizes files into 5 main stages:
-
-1. **Foundation** (01-03)
-
-   - 01: Product Manifesto
-   - 02: Functional Spec
-   - 03: Audience ICPs
-
-2. **Planning** (04-06)
-
-   - 04: User Stories
-   - 05: Competitor Sweep
-   - 06: TAM Sizing
-
-3. **Research** (07-08)
-
-   - 07: PRD Skeleton
-   - 08: UI Prompt
-
-4. **Build** (09-11)
-
-   - 09: Generate Screens
-   - 10: Landing Page Copy
-   - 11: Key Messages
-
-5. **Demo** (12-15)
-   - 12: Investor Deck
-   - 13: Demo Script
-   - 14: Slide Headlines
-   - 15: QA Prep
-
-## Output Structure
-
-The script generates a JSON file with the following structure:
-
-```json
-{
-  "products": {
-    "01_product_name": {
-      "name": "Product Name",
-      "type": "PRODUCT",
-      "stages": {
-        "foundation": {
-          "manifesto": {
-            "file_metadata": {...},
-            "generation_metadata": {...},
-            "content": {...}
-          },
-          ...
-        },
-        ...
-      }
-    }
-  }
-}
-```
-
-## Adding New Products
-
-To add a new product:
-
-1. Create the MD files in the products directory following the naming convention:
-
-   ```
-   XX_product_name_YY_stage_name.md
-   ```
-
-   where:
-
-   - XX is the product number (01-99)
-   - YY is the stage number (01-15)
-
-2. Run the script:
-   ```bash
-   python3 generate_product_config.py
-   ```
-
-The script will automatically:
-
-- Detect the new product files
-- Create a new product configuration
-- Preserve any existing product configurations
-- Update the output file
-
-## Updating Existing Products
-
-To update an existing product:
-
-1. Modify the relevant MD files
-2. Run the script
-3. The script will:
-   - Detect changed files
-   - Update only the modified sections
-   - Preserve unchanged configurations
-
-## Error Handling
-
-The script includes comprehensive error handling:
-
-- Validates input files against schema
-- Logs warnings for unrecognized files
-- Reports parsing errors
-- Maintains existing config on error
-
-## Logging
-
-The script provides detailed logging:
-
-- Info level: Normal operations
-- Warning level: Non-critical issues
-- Error level: Critical problems
-
-Logs include timestamps and are written to stdout.
+1. Foundation (01–03): Manifesto, Functional Spec, Audience ICPs
+2. Planning (04–06): User Stories, Competitor Sweep, TAM Sizing
+3. Research (07–08): PRD Skeleton, UI Prompt
+4. Build (09–11): Generate Screens, Landing Page Copy, Key Messages
+5. Demo (12–15): Investor Deck, Demo Script, Slide Headlines, QA Prep

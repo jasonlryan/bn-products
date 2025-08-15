@@ -51,21 +51,27 @@ interface ProductConfigFile {
         keyMessages: string[];
       };
       richContent: {
+        // Executive & Product (4)
         manifesto?: RichContentFile;
+        productCapabilities?: RichContentFile;
         functionalSpec?: RichContentFile;
-        audienceICPs?: RichContentFile;
         userStories?: RichContentFile;
+        
+        // Market Intelligence (3)
+        audienceICPs?: RichContentFile;
         competitorAnalysis?: RichContentFile;
         marketSizing?: RichContentFile;
-        prdSkeleton?: RichContentFile;
-        uiPrompt?: RichContentFile;
-        screenGeneration?: RichContentFile;
-        landingPageCopy?: RichContentFile;
+        
+        // Sales Enablement (4)
         keyMessages?: RichContentFile;
-        investorDeck?: RichContentFile;
         demoScript?: RichContentFile;
         slideHeadlines?: RichContentFile;
+        discoveryQualification?: RichContentFile;
+        
+        // Strategic Planning (3)
         qaPrep?: RichContentFile;
+        pricingStrategy?: RichContentFile;
+        gtmStrategy?: RichContentFile;
       };
       metadata: {
         extractedAt: string;
