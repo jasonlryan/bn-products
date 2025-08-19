@@ -22,7 +22,12 @@ export function useCompiledContent(
 export function useCompilationStatus(productId: string | null) {
   const { data, error, isLoading, mutate } = useSWR(
     productId ? `/api/compilation/status?productId=${productId}` : null,
-    fetcher
+    fetcher,
+    {
+      refreshInterval: 0, // Don't auto-refresh
+      revalidateOnFocus: false, // Don't revalidate on window focus
+      dedupingInterval: 1000 // Dedupe requests within 1 second
+    }
   )
   
   return {

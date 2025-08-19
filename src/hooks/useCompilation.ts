@@ -71,18 +71,6 @@ export function useCompilation() {
     }
   }, [])
 
-  const getCompiledContent = useCallback(async (productId: string, type: CompilationType) => {
-    return await compilationService.getCompiledContent(productId, type)
-  }, [])
-
-  const getCompilationCounts = useCallback(async (productId: string) => {
-    return await compilationService.getCompilationCounts(productId)
-  }, [])
-
-  const hasCompiledContent = useCallback(async (productId: string, type: CompilationType) => {
-    return await compilationService.hasCompiledContent(productId, type)
-  }, [])
-
   const deleteCompiledContent = useCallback(async (productId: string, type: CompilationType) => {
     return await compilationService.deleteCompiledContent(productId, type)
   }, [])
@@ -90,9 +78,6 @@ export function useCompilation() {
   return {
     compile,
     compileAll,
-    getCompiledContent,
-    getCompilationCounts,
-    hasCompiledContent,
     deleteCompiledContent,
     isCompiling,
     compilationErrors

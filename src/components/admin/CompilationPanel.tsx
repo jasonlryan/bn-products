@@ -2,94 +2,36 @@ import { useState, useEffect } from 'react'
 import { RefreshCw, FileText, TrendingUp, Target, Zap } from 'lucide-react'
 import { Button, Card } from '../ui'
 import { useProducts, useCompilation } from '../../hooks'
+import { useCompilationStatus } from '../../hooks/useCompiledContent'
 
 export function CompilationPanel() {
   const { products, isLoading: productsLoading } = useProducts()
   const { 
     compile, 
     compileAll, 
-    getCompilationCounts, 
-    hasCompiledContent, 
     isCompiling, 
     compilationErrors 
   } = useCompilation()
   
   const [selectedProductId, setSelectedProductId] = useState<string>('')
-  const [compilationCounts, setCompilationCounts] = useState<Record<string, {
-    marketing: number
-    marketIntel: number
-    productStrategy: number
-  }>>({})
-  const [hasCompiled, setHasCompiled] = useState<Record<string, {
-    marketing: boolean
-    marketIntel: boolean
-    productStrategy: boolean
-  }>>({})
+  
+  // Use API-based compilation status
+  const { status: compilationStatus, refetch: refetchStatus } = useCompilationStatus(selectedProductId)
 
-  // Load compilation data when products change
+  // Set initial product selection
   useEffect(() => {
     if (products.length > 0 && !selectedProductId) {
       setSelectedProductId(products[0].id)
     }
   }, [products, selectedProductId])
 
-  useEffect(() => {
-    const loadCompilationData = async () => {
-      for (const product of products) {
-        try {
-          const counts = await getCompilationCounts(product.id)
-          setCompilationCounts(prev => ({
-            ...prev,
-            [product.id]: counts
-          }))
-
-          const [hasMarketing, hasMarketIntel, hasProductStrategy] = await Promise.all([
-            hasCompiledContent(product.id, 'marketing'),
-            hasCompiledContent(product.id, 'market-intel'),
-            hasCompiledContent(product.id, 'product-strategy')
-          ])
-
-          setHasCompiled(prev => ({
-            ...prev,
-            [product.id]: {
-              marketing: hasMarketing,
-              marketIntel: hasMarketIntel,
-              productStrategy: hasProductStrategy
-            }
-          }))
-        } catch (error) {
-          console.error(`Failed to load compilation data for ${product.id}:`, error)
-        }
-      }
-    }
-
-    if (products.length > 0) {
-      loadCompilationData()
-    }
-  }, [products, getCompilationCounts, hasCompiledContent])
-
   const handleCompile = async (type: 'marketing' | 'market-intel' | 'product-strategy') => {
     if (!selectedProductId) return
 
     try {
       await compile(selectedProductId, type)
-      
-      // Refresh compilation data
-      const counts = await getCompilationCounts(selectedProductId)
-      setCompilationCounts(prev => ({
-        ...prev,
-        [selectedProductId]: counts
-      }))
-
-      const hasContent = await hasCompiledContent(selectedProductId, type)
-      setHasCompiled(prev => ({
-        ...prev,
-        [selectedProductId]: {
-          ...prev[selectedProductId],
-          [type]: hasContent
-        }
-      }))
-      
+      // Refresh compilation status from API
+      refetchStatus()
       console.log(`✅ ${type} compilation completed for ${selectedProductId}`)
     } catch (error) {
       console.error(`❌ ${type} compilation failed:`, error)
@@ -101,29 +43,8 @@ export function CompilationPanel() {
 
     try {
       await compileAll(selectedProductId)
-      
-      // Refresh all compilation data
-      const counts = await getCompilationCounts(selectedProductId)
-      setCompilationCounts(prev => ({
-        ...prev,
-        [selectedProductId]: counts
-      }))
-
-      const [hasMarketing, hasMarketIntel, hasProductStrategy] = await Promise.all([
-        hasCompiledContent(selectedProductId, 'marketing'),
-        hasCompiledContent(selectedProductId, 'market-intel'),
-        hasCompiledContent(selectedProductId, 'product-strategy')
-      ])
-
-      setHasCompiled(prev => ({
-        ...prev,
-        [selectedProductId]: {
-          marketing: hasMarketing,
-          marketIntel: hasMarketIntel,
-          productStrategy: hasProductStrategy
-        }
-      }))
-      
+      // Refresh compilation status from API
+      refetchStatus()
       console.log(`✅ All compilations completed for ${selectedProductId}`)
     } catch (error) {
       console.error(`❌ Compilation failed:`, error)
@@ -143,8 +64,8 @@ export function CompilationPanel() {
   }
 
   const selectedProduct = products.find(p => p.id === selectedProductId)
-  const productCounts = compilationCounts[selectedProductId] || { marketing: 0, marketIntel: 0, productStrategy: 0 }
-  const productHasCompiled = hasCompiled[selectedProductId] || { marketing: false, marketIntel: false, productStrategy: false }
+  const productCounts = compilationStatus?.counts || { marketing: 0, marketIntel: 0, productStrategy: 0 }
+  const productHasCompiled = compilationStatus?.hasCompiled || { marketing: false, marketIntel: false, productStrategy: false }
 
   return (
     <div className="space-y-6">
