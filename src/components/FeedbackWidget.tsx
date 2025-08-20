@@ -18,20 +18,22 @@ const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
   className = '',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [name, setName] = useState('');
   const [comment, setComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (comment.trim() === '') return;
+    if (name.trim() === '' || comment.trim() === '') return;
 
     setIsSubmitting(true);
     try {
       const success = await feedbackService.submitFeedback({
+        name: name.trim(),
         productName,
         activeTab,
-        comment,
+        comment: comment.trim(),
         userAgent: navigator.userAgent,
         url: window.location.href,
       });
@@ -41,6 +43,7 @@ const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
         setTimeout(() => {
           setIsOpen(false);
           setIsSubmitted(false);
+          setName('');
           setComment('');
         }, 2000);
       }
@@ -103,6 +106,21 @@ const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
                 </p>
               </div>
 
+              {/* Name */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Your Name
+                </label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-base"
+                  placeholder="Enter your name"
+                />
+              </div>
+
               {/* Comment */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -130,7 +148,7 @@ const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
                 </Button>
                 <Button
                   type="submit"
-                  disabled={comment.trim() === '' || isSubmitting}
+                  disabled={name.trim() === '' || comment.trim() === '' || isSubmitting}
                   className="flex-1"
                 >
                   {isSubmitting ? 'Submitting...' : 'Submit Feedback'}

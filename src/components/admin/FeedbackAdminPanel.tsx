@@ -34,9 +34,10 @@ const FeedbackAdminPanel: React.FC = () => {
 
   const exportFeedback = () => {
     const csvContent = [
-      ['ID', 'Product Name', 'Active Tab', 'Comment', 'Timestamp', 'URL'],
+      ['ID', 'Name', 'Product Name', 'Active Tab', 'Comment', 'Timestamp', 'URL'],
       ...feedback.map(f => [
         f.id,
+        f.name,
         f.productName,
         f.activeTab,
         f.comment.replace(/"/g, '""'),
@@ -156,6 +157,8 @@ const FeedbackAdminPanel: React.FC = () => {
                     </span>
                   </div>
                   <div className="text-sm text-gray-600 mb-2">
+                    <span className="font-medium">Name:</span> {item.name}
+                    <span className="mx-2">•</span>
                     <span className="font-medium">Product:</span> {item.productName}
                     <span className="mx-2">•</span>
                     <span className="font-medium">Tab:</span> {item.activeTab}

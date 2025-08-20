@@ -1,5 +1,6 @@
 export interface FeedbackData {
   id: string;
+  name: string;             // User's name
   productName: string;      // e.g. "Power Hour" 
   activeTab: string;        // e.g. "Functional Spec", "Marketing & Sales"
   comment: string;          // How can this be improved?
