@@ -59,8 +59,8 @@ const storage = {
 
 // Key factory matching the one in utils/keyFactory.ts
 const keyFactory = {
-  compiled: (type: CompilationType, productId: string) => `compiled:${type}:${productId}`,
-  count: (type: CompilationType, productId: string) => `count:${type}:${productId}`
+  compiled: (type: CompilationType, productId: string) => `bn:compiled:${type}:${productId}`,
+  count: (type: CompilationType, productId: string) => `bn:count:${type}:${productId}`
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
