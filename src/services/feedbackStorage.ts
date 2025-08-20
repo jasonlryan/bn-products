@@ -2,7 +2,7 @@ export interface FeedbackData {
   id: string;
   page: string;
   productId?: string;
-  rating: number;
+  rating?: number;
   comment: string;
   category: 'general' | 'bug' | 'feature' | 'content' | 'ui';
   timestamp: string;
@@ -103,14 +103,14 @@ class FeedbackStorage {
         byPage[f.page] = (byPage[f.page] || 0) + 1;
         if (f.productId) byProduct[f.productId] = (byProduct[f.productId] || 0) + 1;
         byCategory[f.category] = (byCategory[f.category] || 0) + 1;
-        totalRating += f.rating;
+        if (f.rating) totalRating += f.rating;
       });
       return {
         total: allFeedback.length,
         byPage,
         byProduct,
         byCategory,
-        averageRating: allFeedback.length ? totalRating / allFeedback.length : 0,
+        averageRating: allFeedback.filter(f => f.rating).length ? totalRating / allFeedback.filter(f => f.rating).length : 0,
       };
     } catch (error) {
       console.error('❌ [Feedback] Error getting feedback stats:', error);
