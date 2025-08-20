@@ -24,7 +24,6 @@ import { eventBus } from '../utils/events';
 // Remove unused import
 import { Button, Card } from '../components/ui';
 import Badge from '../components/ui/Badge';
-import { QueueManagementPanel } from '../components/admin/QueueManagementPanel';
 import FeedbackAdminPanel from '../components/admin/FeedbackAdminPanel';
 import { MARKETING_COMPILATION_PROMPT } from '../prompts/marketingPrompt';
 import { MARKET_INTELLIGENCE_COMPILATION_PROMPT } from '../prompts/marketIntelligencePrompt';
@@ -1596,23 +1595,6 @@ const AdminPage: React.FC = () => {
           </div>
         </Card>
 
-        {/* Queue Management */}
-        <Card className="mt-8">
-          <div className="p-6">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-xl font-semibold text-gray-900">
-                  Queue Management
-                </h2>
-                <p className="text-gray-600 mt-1">
-                  Advanced compilation queue with priority management and
-                  monitoring
-                </p>
-              </div>
-            </div>
-            <QueueManagementPanel />
-          </div>
-        </Card>
 
         {/* Feedback Management */}
         <Card className="mt-8">
