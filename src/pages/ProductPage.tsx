@@ -1893,7 +1893,10 @@ export default function ProductPage() {
       </footer>
 
       {/* Hidden Feedback Widget */}
-      <FeedbackWidget page="product" productId={productData?.id} />
+      <FeedbackWidget 
+        productName={productData?.name || 'Unknown Product'} 
+        activeTab={tabs.find(t => t.id === activeView)?.label || 'Home'}
+      />
     </div>
   );
 }

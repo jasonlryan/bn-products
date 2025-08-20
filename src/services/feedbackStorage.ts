@@ -1,10 +1,8 @@
 export interface FeedbackData {
   id: string;
-  page: string;
-  productId?: string;
-  rating?: number;
-  comment: string;
-  category: 'general' | 'bug' | 'feature' | 'content' | 'ui';
+  productName: string;      // e.g. "Power Hour" 
+  activeTab: string;        // e.g. "Functional Spec", "Marketing & Sales"
+  comment: string;          // How can this be improved?
   timestamp: string;
   userAgent?: string;
   url: string;
@@ -88,33 +86,27 @@ class FeedbackStorage {
 
   async getFeedbackStats(): Promise<{
     total: number;
-    byPage: Record<string, number>;
     byProduct: Record<string, number>;
-    byCategory: Record<string, number>;
-    averageRating: number;
+    byActiveTab: Record<string, number>;
   }> {
     try {
       const allFeedback = await this.getAllFeedback();
-      const byPage: Record<string, number> = {};
       const byProduct: Record<string, number> = {};
-      const byCategory: Record<string, number> = {};
-      let totalRating = 0;
+      const byActiveTab: Record<string, number> = {};
+      
       allFeedback.forEach(f => {
-        byPage[f.page] = (byPage[f.page] || 0) + 1;
-        if (f.productId) byProduct[f.productId] = (byProduct[f.productId] || 0) + 1;
-        byCategory[f.category] = (byCategory[f.category] || 0) + 1;
-        if (f.rating) totalRating += f.rating;
+        byProduct[f.productName] = (byProduct[f.productName] || 0) + 1;
+        byActiveTab[f.activeTab] = (byActiveTab[f.activeTab] || 0) + 1;
       });
+      
       return {
         total: allFeedback.length,
-        byPage,
         byProduct,
-        byCategory,
-        averageRating: allFeedback.filter(f => f.rating).length ? totalRating / allFeedback.filter(f => f.rating).length : 0,
+        byActiveTab,
       };
     } catch (error) {
       console.error('❌ [Feedback] Error getting feedback stats:', error);
-      return { total: 0, byPage: {}, byProduct: {}, byCategory: {}, averageRating: 0 };
+      return { total: 0, byProduct: {}, byActiveTab: {} };
     }
   }
 

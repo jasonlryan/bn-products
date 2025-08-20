@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { feedbackService, type FeedbackData } from '../../services/feedbackService';
-import { Star, Download, Filter } from 'lucide-react';
+import { Download, Filter } from 'lucide-react';
 import { Button } from '../ui';
 
 const FeedbackAdminPanel: React.FC = () => {
@@ -8,9 +8,8 @@ const FeedbackAdminPanel: React.FC = () => {
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState({
-    page: '',
-    productId: '',
-    category: '',
+    productName: '',
+    activeTab: '',
   });
 
   useEffect(() => {
@@ -35,13 +34,11 @@ const FeedbackAdminPanel: React.FC = () => {
 
   const exportFeedback = () => {
     const csvContent = [
-      ['ID', 'Page', 'Product ID', 'Rating', 'Category', 'Comment', 'Timestamp', 'URL'],
+      ['ID', 'Product Name', 'Active Tab', 'Comment', 'Timestamp', 'URL'],
       ...feedback.map(f => [
         f.id,
-        f.page,
-        f.productId || '',
-        f.rating?.toString() || '',
-        f.category,
+        f.productName,
+        f.activeTab,
         f.comment.replace(/"/g, '""'),
         f.timestamp,
         f.url,
@@ -60,15 +57,13 @@ const FeedbackAdminPanel: React.FC = () => {
   };
 
   const filteredFeedback = feedback.filter(f => {
-    if (filter.page && f.page !== filter.page) return false;
-    if (filter.productId && f.productId !== filter.productId) return false;
-    if (filter.category && f.category !== filter.category) return false;
+    if (filter.productName && f.productName !== filter.productName) return false;
+    if (filter.activeTab && f.activeTab !== filter.activeTab) return false;
     return true;
   });
 
-  const uniquePages = [...new Set(feedback.map(f => f.page))];
-  const uniqueProducts = [...new Set(feedback.map(f => f.productId).filter(Boolean))];
-  const uniqueCategories = [...new Set(feedback.map(f => f.category))];
+  const uniqueProducts = [...new Set(feedback.map(f => f.productName))];
+  const uniqueTabs = [...new Set(feedback.map(f => f.activeTab))];
 
   if (loading) {
     return (
@@ -96,23 +91,17 @@ const FeedbackAdminPanel: React.FC = () => {
             <div className="text-2xl font-bold text-blue-600">{stats.total}</div>
             <div className="text-sm text-blue-600">Total Feedback</div>
           </div>
-          <div className="bg-green-50 p-4 rounded-lg">
-            <div className="text-2xl font-bold text-green-600">
-              {stats.averageRating > 0 ? stats.averageRating.toFixed(1) : 'N/A'}
-            </div>
-            <div className="text-sm text-green-600">Average Rating</div>
-          </div>
           <div className="bg-purple-50 p-4 rounded-lg">
             <div className="text-2xl font-bold text-purple-600">
-              {Object.keys(stats.byPage).length}
+              {Object.keys(stats.byProduct).length}
             </div>
-            <div className="text-sm text-purple-600">Pages with Feedback</div>
+            <div className="text-sm text-purple-600">Products with Feedback</div>
           </div>
           <div className="bg-orange-50 p-4 rounded-lg">
             <div className="text-2xl font-bold text-orange-600">
-              {Object.keys(stats.byProduct).length}
+              {Object.keys(stats.byActiveTab).length}
             </div>
-            <div className="text-sm text-orange-600">Products with Feedback</div>
+            <div className="text-sm text-orange-600">Active Tabs with Feedback</div>
           </div>
         </div>
       )}
@@ -123,35 +112,25 @@ const FeedbackAdminPanel: React.FC = () => {
           <Filter className="w-4 h-4 text-gray-600" />
           <span className="font-medium text-gray-700">Filters</span>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <select
-            value={filter.page}
-            onChange={(e) => setFilter(prev => ({ ...prev, page: e.target.value }))}
-            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-          >
-            <option value="">All Pages</option>
-            {uniquePages.map(page => (
-              <option key={page} value={page}>{page}</option>
-            ))}
-          </select>
-          <select
-            value={filter.productId}
-            onChange={(e) => setFilter(prev => ({ ...prev, productId: e.target.value }))}
+            value={filter.productName}
+            onChange={(e) => setFilter(prev => ({ ...prev, productName: e.target.value }))}
             className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
           >
             <option value="">All Products</option>
-            {uniqueProducts.map(productId => (
-              <option key={productId} value={productId}>{productId}</option>
+            {uniqueProducts.map(productName => (
+              <option key={productName} value={productName}>{productName}</option>
             ))}
           </select>
           <select
-            value={filter.category}
-            onChange={(e) => setFilter(prev => ({ ...prev, category: e.target.value }))}
+            value={filter.activeTab}
+            onChange={(e) => setFilter(prev => ({ ...prev, activeTab: e.target.value }))}
             className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
           >
-            <option value="">All Categories</option>
-            {uniqueCategories.map(category => (
-              <option key={category} value={category}>{category}</option>
+            <option value="">All Tabs</option>
+            {uniqueTabs.map(activeTab => (
+              <option key={activeTab} value={activeTab}>{activeTab}</option>
             ))}
           </select>
         </div>
@@ -169,47 +148,17 @@ const FeedbackAdminPanel: React.FC = () => {
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center space-x-3 mb-2">
-                    {item.rating && (
-                      <div className="flex items-center space-x-1">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            className={`w-4 h-4 ${
-                              star <= item.rating!
-                                ? 'text-yellow-400 fill-current'
-                                : 'text-gray-300'
-                            }`}
-                          />
-                        ))}
-                      </div>
-                    )}
                     <span className="text-sm text-gray-500">
                       {new Date(item.timestamp).toLocaleString()}
                     </span>
-                    <span className={`px-2 py-1 text-xs rounded-full ${
-                      item.category === 'bug' ? 'bg-red-100 text-red-800' :
-                      item.category === 'feature' ? 'bg-blue-100 text-blue-800' :
-                      item.category === 'content' ? 'bg-green-100 text-green-800' :
-                      item.category === 'ui' ? 'bg-purple-100 text-purple-800' :
-                      'bg-gray-100 text-gray-800'
-                    }`}>
-                      {item.category}
-                    </span>
-                    {/* Feedback Type Indicator */}
-                    <span className={`px-2 py-1 text-xs rounded-full ${
-                      item.page === 'product' ? 'bg-indigo-100 text-indigo-800' : 'bg-slate-100 text-slate-800'
-                    }`}>
-                      {item.page === 'product' ? 'Product' : 'Page'} Feedback
+                    <span className="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">
+                      {item.activeTab}
                     </span>
                   </div>
                   <div className="text-sm text-gray-600 mb-2">
-                    <span className="font-medium">Page:</span> {item.page}
-                    {item.productId && (
-                      <>
-                        <span className="mx-2">•</span>
-                        <span className="font-medium">Product:</span> {item.productId}
-                      </>
-                    )}
+                    <span className="font-medium">Product:</span> {item.productName}
+                    <span className="mx-2">•</span>
+                    <span className="font-medium">Tab:</span> {item.activeTab}
                   </div>
                   {item.comment && (
                     <p className="text-gray-700 text-sm">{item.comment}</p>

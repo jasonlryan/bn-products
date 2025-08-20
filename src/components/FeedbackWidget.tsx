@@ -7,39 +7,31 @@ import {
 import { Button } from './ui';
 
 interface FeedbackWidgetProps {
-  page: string;
-  productId?: string;
+  productName: string;    // e.g. "Power Hour"
+  activeTab: string;      // e.g. "Functional Spec", "Marketing & Sales"
   className?: string;
 }
 
 const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
-  page,
-  productId,
+  productName,
+  activeTab,
   className = '',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'page' | 'product'>('page');
   const [comment, setComment] = useState('');
-  const [productComment, setProductComment] = useState('');
-  const [category, setCategory] = useState<FeedbackData['category']>('general');
-  const [productCategory, setProductCategory] = useState<FeedbackData['category']>('general');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const currentComment = activeTab === 'page' ? comment : productComment;
-    const currentCategory = activeTab === 'page' ? category : productCategory;
-    
-    if (currentComment.trim() === '') return;
+    if (comment.trim() === '') return;
 
     setIsSubmitting(true);
     try {
       const success = await feedbackService.submitFeedback({
-        page: activeTab === 'page' ? page : 'product',
-        productId: activeTab === 'product' ? productId : undefined,
-        comment: currentComment,
-        category: currentCategory,
+        productName,
+        activeTab,
+        comment,
         userAgent: navigator.userAgent,
         url: window.location.href,
       });
@@ -50,10 +42,6 @@ const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
           setIsOpen(false);
           setIsSubmitted(false);
           setComment('');
-          setProductComment('');
-          setCategory('general');
-          setProductCategory('general');
-          setActiveTab('page');
         }, 2000);
       }
     } catch (error) {
@@ -63,13 +51,6 @@ const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
     }
   };
 
-  const categories = [
-    { value: 'general', label: 'General' },
-    { value: 'bug', label: 'Bug Report' },
-    { value: 'feature', label: 'Feature Request' },
-    { value: 'content', label: 'Content' },
-    { value: 'ui', label: 'UI/UX' },
-  ] as const;
 
   if (isSubmitted) {
     return (
@@ -110,92 +91,30 @@ const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
               </button>
             </div>
 
-            {/* Tab Navigation */}
-            <div className="flex border-b">
-              <button
-                type="button"
-                onClick={() => setActiveTab('page')}
-                className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
-                  activeTab === 'page'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                Page Feedback
-              </button>
-              {productId && (
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('product')}
-                  className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
-                    activeTab === 'product'
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700'
-                  }`}
-                >
-                  Product Feedback
-                </button>
-              )}
-            </div>
-
             {/* Form */}
             <form onSubmit={handleSubmit} className="p-6 space-y-6">
               {/* Context Info */}
-              <div className="text-sm text-gray-600">
-                {activeTab === 'page' ? (
-                  <p>
-                    Page: <span className="font-medium">{page}</span>
-                  </p>
-                ) : (
-                  <p>
-                    Product: <span className="font-medium">{productId}</span>
-                  </p>
-                )}
-              </div>
-
-              {/* Category */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Category
-                </label>
-                <select
-                  value={activeTab === 'page' ? category : productCategory}
-                  onChange={(e) => {
-                    const value = e.target.value as FeedbackData['category'];
-                    if (activeTab === 'page') {
-                      setCategory(value);
-                    } else {
-                      setProductCategory(value);
-                    }
-                  }}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                >
-                  {categories.map((cat) => (
-                    <option key={cat.value} value={cat.value}>
-                      {cat.label}
-                    </option>
-                  ))}
-                </select>
+              <div className="text-sm text-gray-600 space-y-1">
+                <p>
+                  <span className="font-medium">Product/Service:</span> {productName}
+                </p>
+                <p>
+                  <span className="font-medium">Active Tab:</span> {activeTab}
+                </p>
               </div>
 
               {/* Comment */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {activeTab === 'page' ? 'How can this page be improved?' : 'How can this product be improved?'}
+                  How can this be improved?
                 </label>
                 <textarea
-                  value={activeTab === 'page' ? comment : productComment}
-                  onChange={(e) => {
-                    if (activeTab === 'page') {
-                      setComment(e.target.value);
-                    } else {
-                      setProductComment(e.target.value);
-                    }
-                  }}
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
                   rows={8}
                   required
                   className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none text-base"
-                  placeholder={activeTab === 'page' ? 'Tell us what you think about this page...' : 'Tell us what you think about this product...'}
+                  placeholder="Tell us what you think..."
                 />
               </div>
 
@@ -211,10 +130,10 @@ const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
                 </Button>
                 <Button
                   type="submit"
-                  disabled={(activeTab === 'page' ? comment.trim() === '' : productComment.trim() === '') || isSubmitting}
+                  disabled={comment.trim() === '' || isSubmitting}
                   className="flex-1"
                 >
-                  {isSubmitting ? 'Submitting...' : `Submit ${activeTab === 'page' ? 'Page' : 'Product'} Feedback`}
+                  {isSubmitting ? 'Submitting...' : 'Submit Feedback'}
                 </Button>
               </div>
             </form>

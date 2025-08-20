@@ -361,7 +361,10 @@ export default function Dashboard() {
       </footer>
 
       {/* Hidden Feedback Widget */}
-      <FeedbackWidget page="dashboard" />
+      <FeedbackWidget 
+        productName="Dashboard"
+        activeTab="Dashboard"
+      />
 
       {/* Quick View Modal */}
       <QuickViewModal
