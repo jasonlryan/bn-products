@@ -40,7 +40,7 @@ const FeedbackAdminPanel: React.FC = () => {
         f.id,
         f.page,
         f.productId || '',
-        f.rating.toString(),
+        f.rating?.toString() || '',
         f.category,
         f.comment.replace(/"/g, '""'),
         f.timestamp,
@@ -98,7 +98,7 @@ const FeedbackAdminPanel: React.FC = () => {
           </div>
           <div className="bg-green-50 p-4 rounded-lg">
             <div className="text-2xl font-bold text-green-600">
-              {stats.averageRating.toFixed(1)}
+              {stats.averageRating > 0 ? stats.averageRating.toFixed(1) : 'N/A'}
             </div>
             <div className="text-sm text-green-600">Average Rating</div>
           </div>
@@ -169,18 +169,20 @@ const FeedbackAdminPanel: React.FC = () => {
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center space-x-3 mb-2">
-                    <div className="flex items-center space-x-1">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star
-                          key={star}
-                          className={`w-4 h-4 ${
-                            star <= item.rating
-                              ? 'text-yellow-400 fill-current'
-                              : 'text-gray-300'
-                          }`}
-                        />
-                      ))}
-                    </div>
+                    {item.rating && (
+                      <div className="flex items-center space-x-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            className={`w-4 h-4 ${
+                              star <= item.rating!
+                                ? 'text-yellow-400 fill-current'
+                                : 'text-gray-300'
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    )}
                     <span className="text-sm text-gray-500">
                       {new Date(item.timestamp).toLocaleString()}
                     </span>
@@ -192,6 +194,12 @@ const FeedbackAdminPanel: React.FC = () => {
                       'bg-gray-100 text-gray-800'
                     }`}>
                       {item.category}
+                    </span>
+                    {/* Feedback Type Indicator */}
+                    <span className={`px-2 py-1 text-xs rounded-full ${
+                      item.page === 'product' ? 'bg-indigo-100 text-indigo-800' : 'bg-slate-100 text-slate-800'
+                    }`}>
+                      {item.page === 'product' ? 'Product' : 'Page'} Feedback
                     </span>
                   </div>
                   <div className="text-sm text-gray-600 mb-2">
