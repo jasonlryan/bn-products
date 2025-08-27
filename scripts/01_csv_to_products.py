@@ -32,13 +32,18 @@ except ImportError:
 
 class CSVToProductsProcessorV2:
     def __init__(self, csv_path="../data/BN Products List - 2025.csv", 
-                 prompts_dir="../prompts", output_dir="../products"):
+                 prompts_dir="../prompts", output_dir="../products",
+                 business_context_path="../config/business_context.json"):
         self.csv_path = Path(csv_path)
         self.prompts_dir = Path(prompts_dir)
         self.output_dir = Path(output_dir)
+        self.business_context_path = Path(business_context_path)
         
         # Ensure output directory exists
         self.output_dir.mkdir(exist_ok=True)
+        
+        # Load business context
+        self.business_context = self.load_business_context()
         
         # Content type mapping - Resequenced 14-prompt pipeline
         self.content_types = {
@@ -64,6 +69,15 @@ class CSVToProductsProcessorV2:
             "13_pricing_roi": "pricingStrategy",
             "14_gtm_strategy": "gtmStrategy"
         }
+
+    def load_business_context(self):
+        """Load business context from JSON file"""
+        try:
+            with open(self.business_context_path, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"⚠️  Could not load business context: {e}")
+            return {}
 
     def clean_filename(self, text):
         """Convert text to a clean filename format"""
@@ -258,8 +272,35 @@ class CSVToProductsProcessorV2:
             return f"[Error generating content: {e}]"
 
     def format_product_context_text(self, product):
-        """Format product data for LLM context"""
-        return f"""
+        """Format product data for LLM context with business context"""
+        
+        # Build business context section
+        business_context_text = ""
+        if self.business_context:
+            bc = self.business_context
+            business_context_text = f"""
+BUSINESS CONTEXT:
+
+**Company:** {bc.get('company', {}).get('name', 'Brilliant Noise')} - {bc.get('positioning', {}).get('primary', 'AI innovation partner for global brands')}
+**Location:** {bc.get('company', {}).get('location', 'Brighton, UK')} ({bc.get('company', {}).get('type', 'B-Corp certified digital consultancy')})
+**Founded:** {bc.get('company', {}).get('founded', '2009')} by {', '.join(bc.get('company', {}).get('founders', []))}
+
+**Our Positioning:** {bc.get('positioning', {}).get('secondary', 'Marketing transformation agency')}
+**Our Approach:** {bc.get('approach', {}).get('philosophy', 'Provide clarity, confidence, and capability in AI adoption')}
+**Our Methodology:** {bc.get('approach', {}).get('methodology', 'Test-Learn-Lead™ process')}
+
+**Key Differentiators:**
+{chr(10).join([f"- {strength}" for strength in bc.get('competitive_positioning', {}).get('unique_strengths', [])])}
+
+**We Are NOT:**
+{chr(10).join([f"- {not_like}" for not_like in bc.get('competitive_positioning', {}).get('not_like', [])])}
+
+**Our Clients:** {bc.get('clients', {}).get('type', 'Global brands')} including {', '.join(bc.get('clients', {}).get('examples', [])[:5])}
+**Target Buyers:** {bc.get('target_market', {}).get('decision_makers', 'CMOs, CDOs, Innovation Directors')}
+"""
+        
+        return f"""{business_context_text}
+
 PRODUCT CONTEXT:
 
 **Product Name:** {product['NAME']}
@@ -395,8 +436,8 @@ PRODUCT CONTEXT:
         print(f"\n✅ Successfully processed {success_count}/{len(products)} products")
         return success_count == len(products)
 
-    def list_products(self):
-        """List all available products from CSV"""
+    def list_products(self, interactive=False):
+        """List all available products from CSV with optional interactive selection"""
         products = self.read_products_from_csv()
         
         print("\n📋 Available Products:")
@@ -404,14 +445,37 @@ PRODUCT CONTEXT:
             print(f"   {i:2d}. {product['PRODUCT_ID']} - {product['NAME']} ({product.get('PRICE', 'Price TBD')})")
         
         print(f"\nTotal: {len(products)} products")
+        
+        if interactive:
+            print("\n🎯 Enter product number to process (1-{}) or 'q' to quit: ".format(len(products)), end='')
+            choice = input().strip()
+            
+            if choice.lower() == 'q':
+                print("👋 Exiting...")
+                return None
+            
+            try:
+                num = int(choice)
+                if 1 <= num <= len(products):
+                    selected = products[num - 1]
+                    print(f"\n✅ Selected: {selected['PRODUCT_ID']} - {selected['NAME']}")
+                    return selected['PRODUCT_ID']
+                else:
+                    print(f"❌ Invalid number. Please choose between 1 and {len(products)}")
+                    return None
+            except ValueError:
+                print("❌ Invalid input. Please enter a number.")
+                return None
+        
         return products
 
 def main():
     parser = argparse.ArgumentParser(description='STAGE 1: Generate clean product content from CSV + prompts')
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument('--all', action='store_true', help='Process all products')
-    group.add_argument('--product', type=str, help='Process specific product (e.g., 01_ai_power_hour)')
+    group.add_argument('--product', type=str, help='Process specific product (e.g., 01_ai_power_hour or just 04)')
     group.add_argument('--list', action='store_true', help='List available products')
+    group.add_argument('--select', action='store_true', help='List products and select interactively')
     
     args = parser.parse_args()
     
@@ -420,10 +484,27 @@ def main():
     try:
         if args.list:
             processor.list_products()
+        elif args.select:
+            # Interactive selection mode
+            selected_product = processor.list_products(interactive=True)
+            if selected_product:
+                processor.process_product(selected_product)
         elif args.all:
             processor.process_all_products()
         elif args.product:
-            processor.process_product(args.product)
+            # Handle both full product ID and just number
+            if args.product.isdigit():
+                # If just a number, find the matching product
+                products = processor.read_products_from_csv()
+                product_num = int(args.product)
+                if 1 <= product_num <= len(products):
+                    product_id = products[product_num - 1]['PRODUCT_ID']
+                    processor.process_product(product_id)
+                else:
+                    print(f"❌ Product number {product_num} not found. Use --list to see available products.")
+            else:
+                # Full product ID provided
+                processor.process_product(args.product)
     
     except Exception as e:
         print(f"❌ Error: {e}")

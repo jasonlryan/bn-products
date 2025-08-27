@@ -261,20 +261,23 @@ export class CompilationService {
   }
 
   private computeFingerprintForType(product: any, type: CompilationType): string {
+    // Convert to legacy format first to match compilation fingerprint
+    const legacyProduct = this.convertToLegacyProduct(product)
+    
     switch (type) {
       case 'marketing':
         return fingerprintObject({
-          features: product.features,
-          benefits: product.benefits,
-          marketing: product.marketing,
+          features: legacyProduct.features,
+          benefits: legacyProduct.benefits,
+          marketing: legacyProduct.marketing,
         })
       case 'market-intel':
       case 'product-strategy':
         return fingerprintObject({
-          richContent: product.richContent,
+          richContent: legacyProduct.richContent,
         })
       default:
-        return fingerprintObject(product)
+        return fingerprintObject(legacyProduct)
     }
   }
 

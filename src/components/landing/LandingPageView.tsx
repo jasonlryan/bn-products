@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowRight, ExternalLink } from 'lucide-react';
+import { ArrowRight, ExternalLink, CheckCircle, Clock, MessageSquare } from 'lucide-react';
 import type { LandingPageData, CSVProduct } from '../../types/landing-page';
 import {
   loadLandingPageData,
@@ -44,229 +44,289 @@ export function LandingPageView({
 
   return (
     <div className="max-w-4xl mx-auto space-y-12">
-      {/* Value Proposition */}
+      {/* Section 2: Why teams choose this */}
       <section className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8">
         <EditableLandingSection
-          value={landingData.valueProposition.title}
+          value={landingData.whyChooseThis.title}
           onSave={(value) =>
-            handleSectionUpdate('valueProposition.title', value as string)
-          }
-          className="text-center mb-6"
-        >
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">
-            {landingData.valueProposition.title}
-          </h2>
-        </EditableLandingSection>
-
-        <EditableLandingSection
-          value={landingData.valueProposition.content}
-          onSave={(value) =>
-            handleSectionUpdate('valueProposition.content', value as string)
-          }
-          multiline
-          className="text-center"
-        >
-          <p className="text-lg text-gray-700 leading-relaxed max-w-3xl mx-auto">
-            {landingData.valueProposition.content}
-          </p>
-        </EditableLandingSection>
-      </section>
-
-      {/* Benefits Grid */}
-      <section>
-        <EditableLandingSection
-          value={landingData.benefits.title}
-          onSave={(value) =>
-            handleSectionUpdate('benefits.title', value as string)
+            handleSectionUpdate('whyChooseThis.title', value as string)
           }
           className="text-center mb-8"
         >
-          <h2 className="text-3xl font-bold text-gray-900">
-            {landingData.benefits.title}
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">
+            {landingData.whyChooseThis.title}
           </h2>
         </EditableLandingSection>
 
-        <EditableLandingSection
-          value={landingData.benefits.items}
-          onSave={(value) => handleSectionUpdate('benefits.items', value)}
-          isList
-          className="bg-white"
-        >
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {landingData.benefits.items.map((benefit, index) => (
-              <div
-                key={index}
-                className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg"
-              >
-                <div className="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
-                  <span className="text-green-600 text-sm">✓</span>
-                </div>
-                <span className="text-gray-700">{benefit}</span>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {landingData.whyChooseThis.benefits.map((benefit, index) => (
+            <div key={index} className="text-center p-6 bg-white rounded-xl shadow-sm">
+              <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full mb-4 mx-auto">
+                <CheckCircle className="w-6 h-6 text-blue-600" />
               </div>
-            ))}
-          </div>
-        </EditableLandingSection>
-      </section>
-
-      {/* Features */}
-      <section className="bg-white border rounded-2xl p-8">
-        <EditableLandingSection
-          value={landingData.features.title}
-          onSave={(value) =>
-            handleSectionUpdate('features.title', value as string)
-          }
-          className="text-center mb-8"
-        >
-          <h2 className="text-3xl font-bold text-gray-900">
-            {landingData.features.title}
-          </h2>
-        </EditableLandingSection>
-
-        <EditableLandingSection
-          value={landingData.features.items}
-          onSave={(value) => handleSectionUpdate('features.items', value)}
-          isList
-        >
-          <div className="space-y-4">
-            {landingData.features.items.map((feature, index) => (
-              <div
-                key={index}
-                className="flex items-start gap-3 p-4 border rounded-lg"
+              
+              <EditableLandingSection
+                value={benefit.title}
+                onSave={(value) =>
+                  handleSectionUpdate(`whyChooseThis.benefits.${index}.title`, value as string)
+                }
+                className="mb-3"
               >
-                <div className="flex-shrink-0 w-2 h-2 bg-blue-600 rounded-full mt-3"></div>
-                <span className="text-gray-700">{feature}</span>
-              </div>
-            ))}
-          </div>
-        </EditableLandingSection>
-      </section>
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                  {benefit.title}
+                </h3>
+              </EditableLandingSection>
 
-      {/* Perfect For */}
-      <section className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-8">
-        <EditableLandingSection
-          value={landingData.perfectFor.title}
-          onSave={(value) =>
-            handleSectionUpdate('perfectFor.title', value as string)
-          }
-          className="text-center mb-6"
-        >
-          <h2 className="text-3xl font-bold text-gray-900">
-            {landingData.perfectFor.title}
-          </h2>
-        </EditableLandingSection>
-
-        <div className="space-y-4 max-w-3xl mx-auto">
-          <EditableLandingSection
-            value={landingData.perfectFor.primary}
-            onSave={(value) =>
-              handleSectionUpdate('perfectFor.primary', value as string)
-            }
-            multiline
-          >
-            <p className="text-lg text-gray-700 leading-relaxed">
-              {landingData.perfectFor.primary}
-            </p>
-          </EditableLandingSection>
-
-          <EditableLandingSection
-            value={landingData.perfectFor.secondary}
-            onSave={(value) =>
-              handleSectionUpdate('perfectFor.secondary', value as string)
-            }
-            multiline
-          >
-            <p className="text-gray-600 leading-relaxed">
-              {landingData.perfectFor.secondary}
-            </p>
-          </EditableLandingSection>
+              <EditableLandingSection
+                value={benefit.description}
+                onSave={(value) =>
+                  handleSectionUpdate(`whyChooseThis.benefits.${index}.description`, value as string)
+                }
+                multiline
+              >
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  {benefit.description}
+                </p>
+              </EditableLandingSection>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Pricing */}
-      <section className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-2xl p-8 text-center">
+      {/* Section 3: How it works */}
+      <section className="bg-white border rounded-2xl p-8">
         <EditableLandingSection
-          value={landingData.pricing.price}
+          value={landingData.howItWorks.title}
           onSave={(value) =>
-            handleSectionUpdate('pricing.price', value as string)
+            handleSectionUpdate('howItWorks.title', value as string)
           }
-          className="text-center mb-4"
-        >
-          <h3 className="text-4xl font-bold mb-4">
-            {landingData.pricing.price}
-          </h3>
-        </EditableLandingSection>
-
-        <EditableLandingSection
-          value={landingData.pricing.deliverables}
-          onSave={(value) =>
-            handleSectionUpdate('pricing.deliverables', value as string)
-          }
-          multiline
           className="text-center mb-8"
         >
-          <p className="text-xl text-blue-100 max-w-2xl mx-auto">
-            {landingData.pricing.deliverables}
-          </p>
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">
+            {landingData.howItWorks.title}
+          </h2>
         </EditableLandingSection>
 
-        <div className="flex gap-4 justify-center">
+        <div className="space-y-6">
+          {landingData.howItWorks.steps.map((step, index) => (
+            <div key={index} className="flex items-start gap-6 p-6 bg-gray-50 rounded-lg">
+              <div className="flex-shrink-0 w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
+                {index + 1}
+              </div>
+              <div className="flex-1">
+                <EditableLandingSection
+                  value={`${step.verb} ${step.title}`}
+                  onSave={(value) => {
+                    const parts = (value as string).split(' ', 2);
+                    handleSectionUpdate(`howItWorks.steps.${index}.verb`, parts[0] || '');
+                    handleSectionUpdate(`howItWorks.steps.${index}.title`, parts.slice(1).join(' ') || '');
+                  }}
+                  className="mb-2"
+                >
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    <span className="text-blue-600">{step.verb}</span> {step.title}
+                  </h3>
+                </EditableLandingSection>
+
+                <EditableLandingSection
+                  value={step.description}
+                  onSave={(value) =>
+                    handleSectionUpdate(`howItWorks.steps.${index}.description`, value as string)
+                  }
+                  multiline
+                >
+                  <p className="text-gray-600">{step.description}</p>
+                </EditableLandingSection>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Section 4: What our clients say */}
+      <section className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-8">
+        <EditableLandingSection
+          value={landingData.clientTestimonials.title}
+          onSave={(value) =>
+            handleSectionUpdate('clientTestimonials.title', value as string)
+          }
+          className="text-center mb-8"
+        >
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">
+            {landingData.clientTestimonials.title}
+          </h2>
+        </EditableLandingSection>
+
+        <div className="max-w-3xl mx-auto text-center">
+          <div className="bg-white p-8 rounded-xl shadow-sm mb-6">
+            <MessageSquare className="w-12 h-12 text-green-600 mx-auto mb-6" />
+            
+            <EditableLandingSection
+              value={landingData.clientTestimonials.testimonial.quote}
+              onSave={(value) =>
+                handleSectionUpdate('clientTestimonials.testimonial.quote', value as string)
+              }
+              multiline
+              className="mb-6"
+            >
+              <blockquote className="text-lg text-gray-700 italic leading-relaxed mb-6">
+                "{landingData.clientTestimonials.testimonial.quote}"
+              </blockquote>
+            </EditableLandingSection>
+
+            <EditableLandingSection
+              value={landingData.clientTestimonials.testimonial.attribution}
+              onSave={(value) =>
+                handleSectionUpdate('clientTestimonials.testimonial.attribution', value as string)
+              }
+            >
+              <cite className="text-sm text-gray-600 font-medium">
+                — {landingData.clientTestimonials.testimonial.attribution}
+              </cite>
+            </EditableLandingSection>
+          </div>
+
+          {landingData.clientTestimonials.clientLogos && landingData.clientTestimonials.clientLogos.length > 0 && (
+            <div className="flex items-center justify-center gap-6 opacity-60">
+              {landingData.clientTestimonials.clientLogos.map((logo, index) => (
+                <span key={index} className="text-sm text-gray-500">{logo}</span>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Section 5: What about...? */}
+      <section className="bg-white border rounded-2xl p-8">
+        <EditableLandingSection
+          value={landingData.objections.title}
+          onSave={(value) =>
+            handleSectionUpdate('objections.title', value as string)
+          }
+          className="text-center mb-8"
+        >
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">
+            {landingData.objections.title}
+          </h2>
+        </EditableLandingSection>
+
+        <div className="grid md:grid-cols-3 gap-6">
+          {landingData.objections.items.map((objection, index) => (
+            <div key={index} className="p-6 bg-gray-50 rounded-lg">
+              <EditableLandingSection
+                value={objection.question}
+                onSave={(value) =>
+                  handleSectionUpdate(`objections.items.${index}.question`, value as string)
+                }
+                className="mb-4"
+              >
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  {objection.question}
+                </h3>
+              </EditableLandingSection>
+
+              <EditableLandingSection
+                value={objection.answer}
+                onSave={(value) =>
+                  handleSectionUpdate(`objections.items.${index}.answer`, value as string)
+                }
+                multiline
+              >
+                <p className="text-gray-600 leading-relaxed">
+                  {objection.answer}
+                </p>
+              </EditableLandingSection>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Section 6: What you get */}
+      <section className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-2xl p-8">
+        <EditableLandingSection
+          value={landingData.offer.title}
+          onSave={(value) =>
+            handleSectionUpdate('offer.title', value as string)
+          }
+          className="text-center mb-8"
+        >
+          <h2 className="text-3xl font-bold mb-8">
+            {landingData.offer.title}
+          </h2>
+        </EditableLandingSection>
+
+        <div className="max-w-3xl mx-auto text-center mb-8">
           <EditableLandingSection
-            value={landingData.pricing.ctaText}
+            value={landingData.offer.price}
             onSave={(value) =>
-              handleSectionUpdate('pricing.ctaText', value as string)
+              handleSectionUpdate('offer.price', value as string)
+            }
+            className="mb-6"
+          >
+            <div className="text-2xl font-bold mb-6 text-blue-100">
+              {landingData.offer.price}
+            </div>
+          </EditableLandingSection>
+
+          <div className="grid md:grid-cols-2 gap-8 mb-8">
+            {/* Deliverables */}
+            <div className="bg-white/10 rounded-lg p-6">
+              <h3 className="text-lg font-semibold mb-4">Deliverables include:</h3>
+              <ul className="space-y-2 text-left">
+                {landingData.offer.deliverables.map((deliverable, index) => (
+                  <EditableLandingSection
+                    key={index}
+                    value={deliverable}
+                    onSave={(value) =>
+                      handleSectionUpdate(`offer.deliverables.${index}`, value as string)
+                    }
+                  >
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 text-blue-300 mt-0.5 flex-shrink-0" />
+                      <span className="text-blue-100">{deliverable}</span>
+                    </li>
+                  </EditableLandingSection>
+                ))}
+              </ul>
+            </div>
+
+            {/* Outcomes */}
+            <div className="bg-white/10 rounded-lg p-6">
+              <h3 className="text-lg font-semibold mb-4">👉 Outcomes include:</h3>
+              <ul className="space-y-2 text-left">
+                {landingData.offer.outcomes.map((outcome, index) => (
+                  <EditableLandingSection
+                    key={index}
+                    value={outcome}
+                    onSave={(value) =>
+                      handleSectionUpdate(`offer.outcomes.${index}`, value as string)
+                    }
+                  >
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 text-blue-300 mt-0.5 flex-shrink-0" />
+                      <span className="text-blue-100">{outcome}</span>
+                    </li>
+                  </EditableLandingSection>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div className="text-center">
+          <EditableLandingSection
+            value={landingData.offer.ctaText}
+            onSave={(value) =>
+              handleSectionUpdate('offer.ctaText', value as string)
             }
           >
-            <button className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors flex items-center gap-2">
-              {landingData.pricing.ctaText}
+            <button className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors inline-flex items-center gap-2 text-lg">
+              {landingData.offer.ctaText}
               <ArrowRight size={20} />
             </button>
           </EditableLandingSection>
-
-          <EditableLandingSection
-            value={landingData.pricing.ctaLink}
-            onSave={(value) =>
-              handleSectionUpdate('pricing.ctaLink', value as string)
-            }
-          >
-            <a
-              href={landingData.pricing.ctaLink}
-              className="border border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors flex items-center gap-2"
-            >
-              Learn More
-              <ExternalLink size={20} />
-            </a>
-          </EditableLandingSection>
         </div>
       </section>
-
-      {/* Upsell Section */}
-      {landingData.upsell.show && (
-        <section className="text-center bg-yellow-50 border border-yellow-200 rounded-2xl p-8">
-          <EditableLandingSection
-            value={landingData.upsell.title}
-            onSave={(value) =>
-              handleSectionUpdate('upsell.title', value as string)
-            }
-            className="text-center mb-4"
-          >
-            <h2 className="text-2xl font-bold text-gray-900">
-              {landingData.upsell.title}
-            </h2>
-          </EditableLandingSection>
-
-          <EditableLandingSection
-            value={landingData.upsell.content}
-            onSave={(value) =>
-              handleSectionUpdate('upsell.content', value as string)
-            }
-            multiline
-          >
-            <p className="text-gray-700 max-w-2xl mx-auto">
-              {landingData.upsell.content}
-            </p>
-          </EditableLandingSection>
-        </section>
-      )}
     </div>
   );
 }

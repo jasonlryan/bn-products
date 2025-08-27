@@ -1,0 +1,147 @@
+{
+  "generatedAt": "2025-08-15 16:34:09",
+  "totalPrompts": 14,
+  "model": "gpt-5-mini",
+  "prompts": [
+    {
+      "prompt_number": 1,
+      "prompt_name": "executive_positioning",
+      "prompt_file": "01_executive_positioning.md",
+      "model": "gpt-5-mini",
+      "generated_at": "2025-08-15 16:25:11",
+      "content_length": 2580,
+      "filename": "01_executive_positioning.md",
+      "context_used": 0
+    },
+    {
+      "prompt_number": 2,
+      "prompt_name": "product_capabilities",
+      "prompt_file": "02_product_capabilities.md",
+      "model": "gpt-5-mini",
+      "generated_at": "2025-08-15 16:25:36",
+      "content_length": 6590,
+      "filename": "02_product_capabilities.md",
+      "context_used": 1
+    },
+    {
+      "prompt_number": 3,
+      "prompt_name": "audience_icps",
+      "prompt_file": "03_audience_icps.md",
+      "model": "gpt-5-mini",
+      "generated_at": "2025-08-15 16:26:21",
+      "content_length": 9985,
+      "filename": "03_audience_icps.md",
+      "context_used": 2
+    },
+    {
+      "prompt_number": 4,
+      "prompt_name": "user_stories",
+      "prompt_file": "04_user_stories.md",
+      "model": "gpt-5-mini",
+      "generated_at": "2025-08-15 16:26:58",
+      "content_length": 9946,
+      "filename": "04_user_stories.md",
+      "context_used": 3
+    },
+    {
+      "prompt_number": 5,
+      "prompt_name": "functional_specification",
+      "prompt_file": "05_functional_specification.md",
+      "model": "gpt-5-mini",
+      "generated_at": "2025-08-15 16:27:19",
+      "content_length": 3966,
+      "filename": "05_functional_specification.md",
+      "context_used": 4
+    },
+    {
+      "prompt_number": 6,
+      "prompt_name": "competitor_analysis",
+      "prompt_file": "06_competitor_analysis.md",
+      "model": "gpt-5-mini",
+      "generated_at": "2025-08-15 16:28:01",
+      "content_length": 15477,
+      "filename": "06_competitor_analysis.md",
+      "context_used": 5
+    },
+    {
+      "prompt_number": 7,
+      "prompt_name": "market_sizing",
+      "prompt_file": "07_market_sizing.md",
+      "model": "gpt-5-mini",
+      "generated_at": "2025-08-15 16:29:17",
+      "content_length": 8730,
+      "filename": "07_market_sizing.md",
+      "context_used": 6
+    },
+    {
+      "prompt_number": 8,
+      "prompt_name": "key_messages",
+      "prompt_file": "08_key_messages.md",
+      "model": "gpt-5-mini",
+      "generated_at": "2025-08-15 16:29:44",
+      "content_length": 841,
+      "filename": "08_key_messages.md",
+      "context_used": 7
+    },
+    {
+      "prompt_number": 9,
+      "prompt_name": "demo_script",
+      "prompt_file": "09_demo_script.md",
+      "model": "gpt-5-mini",
+      "generated_at": "2025-08-15 16:30:13",
+      "content_length": 2728,
+      "filename": "09_demo_script.md",
+      "context_used": 8
+    },
+    {
+      "prompt_number": 10,
+      "prompt_name": "presentation_structure",
+      "prompt_file": "10_presentation_structure.md",
+      "model": "gpt-5-mini",
+      "generated_at": "2025-08-15 16:31:01",
+      "content_length": 13251,
+      "filename": "10_presentation_structure.md",
+      "context_used": 9
+    },
+    {
+      "prompt_number": 11,
+      "prompt_name": "discovery_qualification",
+      "prompt_file": "11_discovery_qualification.md",
+      "model": "gpt-5-mini",
+      "generated_at": "2025-08-15 16:31:57",
+      "content_length": 13962,
+      "filename": "11_discovery_qualification.md",
+      "context_used": 10
+    },
+    {
+      "prompt_number": 12,
+      "prompt_name": "qa_prep",
+      "prompt_file": "12_qa_prep.md",
+      "model": "gpt-5-mini",
+      "generated_at": "2025-08-15 16:32:27",
+      "content_length": 5105,
+      "filename": "12_qa_prep.md",
+      "context_used": 11
+    },
+    {
+      "prompt_number": 13,
+      "prompt_name": "pricing_roi",
+      "prompt_file": "13_pricing_roi.md",
+      "model": "gpt-5-mini",
+      "generated_at": "2025-08-15 16:33:02",
+      "content_length": 5693,
+      "filename": "13_pricing_roi.md",
+      "context_used": 12
+    },
+    {
+      "prompt_number": 14,
+      "prompt_name": "gtm_strategy",
+      "prompt_file": "14_gtm_strategy.md",
+      "model": "gpt-5-mini",
+      "generated_at": "2025-08-15 16:34:08",
+      "content_length": 19591,
+      "filename": "14_gtm_strategy.md",
+      "context_used": 13
+    }
+  ]
+}

@@ -1,36 +1,59 @@
 export interface LandingPageData {
+  // Section 1: Hero (handled by ProductPage.tsx)
   hero: {
-    headline: string;        // [NAME]
-    subhead: string;         // [DESCRIPTION] 
-    badge: string;           // [Type]
+    headline: string;        // Product name
+    subhead: string;         // Description/value prop
+    badge: string;           // Product type
+    price: string;           // Price/timeline
+    ctaText: string;         // Primary CTA text
   };
-  valueProposition: {
-    title: string;           // "What You're Actually Buying"
-    content: string;         // [WHAT THE CLIENT IS ACTUALLY BUYING]
+  
+  // Section 2: Why teams choose this (3-4 key benefits)
+  whyChooseThis: {
+    title: string;           // "Why teams choose this"
+    benefits: Array<{
+      title: string;         // Fast/Affordable/Usable/Confidence
+      description: string;   // Benefit description
+    }>;
   };
-  benefits: {
-    title: string;           // "Key Benefits"
-    items: string[];         // parsed from [BENEFITS]
+  
+  // Section 3: How it works (5-6 verb-led steps)
+  howItWorks: {
+    title: string;           // "How it works"
+    steps: Array<{
+      verb: string;          // Action verb (Gather, Analyse, etc.)
+      title: string;         // Step name
+      description: string;   // Step description
+    }>;
   };
-  features: {
-    title: string;           // "Key Features"
-    items: string[];         // parsed from [KEY FEATURES]
+  
+  // Section 4: What our clients say (testimonial + logos)
+  clientTestimonials: {
+    title: string;           // "What our clients say"
+    testimonial: {
+      quote: string;         // Client testimonial
+      attribution: string;   // Client name/title/company
+    };
+    clientLogos?: string[];  // Optional client logos
   };
-  perfectFor: {
-    title: string;           // "Perfect For"
-    primary: string;         // [PERFECT FOR:]
-    secondary: string;       // [IDEAL CLIENT]
+  
+  // Section 5: What about...? (3 common objections)
+  objections: {
+    title: string;           // "What about...?"
+    items: Array<{
+      question: string;      // Budget? Security? etc.
+      answer: string;        // Reassuring response
+    }>;
   };
-  pricing: {
-    price: string;           // [PRICE]
-    deliverables: string;    // [Primary Deliverables]
-    ctaText: string;         // "Get Started"
-    ctaLink: string;         // editable link
-  };
-  upsell: {
-    title: string;           // "What's Next?"
-    content: string;         // [WHAT IS THE NEXT PRODUCT OR SERVICE?]
-    show: boolean;           // only if content exists
+  
+  // Section 6: What you get (price, deliverables, outcomes)
+  offer: {
+    title: string;           // "What you get"
+    price: string;           // Price and timeline
+    deliverables: string[];  // List of deliverables
+    outcomes: string[];      // List of outcomes/benefits
+    ctaText: string;         // Repeat CTA
+    ctaLink: string;         // CTA link
   };
 }
 

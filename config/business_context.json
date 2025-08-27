@@ -1,0 +1,65 @@
+{
+  "company": {
+    "name": "Brilliant Noise",
+    "founded": "2009",
+    "location": "Brighton, UK",
+    "type": "B-Corp certified digital consultancy",
+    "founders": ["Anthony Mayfield", "Maddy Cooper", "Jason Ryan"]
+  },
+  "positioning": {
+    "primary": "AI innovation partner for global brands",
+    "secondary": "Marketing transformation agency that helps global brands accelerate performance through strategy, creativity and capability",
+    "differentiation": "Deep strategic thinking combined with practical implementation support"
+  },
+  "services": {
+    "core_areas": [
+      "AI Strategy & Transformation",
+      "Marketing Transformation", 
+      "Digital Innovation Consulting",
+      "Organizational Capability Building"
+    ],
+    "ai_specific": {
+      "ai_literacy": "Build a shared understanding so your team can learn, grow and move forward together",
+      "breakthrough_innovation": "Use AI to solve problems, spark ideas and design better products and services", 
+      "strategic_growth": "Build a future-ready strategy that drives business growth and inspires your team"
+    }
+  },
+  "approach": {
+    "methodology": "Test-Learn-Lead™ process",
+    "philosophy": "Provide clarity, confidence, and capability in AI adoption",
+    "style": "Collaborative with leadership teams, hands-on practical implementation"
+  },
+  "clients": {
+    "type": "Global brands and forward-thinking organizations",
+    "examples": ["adidas", "Asahi", "Barilla", "BMW", "Nestle", "Diageo", "L'Oréal", "Visa Europe", "Universal Pictures International"]
+  },
+  "competitive_positioning": {
+    "not_like": [
+      "Large global management consultancies (McKinsey, BCG, etc.)",
+      "Pure technology implementation firms",
+      "Traditional advertising agencies"
+    ],
+    "unique_strengths": [
+      "Brighton-based boutique with global brand experience",
+      "Deep AI expertise with practical business application",
+      "Marketing transformation heritage with AI innovation focus",
+      "B-Corp values with commercial excellence",
+      "Leadership team with 15+ years digital transformation experience"
+    ]
+  },
+  "target_market": {
+    "primary": "Global brands and enterprises ready for AI transformation",
+    "secondary": "Scale-ups and mid-market companies seeking AI strategy",
+    "decision_makers": "CMOs, CDOs, Innovation Directors, C-suite executives"
+  },
+  "brand_voice": {
+    "tone": "Expert but approachable, strategic but practical",
+    "values": ["Purpose-driven", "Collaborative", "Innovation-focused", "Results-oriented"],
+    "messaging_themes": [
+      "Navigate AI transformation with confidence",
+      "Turn AI potential into business reality", 
+      "Strategic thinking meets practical implementation",
+      "Future-ready strategies that drive growth"
+    ]
+  }
+}
