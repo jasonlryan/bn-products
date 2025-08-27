@@ -10,6 +10,10 @@
       "destination": "/api/storage.ts"
     },
     {
+      "source": "/api/seed",
+      "destination": "/api/seed.ts"
+    },
+    {
       "source": "/api/(.*)",
       "destination": "/src/app/api/$1"
     },

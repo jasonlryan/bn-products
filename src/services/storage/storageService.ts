@@ -70,9 +70,11 @@ class DualStorageService implements StorageService {
       const localValue = await this.localStorage.get<T>(key)
       if (localValue !== null) {
         console.log(`✅ [Storage] Found in localStorage: ${key}`);
-        // If we have data in localStorage but not in Redis, sync it to Redis
-        if (this.redis) {
-          console.log(`🔄 [Storage] Syncing localStorage data to Redis: ${key}`);
+        // Guard against polluting Redis from stale browser data in production
+        const allowLocalBackfill =
+          typeof window !== 'undefined' && (import.meta as any)?.env?.VITE_ALLOW_LOCAL_TO_REDIS === 'true'
+        if (this.redis && allowLocalBackfill) {
+          console.log(`🔄 [Storage] Dev backfill: syncing localStorage data to Redis: ${key}`);
           await this.redis.set(key, localValue).catch(console.error)
         }
         return localValue
