@@ -1,0 +1,813 @@
+{
+  "version": "3.0",
+  "generated_at": "2025-08-27",
+  "products": {
+    "01_ai_power_hour": {
+      "name": "AI Power Hour",
+      "landingPageData": {
+        "hero": {
+          "headline": "AI Power Hour",
+          "subhead": "One hour. One challenge. Tangible results. The AI Power Hour is a focused, one-to-one session designed to help you tackle a specific problem with AI — and leave with a clear workflow, practical tools and new confidence.",
+          "badge": "PRODUCT",
+          "price": "£300. Includes the live session + follow-up resources.",
+          "ctaText": "Book your Power Hour"
+        },
+        "whyChooseThis": {
+          "title": "Why teams choose this",
+          "benefits": [
+            {
+              "title": "Hands-on learning",
+              "description": "Not theory, but practical problem-solving with real tools."
+            },
+            {
+              "title": "Tailored to you",
+              "description": "We work on your challenge, not a case study."
+            },
+            {
+              "title": "Immediate value",
+              "description": "Leave with a workflow and documented next steps."
+            },
+            {
+              "title": "Low risk, high return",
+              "description": "At £300, it’s the easiest way to explore what AI can do for you — and how we can help further."
+            }
+          ]
+        },
+        "howItWorks": {
+          "title": "How it works",
+          "steps": [
+            {
+              "verb": "Before",
+              "title": "the session",
+              "description": ""
+            },
+            {
+              "verb": "You",
+              "title": "tell us your",
+              "description": "challenge."
+            },
+            {
+              "verb": "We",
+              "title": "ask for any",
+              "description": "documents or data you want to use."
+            },
+            {
+              "verb": "Together",
+              "title": "we define the",
+              "description": "objective: go as far as possible in the time."
+            },
+            {
+              "verb": "During",
+              "title": "the session (1",
+              "description": "hour)"
+            }
+          ]
+        },
+        "clientTestimonials": {
+          "title": "What our clients say",
+          "testimonial": {
+            "quote": "",
+            "attribution": ""
+          }
+        },
+        "objections": {
+          "title": "What about...?",
+          "items": [
+            {
+              "question": "Not sure what to bring?",
+              "answer": "We’ll help you frame your challenge beforehand."
+            },
+            {
+              "question": "Worried it’s too basic?",
+              "answer": "Even advanced users leave with new workflows and shortcuts."
+            },
+            {
+              "question": "Think it won’t be enough time?",
+              "answer": "Our structure ensures you leave with tangible value in 60 minutes."
+            }
+          ]
+        },
+        "offer": {
+          "title": "What you get",
+          "price": "A one-hour, £300 one-to-one session to solve a real challenge with AI. Hands-on, tailored, and packed with immediate value + follow-up resources.",
+          "deliverables": [
+            "60-minute one-to-one session (remote).",
+            "Clear problem statement and workflow.",
+            "Demos of relevant AI tools tailored to your challenge.",
+            "Written summary of session + next steps.",
+            "Follow-up resources for continued learning."
+          ],
+          "outcomes": [],
+          "ctaText": "Get started",
+          "ctaLink": "#contact"
+        }
+      }
+    },
+    "02_ai_b_c": {
+      "name": "AI-B-C™",
+      "landingPageData": {
+        "hero": {
+          "headline": "AI-B-C™",
+          "subhead": "Build AI literacy. Unlock performance. The AI-B-C™ programme helps your teams learn, apply and scale AI skills — fast. From quick wins to strategic roadmaps, we give you the knowledge and tools to spark innovation and boost performance.",
+          "badge": "PRODUCT",
+          "price": "From £300. Tailored programmes to fit your goals.",
+          "ctaText": "Start your journey"
+        },
+        "whyChooseThis": {
+          "title": "Why teams choose this",
+          "benefits": [
+            {
+              "title": "Layout",
+              "description": "3 cards / columns (mobile-first stack)"
+            },
+            {
+              "title": "Accessible",
+              "description": "We make AI clear, practical and energising — no jargon, no overwhelm."
+            },
+            {
+              "title": "Actionable",
+              "description": "Every session leads to new skills, tools and opportunities your team can use immediately."
+            },
+            {
+              "title": "Scalable",
+              "description": "From a single power hour to a multi-day sprint, we build literacy across your whole organisation."
+            }
+          ]
+        },
+        "howItWorks": {
+          "title": "How it works",
+          "steps": [
+            {
+              "verb": "Visual:",
+              "title": "5-step numbered process",
+              "description": "(horizontal timeline on desktop, stacked on mobile)"
+            },
+            {
+              "verb": "Brief",
+              "title": "& align",
+              "description": ""
+            },
+            {
+              "verb": "Apply",
+              "title": "AI in practice",
+              "description": ""
+            },
+            {
+              "verb": "Spot",
+              "title": "opportunities",
+              "description": ""
+            },
+            {
+              "verb": "Build",
+              "title": "custom tools",
+              "description": ""
+            }
+          ]
+        },
+        "clientTestimonials": {
+          "title": "What our clients say",
+          "testimonial": {
+            "quote": "",
+            "attribution": ""
+          }
+        },
+        "objections": {
+          "title": "What about...?",
+          "items": [
+            {
+              "question": "Too complex?",
+              "answer": "We keep sessions simple, practical and energising — meeting teams where they are."
+            },
+            {
+              "question": "Too theoretical?",
+              "answer": "You’ll leave with real-world tools, use cases and a roadmap."
+            },
+            {
+              "question": "Too expensive?",
+              "answer": "Formats fit every budget — from £300 coaching to multi-day sprints."
+            }
+          ]
+        },
+        "offer": {
+          "title": "What you get",
+          "price": "Price/timeline snippet: Flexible programmes from £300 to £17,500.",
+          "deliverables": [
+            "Choose the format that fits your needs:",
+            "CTA (repeated): Start your journey",
+            "Wireframe outline: AI-B-C™",
+            "Frame 1: Hero (above the fold)",
+            "Headline (H1): Build AI literacy. Unlock performance."
+          ],
+          "outcomes": [],
+          "ctaText": "Get started",
+          "ctaLink": "#contact"
+        }
+      }
+    },
+    "03_ai_innovation_programme": {
+      "name": "AI Innovation Programme",
+      "landingPageData": {
+        "hero": {
+          "headline": "AI Innovation Programme",
+          "subhead": "Systematise AI-driven innovation. The AI Innovation Programme turns experimentation into business results. We help you create a repeatable framework for AI-driven product, service and process improvement — so innovation isn’t a one-off, it’s a capability. 👉 Bespoke programmes for medium–large organisations, typically 2–6 months.",
+          "badge": "SERVICE",
+          "price": "",
+          "ctaText": "Start your programme"
+        },
+        "whyChooseThis": {
+          "title": "Why teams choose this",
+          "benefits": [
+            {
+              "title": "Continuous innovation",
+              "description": "Move beyond one-off pilots to a system that delivers repeatable results."
+            },
+            {
+              "title": "Breakthrough outcomes",
+              "description": "Rapid solutions available for a fraction of the investment compared to even a year ago."
+            },
+            {
+              "title": "Integrated with R&D",
+              "description": "Designed for organisations with budgets and appetite for sustained innovation."
+            },
+            {
+              "title": "Expert guidance",
+              "description": "Industry-leading advisors simplify AI challenges and de-risk experimentation."
+            }
+          ]
+        },
+        "howItWorks": {
+          "title": "How it works",
+          "steps": [
+            {
+              "verb": "Set",
+              "title": "up your process",
+              "description": "consulting to design your innovation framework and governance."
+            },
+            {
+              "verb": "Run",
+              "title": "ideation workshops",
+              "description": "facilitated sessions to generate, shape and prioritise AI ideas."
+            },
+            {
+              "verb": "Prototype",
+              "title": "and test",
+              "description": "rapid prototyping to explore feasibility and impact."
+            },
+            {
+              "verb": "Integrate",
+              "title": "into R&D",
+              "description": "connect tested solutions with existing products, services or processes."
+            },
+            {
+              "verb": "Measure",
+              "title": "and optimise",
+              "description": "track metrics, capture learnings and embed continuous improvement."
+            }
+          ]
+        },
+        "clientTestimonials": {
+          "title": "What our clients say",
+          "testimonial": {
+            "quote": "",
+            "attribution": ""
+          }
+        },
+        "objections": {
+          "title": "What about...?",
+          "items": [
+            {
+              "question": "Too abstract?",
+              "answer": "You’ll leave with tangible prototypes, frameworks and tested solutions."
+            },
+            {
+              "question": "Too risky?",
+              "answer": "We de-risk innovation by starting small, testing fast and scaling only what works."
+            },
+            {
+              "question": "Too resource-heavy?",
+              "answer": "Programmes are tailored to your size, budget and existing capability."
+            }
+          ]
+        },
+        "offer": {
+          "title": "What you get",
+          "price": "",
+          "deliverables": [
+            "A tailored AI innovation process designed for your organisation.",
+            "Ideation workshops and facilitated experimentation.",
+            "Prototyping and testing of selected solutions.",
+            "Guidance on integrating AI into products and services.",
+            "Innovation metrics and evaluation framework."
+          ],
+          "outcomes": [],
+          "ctaText": "Get started",
+          "ctaLink": "#contact"
+        }
+      }
+    },
+    "04_ai_leadership_partner_fractional_caio": {
+      "name": "AI Leadership Partner (Fractional CAIO)",
+      "landingPageData": {
+        "hero": {
+          "headline": "AI Leadership Partner (Fractional CAIO)",
+          "subhead": "Executive-level AI leadership without the overhead. The AI Leadership Partner gives you access to senior AI expertise — guiding strategy, shaping capability and supporting decisions at the highest level. Think of it as a Fractional Chief AI Officer (CAIO): on call, embedded, and focused on your organisation’s future. 👉 Bespoke retainer, tailored to your needs.",
+          "badge": "SERVICE",
+          "price": "",
+          "ctaText": "Start your partnership"
+        },
+        "whyChooseThis": {
+          "title": "Why teams choose this",
+          "benefits": [
+            {
+              "title": "Strategic clarity",
+              "description": "Get executive-level advice on the impact of AI without big-tech bias."
+            },
+            {
+              "title": "On-demand leadership",
+              "description": "Fractional CAIO access with no delay or long recruitment cycles."
+            },
+            {
+              "title": "Capability building",
+              "description": "Develop your teams’ skills while you set direction from the top."
+            },
+            {
+              "title": "Future focus",
+              "description": "Keep pace with disruption and turn uncertainty into opportunity."
+            }
+          ]
+        },
+        "howItWorks": {
+          "title": "How it works",
+          "steps": [
+            {
+              "verb": "Understand",
+              "title": "challenges and opportunities",
+              "description": "we start with a deep dive into your business priorities."
+            },
+            {
+              "verb": "Act",
+              "title": "as your AI leader",
+              "description": "ongoing presence at the executive/board level to guide strategy and decision-making."
+            },
+            {
+              "verb": "Develop",
+              "title": "talent and teams",
+              "description": "workshops and coaching to upskill leaders and embed AI capability."
+            },
+            {
+              "verb": "Prototype,",
+              "title": "test and innovate",
+              "description": "support for pilots and innovation sprints to accelerate learning."
+            },
+            {
+              "verb": "Measure,",
+              "title": "optimise and scale",
+              "description": "continuous assessment and roadmap updates to ensure lasting impact."
+            }
+          ]
+        },
+        "clientTestimonials": {
+          "title": "What our clients say",
+          "testimonial": {
+            "quote": "",
+            "attribution": ""
+          }
+        },
+        "objections": {
+          "title": "What about...?",
+          "items": [
+            {
+              "question": "Too risky to invest in leadership?",
+              "answer": "A fractional model means you get senior-level expertise without the overhead of a full-time hire."
+            },
+            {
+              "question": "Too early for us?",
+              "answer": "We meet you where you are — from low to medium AI maturity — and accelerate your learning curve."
+            },
+            {
+              "question": "Too disruptive?",
+              "answer": "We cut through the noise with pragmatic, board-ready guidance."
+            }
+          ]
+        },
+        "offer": {
+          "title": "What you get",
+          "price": "",
+          "deliverables": [
+            "Regular strategy sessions with AI experts.",
+            "Ongoing advisory services at the executive/board level.",
+            "Support in AI-related decision-making.",
+            "Assistance with AI talent acquisition and development.",
+            "Regular capability assessments and roadmap updates."
+          ],
+          "outcomes": [],
+          "ctaText": "Get started",
+          "ctaLink": "#contact"
+        }
+      }
+    },
+    "05_ai_powered_research_and_insight_sprint": {
+      "name": "AI Insight Sprint",
+      "landingPageData": {
+        "hero": {
+          "headline": "AI Insight Sprint",
+          "subhead": "Faster insights. Smarter campaigns. In just five days we’ll deliver an interactive dashboard of audience insights and creative tests — not a static report.",
+          "badge": "PRODUCT",
+          "price": "£10,000. Five days. Campaign-ready insights.",
+          "ctaText": "Start your sprint"
+        },
+        "whyChooseThis": {
+          "title": "Why teams choose this",
+          "benefits": [
+            {
+              "title": "Benefit 1",
+              "description": "{4 columns / stacked cards (mobile-first design)"
+            },
+            {
+              "title": "Fast",
+              "description": "Get campaign-ready insights in days, not months."
+            },
+            {
+              "title": "Affordable",
+              "description": "Research insights at a fraction of the cost of traditional methods."
+            },
+            {
+              "title": "Usable",
+              "description": "A live dashboard you can explore — not a PDF that gathers dust."
+            }
+          ]
+        },
+        "howItWorks": {
+          "title": "How it works",
+          "steps": [
+            {
+              "verb": "Gather",
+              "title": "and structure data",
+              "description": "audience, competitor and market intelligence."
+            },
+            {
+              "verb": "Analyse",
+              "title": "trends and sentiment",
+              "description": "use AI tools to surface opportunities and signals."
+            },
+            {
+              "verb": "Build",
+              "title": "persona chatbots",
+              "description": "simulate conversations to uncover human truths."
+            },
+            {
+              "verb": "Test",
+              "title": "creative concepts",
+              "description": "predict resonance and refine direction."
+            },
+            {
+              "verb": "Deliver",
+              "title": "the dashboard",
+              "description": "insights, scenarios and recommendations in one interactive hub."
+            }
+          ]
+        },
+        "clientTestimonials": {
+          "title": "What our clients say",
+          "testimonial": {
+            "quote": "",
+            "attribution": ""
+          }
+        },
+        "objections": {
+          "title": "What about...?",
+          "items": [
+            {
+              "question": "Budget?",
+              "answer": "Priced to deliver high-value insights quickly — used by charities and global brands alike."
+            },
+            {
+              "question": "Security?",
+              "answer": "Dashboards are hosted safely with no risk to your data or systems."
+            },
+            {
+              "question": "Tradition?",
+              "answer": "Reports are static. Dashboards let you see the living, moving picture of your audiences."
+            }
+          ]
+        },
+        "offer": {
+          "title": "What you get",
+          "price": "5-day sprint for £10,000",
+          "deliverables": [
+            "AI-driven market, sentiment and competitor analysis",
+            "Persona chatbots for deeper understanding",
+            "Concept testing and predictive modelling",
+            "An interactive dashboard of insights and recommendations"
+          ],
+          "outcomes": [],
+          "ctaText": "Get started",
+          "ctaLink": "#contact"
+        }
+      }
+    },
+    "06_ai_consultancy_retainer": {
+      "name": "AI Sherpa",
+      "landingPageData": {
+        "hero": {
+          "headline": "AI Sherpa",
+          "subhead": "Your dedicated leadership guide to AI. Our AI Sherpa service is a one-to-one coaching and advisory service for senior leaders. You’ll work directly with a dedicated Brilliant Noise consultant — your Sherpa — to build confidence, accelerate learning and make smarter decisions about AI in your organisation. 👉 Bespoke monthly retainer. Tailored to you.",
+          "badge": "SERVICE",
+          "price": "",
+          "ctaText": "Start your journey"
+        },
+        "whyChooseThis": {
+          "title": "Why teams choose this",
+          "benefits": [
+            {
+              "title": "Dedicated support",
+              "description": "A single point of contact — your AI Sherpa — available when you need them."
+            },
+            {
+              "title": "Strategic confidence",
+              "description": "Build clarity on how AI impacts your business and how to respond."
+            },
+            {
+              "title": "Practical guidance",
+              "description": "Get tools, workflows and examples directly applied to your context."
+            },
+            {
+              "title": "Personalised pace",
+              "description": "Weekly sessions, ongoing correspondence and continuous support, shaped around your needs."
+            }
+          ]
+        },
+        "howItWorks": {
+          "title": "How it works",
+          "steps": [
+            {
+              "verb": "Kick-off",
+              "title": "deep dive",
+              "description": "understand your challenges, goals and organisational context."
+            },
+            {
+              "verb": "Weekly",
+              "title": "coaching sessions",
+              "description": "structured one-to-one time (remote or in person) to build skills and shape strategy."
+            },
+            {
+              "verb": "Always-on",
+              "title": "support",
+              "description": "direct access to your AI Sherpa between sessions for advice, resources and feedback."
+            },
+            {
+              "verb": "Live",
+              "title": "problem-solving",
+              "description": "work on real tasks, pilots or strategic questions together."
+            },
+            {
+              "verb": "Ongoing",
+              "title": "roadmap",
+              "description": "continuous updates to your personal and organisational AI plan."
+            }
+          ]
+        },
+        "clientTestimonials": {
+          "title": "What our clients say",
+          "testimonial": {
+            "quote": "",
+            "attribution": ""
+          }
+        },
+        "objections": {
+          "title": "What about...?",
+          "items": [
+            {
+              "question": "Too much commitment?",
+              "answer": "The retainer is flexible — we scale up or down depending on what you need."
+            },
+            {
+              "question": "Not technical enough?",
+              "answer": "This isn’t about coding — it’s about strategy, leadership and smart application of AI."
+            },
+            {
+              "question": "Can’t find the time?",
+              "answer": "Weekly sessions are structured, but most value comes from the ongoing access and responsiveness of your Sherpa."
+            }
+          ]
+        },
+        "offer": {
+          "title": "What you get",
+          "price": "",
+          "deliverables": [
+            "A dedicated Brilliant Noise consultant as your AI Sherpa.",
+            "Weekly one-to-one coaching sessions (remote or in person).",
+            "Always-on support between sessions.",
+            "Customised resources, tools and prompts.",
+            "Live problem-solving applied to your business challenges."
+          ],
+          "outcomes": [],
+          "ctaText": "Get started",
+          "ctaLink": "#contact"
+        }
+      }
+    },
+    "07_ai_innovation_day": {
+      "name": "AI Acceleration Day",
+      "landingPageData": {
+        "hero": {
+          "headline": "AI Acceleration Day",
+          "subhead": "Hero From idea to output in one day. AI Acceleration Day is a fast-paced, immersive workshop that takes your team from raw idea to working concept — in just 24 hours. By the end of the day you’ll have something real: a prototype, microsite, campaign concept or product demo built with AI tools.",
+          "badge": "PRODUCT",
+          "price": "£8,800 for a full-day facilitated workshop.",
+          "ctaText": "Book your day"
+        },
+        "whyChooseThis": {
+          "title": "Why teams choose this",
+          "benefits": [
+            {
+              "title": "Proves what’s possible",
+              "description": "Turn AI hype into hands-on, live results."
+            },
+            {
+              "title": "Accelerates understanding",
+              "description": "Teams see AI’s potential by doing, not just talking."
+            },
+            {
+              "title": "Tangible outputs",
+              "description": "Leave with a working concept, not a slide deck."
+            },
+            {
+              "title": "Future blueprint",
+              "description": "Create a repeatable model for rapid experimentation."
+            }
+          ]
+        },
+        "howItWorks": {
+          "title": "How it works",
+          "steps": [
+            {
+              "verb": "Frame",
+              "title": "the challenge",
+              "description": "align on your team’s idea, opportunity or problem."
+            },
+            {
+              "verb": "Generate",
+              "title": "ideas with AI",
+              "description": "structured brainstorming using AI-assisted ideation tools."
+            },
+            {
+              "verb": "Design",
+              "title": "and prototype",
+              "description": "create live outputs using no-code tools and AI accelerators."
+            },
+            {
+              "verb": "Launch",
+              "title": "and test",
+              "description": "produce a shareable landing page, microsite or demo in real time."
+            },
+            {
+              "verb": "Reflect",
+              "title": "and plan",
+              "description": "capture learnings, coaching and recommendations for next steps."
+            }
+          ]
+        },
+        "clientTestimonials": {
+          "title": "What our clients say",
+          "testimonial": {
+            "quote": "",
+            "attribution": ""
+          }
+        },
+        "objections": {
+          "title": "What about...?",
+          "items": [
+            {
+              "question": "Too theoretical?",
+              "answer": "This is hands-on from start to finish — teams build and launch live outputs."
+            },
+            {
+              "question": "Too risky?",
+              "answer": "It’s a low-cost, low-risk way to explore AI’s value before investing further."
+            },
+            {
+              "question": "Too much for one day?",
+              "answer": "The format is proven: structured facilitation means you get results in 24 hours."
+            }
+          ]
+        },
+        "offer": {
+          "title": "What you get",
+          "price": "",
+          "deliverables": [
+            "One-day facilitated workshop, led by strategists and AI experts.",
+            "Full-day prototyping support with AI tools (ChatGPT, Gamma, Framer, Webflow).",
+            "Launch-ready output: a landing page, prototype, campaign concept or microsite.",
+            "Custom prompts, templates and coaching for future use.",
+            "Follow-up recommendations on embedding AI in product and content development."
+          ],
+          "outcomes": [],
+          "ctaText": "Get started",
+          "ctaLink": "#contact"
+        }
+      }
+    },
+    "08_social_intelligence_dashboard": {
+      "name": "AI Market Intelligence Dashboard",
+      "landingPageData": {
+        "hero": {
+          "headline": "AI Market Intelligence Dashboard",
+          "subhead": "Turn data into marketing intelligence. The AI Market Intelligence Dashboard turns online conversations into actionable insight. It scans reviews, forums, and social feeds to show what people really think — about your products, competitors and what matters most. Use it for a single campaign, an entire market, or set it to update continuously for always-on intelligence. With an interactive dashboard and AI chatbot, you’ll see sentiment, signals and trends in seconds.",
+          "badge": "PRODUCT",
+          "price": "From £12,000. Packages scale from single campaigns to multi-market tracking.",
+          "ctaText": "Start your dashboard"
+        },
+        "whyChooseThis": {
+          "title": "Why teams choose this",
+          "benefits": [
+            {
+              "title": "Faster decisions",
+              "description": "Insights at your fingertips — no more weeks of manual research."
+            },
+            {
+              "title": "Smarter campaigns",
+              "description": "See exactly what resonates with audiences in each market."
+            },
+            {
+              "title": "Scalable",
+              "description": "From one campaign to multi-market tracking, it grows with your needs."
+            },
+            {
+              "title": "Confidence at scale",
+              "description": "Reliable, repeatable analysis you can trust."
+            }
+          ]
+        },
+        "howItWorks": {
+          "title": "How it works",
+          "steps": [
+            {
+              "verb": "Gather",
+              "title": "data",
+              "description": "AI-powered research across 50+ validated online sources."
+            },
+            {
+              "verb": "Analyse",
+              "title": "and score",
+              "description": "our Weighted Resonance Index (WRI) ranks the attributes that matter most."
+            },
+            {
+              "verb": "Compare",
+              "title": "competitors",
+              "description": "see how rivals are positioned and what’s working for them."
+            },
+            {
+              "verb": "Explore",
+              "title": "in the dashboard",
+              "description": "interactive visualisation with drill-downs by segment, product or market."
+            },
+            {
+              "verb": "Ask",
+              "title": "the chatbot",
+              "description": "get instant answers to your biggest questions."
+            }
+          ]
+        },
+        "clientTestimonials": {
+          "title": "What our clients say",
+          "testimonial": {
+            "quote": "",
+            "attribution": ""
+          }
+        },
+        "objections": {
+          "title": "What about...?",
+          "items": [
+            {
+              "question": "Too complex?",
+              "answer": "Designed for marketers — intuitive dashboards and chatbot, not dense reports."
+            },
+            {
+              "question": "Too generic?",
+              "answer": "Each dashboard is customised to your brand, market or campaign."
+            },
+            {
+              "question": "Too resource-heavy?",
+              "answer": "Scale it: start small with one campaign or single market, then expand to always-on intelligence."
+            }
+          ]
+        },
+        "offer": {
+          "title": "What you get",
+          "price": "",
+          "deliverables": [
+            "Per-campaign or per-market analysis with consumer, competitor and trend data.",
+            "Weighted Resonance Index (WRI) scoring 20 key attributes per product or market.",
+            "Interactive dashboard for exploration, comparison and scenario planning.",
+            "AI chatbot for instant answers to strategic questions.",
+            "Integrated reports (PDF + searchable viewer) with executive summaries."
+          ],
+          "outcomes": [],
+          "ctaText": "Get started",
+          "ctaLink": "#contact"
+        }
+      }
+    }
+  }
+}
