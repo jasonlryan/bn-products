@@ -114,7 +114,35 @@ class MarketIntelligenceCompilerService {
   }
 
   /**
-   * Extract market intelligence inputs from product data
+   * Sanitize content to ensure consistent product naming
+   */
+  private sanitizeProductReferences(content: string, currentProductName: string): string {
+    if (!content) return content;
+    
+    // Map of old product names to clean up
+    const nameReplacements: Record<string, string> = {
+      'AI-Powered Research and Insight Sprint': 'AI Insight Sprint',
+      'AI Consultancy Retainer': 'AI Sherpa',
+      'AI Innovation Day': 'AI Acceleration Day',
+      'Social Intelligence Dashboard': 'AI Market Intelligence Dashboard'
+    };
+    
+    let sanitizedContent = content;
+    
+    // Replace old names with current product name if it matches
+    for (const [oldName, newName] of Object.entries(nameReplacements)) {
+      if (currentProductName.includes(newName) || newName === currentProductName) {
+        // Use global regex to replace all instances
+        const regex = new RegExp(oldName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+        sanitizedContent = sanitizedContent.replace(regex, currentProductName);
+      }
+    }
+    
+    return sanitizedContent;
+  }
+
+  /**
+   * Extract market intelligence inputs from product data with name hygiene check
    */
   private extractMarketIntelligenceInputs(product: Product): MarketIntelligenceInputs {
     const inputs: MarketIntelligenceInputs = {
@@ -124,29 +152,50 @@ class MarketIntelligenceCompilerService {
       industryTrends: ''
     };
 
-    // Extract Market Opportunity (from market sizing)
+    // Extract Market Opportunity (from market sizing) with name sanitization
     if (product.richContent?.marketSizing?.sections?.['Generated Output']) {
-      inputs.marketOpportunity = product.richContent.marketSizing.sections['Generated Output'];
+      inputs.marketOpportunity = this.sanitizeProductReferences(
+        product.richContent.marketSizing.sections['Generated Output'], 
+        product.name
+      );
     } else if (product.richContent?.marketSizing?.fullContent) {
-      inputs.marketOpportunity = product.richContent.marketSizing.fullContent;
+      inputs.marketOpportunity = this.sanitizeProductReferences(
+        product.richContent.marketSizing.fullContent, 
+        product.name
+      );
     }
 
-    // Extract Competitive Analysis
+    // Extract Competitive Analysis with name sanitization
     if (product.richContent?.competitorAnalysis?.sections?.['Generated Output']) {
-      inputs.competitiveAnalysis = product.richContent.competitorAnalysis.sections['Generated Output'];
+      inputs.competitiveAnalysis = this.sanitizeProductReferences(
+        product.richContent.competitorAnalysis.sections['Generated Output'], 
+        product.name
+      );
     } else if (product.richContent?.competitorAnalysis?.fullContent) {
-      inputs.competitiveAnalysis = product.richContent.competitorAnalysis.fullContent;
+      inputs.competitiveAnalysis = this.sanitizeProductReferences(
+        product.richContent.competitorAnalysis.fullContent, 
+        product.name
+      );
     }
 
-    // Extract Target Market Analysis (from audience ICPs)
+    // Extract Target Market Analysis (from audience ICPs) with name sanitization
     if (product.richContent?.audienceICPs?.sections?.['Generated Output']) {
-      inputs.targetMarketAnalysis = product.richContent.audienceICPs.sections['Generated Output'];
+      inputs.targetMarketAnalysis = this.sanitizeProductReferences(
+        product.richContent.audienceICPs.sections['Generated Output'], 
+        product.name
+      );
     } else if (product.richContent?.audienceICPs?.fullContent) {
-      inputs.targetMarketAnalysis = product.richContent.audienceICPs.fullContent;
+      inputs.targetMarketAnalysis = this.sanitizeProductReferences(
+        product.richContent.audienceICPs.fullContent, 
+        product.name
+      );
     }
 
-    // Industry Trends - for now use product description or other available data
+    // Industry Trends - use clean product name
     inputs.industryTrends = `Industry trends for ${product.name} - AI adoption, digital transformation, market evolution in ${product.type} sector`;
+
+    // Log sanitization activity for debugging
+    console.log(`🧹 [Market Intelligence Compiler] Applied name hygiene check for ${product.name}`);
 
     return inputs;
   }

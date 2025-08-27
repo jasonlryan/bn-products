@@ -121,7 +121,35 @@ class MarketingCompilerService {
   }
 
   /**
-   * Extract marketing inputs from product data
+   * Sanitize content to ensure consistent product naming
+   */
+  private sanitizeProductReferences(content: string, currentProductName: string): string {
+    if (!content) return content;
+    
+    // Map of old product names to clean up
+    const nameReplacements: Record<string, string> = {
+      'AI-Powered Research and Insight Sprint': 'AI Insight Sprint',
+      'AI Consultancy Retainer': 'AI Sherpa',
+      'AI Innovation Day': 'AI Acceleration Day',
+      'Social Intelligence Dashboard': 'AI Market Intelligence Dashboard'
+    };
+    
+    let sanitizedContent = content;
+    
+    // Replace old names with current product name if it matches
+    for (const [oldName, newName] of Object.entries(nameReplacements)) {
+      if (currentProductName.includes(newName) || newName === currentProductName) {
+        // Use global regex to replace all instances
+        const regex = new RegExp(oldName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+        sanitizedContent = sanitizedContent.replace(regex, currentProductName);
+      }
+    }
+    
+    return sanitizedContent;
+  }
+
+  /**
+   * Extract marketing inputs from product data with name hygiene check
    */
   private extractMarketingInputs(product: Product): MarketingInputs {
     const inputs: MarketingInputs = {
@@ -131,33 +159,60 @@ class MarketingCompilerService {
       qaPrep: ''
     };
 
-    // Extract Key Messages
+    // Extract Key Messages with name sanitization
     if (product.richContent?.keyMessages?.sections?.['Generated Output']) {
-      inputs.keyMessages = product.richContent.keyMessages.sections['Generated Output'];
+      inputs.keyMessages = this.sanitizeProductReferences(
+        product.richContent.keyMessages.sections['Generated Output'], 
+        product.name
+      );
     } else if (product.richContent?.keyMessages?.fullContent) {
-      inputs.keyMessages = product.richContent.keyMessages.fullContent;
+      inputs.keyMessages = this.sanitizeProductReferences(
+        product.richContent.keyMessages.fullContent, 
+        product.name
+      );
     }
 
-    // Extract Demo Script
+    // Extract Demo Script with name sanitization
     if (product.richContent?.demoScript?.sections?.['Generated Output']) {
-      inputs.demoScript = product.richContent.demoScript.sections['Generated Output'];
+      inputs.demoScript = this.sanitizeProductReferences(
+        product.richContent.demoScript.sections['Generated Output'], 
+        product.name
+      );
     } else if (product.richContent?.demoScript?.fullContent) {
-      inputs.demoScript = product.richContent.demoScript.fullContent;
+      inputs.demoScript = this.sanitizeProductReferences(
+        product.richContent.demoScript.fullContent, 
+        product.name
+      );
     }
 
-    // Extract Slide Headlines
+    // Extract Slide Headlines with name sanitization
     if (product.richContent?.slideHeadlines?.sections?.['Generated Output']) {
-      inputs.slideHeadlines = product.richContent.slideHeadlines.sections['Generated Output'];
+      inputs.slideHeadlines = this.sanitizeProductReferences(
+        product.richContent.slideHeadlines.sections['Generated Output'], 
+        product.name
+      );
     } else if (product.richContent?.slideHeadlines?.fullContent) {
-      inputs.slideHeadlines = product.richContent.slideHeadlines.fullContent;
+      inputs.slideHeadlines = this.sanitizeProductReferences(
+        product.richContent.slideHeadlines.fullContent, 
+        product.name
+      );
     }
 
-    // Extract Q&A Prep
+    // Extract Q&A Prep with name sanitization
     if (product.richContent?.qaPrep?.sections?.['Generated Output']) {
-      inputs.qaPrep = product.richContent.qaPrep.sections['Generated Output'];
+      inputs.qaPrep = this.sanitizeProductReferences(
+        product.richContent.qaPrep.sections['Generated Output'], 
+        product.name
+      );
     } else if (product.richContent?.qaPrep?.fullContent) {
-      inputs.qaPrep = product.richContent.qaPrep.fullContent;
+      inputs.qaPrep = this.sanitizeProductReferences(
+        product.richContent.qaPrep.fullContent, 
+        product.name
+      );
     }
+
+    // Log sanitization activity for debugging
+    console.log(`🧹 [Marketing Compiler] Applied name hygiene check for ${product.name}`);
 
     return inputs;
   }

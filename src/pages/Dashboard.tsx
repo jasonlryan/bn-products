@@ -229,13 +229,13 @@ export default function Dashboard() {
               className="group cursor-pointer"
             >
               {/* Product Header */}
-              <div className="flex items-start justify-between mb-4">
-                <h3 className="text-xl font-semibold text-gray-900 group-hover:text-primary transition-colors">
-                  {cleanProductName(item.name)}
-                </h3>
-                <div className="flex items-center gap-2 flex-shrink-0 ml-4">
+              <div className="mb-4">
+                <div className="flex items-start justify-between mb-2">
+                  <h3 className="text-xl font-semibold text-gray-900 group-hover:text-primary transition-colors flex-1 pr-4">
+                    {cleanProductName(item.name)}
+                  </h3>
                   <span
-                    className={`px-3 py-1 text-xs font-semibold rounded-full uppercase tracking-wide ${
+                    className={`px-3 py-1 text-xs font-semibold rounded-full uppercase tracking-wide flex-shrink-0 ${
                       item.type === 'PRODUCT'
                         ? 'bg-blue-100 text-blue-800'
                         : 'bg-green-100 text-green-800'
@@ -243,7 +243,9 @@ export default function Dashboard() {
                   >
                     {item.type}
                   </span>
-                  <span className="bg-white border border-gray-200 rounded-lg px-3 py-1 text-sm font-bold text-primary">
+                </div>
+                <div className="mt-2">
+                  <span className="bg-white border border-gray-200 rounded-lg px-3 py-1 text-sm font-bold text-primary inline-block">
                     {item.pricing?.display || 'Contact for Pricing'}
                   </span>
                 </div>

@@ -101,7 +101,35 @@ class ProductStrategyCompilerService {
   }
 
   /**
-   * Extract product strategy inputs from product data
+   * Sanitize content to ensure consistent product naming
+   */
+  private sanitizeProductReferences(content: string, currentProductName: string): string {
+    if (!content) return content;
+    
+    // Map of old product names to clean up
+    const nameReplacements: Record<string, string> = {
+      'AI-Powered Research and Insight Sprint': 'AI Insight Sprint',
+      'AI Consultancy Retainer': 'AI Sherpa',
+      'AI Innovation Day': 'AI Acceleration Day',
+      'Social Intelligence Dashboard': 'AI Market Intelligence Dashboard'
+    };
+    
+    let sanitizedContent = content;
+    
+    // Replace old names with current product name if it matches
+    for (const [oldName, newName] of Object.entries(nameReplacements)) {
+      if (currentProductName.includes(newName) || newName === currentProductName) {
+        // Use global regex to replace all instances
+        const regex = new RegExp(oldName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+        sanitizedContent = sanitizedContent.replace(regex, currentProductName);
+      }
+    }
+    
+    return sanitizedContent;
+  }
+
+  /**
+   * Extract product strategy inputs from product data with name hygiene check
    */
   private extractProductStrategyInputs(product: Product): ProductStrategyInputs {
     const inputs: ProductStrategyInputs = {
@@ -111,34 +139,57 @@ class ProductStrategyCompilerService {
       functionalSpec: ''
     };
 
-    // Extract Product Manifesto
+    // Extract Product Manifesto with name sanitization
     if (product.richContent?.manifesto?.sections?.['Generated Output']) {
-      inputs.productManifesto = product.richContent.manifesto.sections['Generated Output'];
+      inputs.productManifesto = this.sanitizeProductReferences(
+        product.richContent.manifesto.sections['Generated Output'], 
+        product.name
+      );
     } else if (product.richContent?.manifesto?.fullContent) {
-      inputs.productManifesto = product.richContent.manifesto.fullContent;
+      inputs.productManifesto = this.sanitizeProductReferences(
+        product.richContent.manifesto.fullContent, 
+        product.name
+      );
     }
 
-    // Extract User Stories
+    // Extract User Stories with name sanitization
     if (product.richContent?.userStories?.sections?.['Generated Output']) {
-      inputs.userStories = product.richContent.userStories.sections['Generated Output'];
+      inputs.userStories = this.sanitizeProductReferences(
+        product.richContent.userStories.sections['Generated Output'], 
+        product.name
+      );
     } else if (product.richContent?.userStories?.fullContent) {
-      inputs.userStories = product.richContent.userStories.fullContent;
+      inputs.userStories = this.sanitizeProductReferences(
+        product.richContent.userStories.fullContent, 
+        product.name
+      );
     }
 
-    // Extract Business Model (combine multiple product properties)
+    // Extract Business Model (combine multiple product properties) with name sanitization
     const businessModelParts = [];
     if (product.type) businessModelParts.push(`**Product Type:** ${product.type}`);
     if (product.pricing?.display) businessModelParts.push(`**Pricing:** ${product.pricing.display}`);
     if (product.pricing?.type) businessModelParts.push(`**Revenue Model:** ${product.pricing.type}`);
-    if (product.content?.description) businessModelParts.push(`**Value Proposition:** ${product.content.description}`);
+    if (product.content?.description) {
+      businessModelParts.push(`**Value Proposition:** ${this.sanitizeProductReferences(product.content.description, product.name)}`);
+    }
     inputs.businessModel = businessModelParts.join('\n\n');
 
-    // Extract Functional Specification
+    // Extract Functional Specification with name sanitization
     if (product.richContent?.functionalSpec?.sections?.['Generated Output']) {
-      inputs.functionalSpec = product.richContent.functionalSpec.sections['Generated Output'];
+      inputs.functionalSpec = this.sanitizeProductReferences(
+        product.richContent.functionalSpec.sections['Generated Output'], 
+        product.name
+      );
     } else if (product.richContent?.functionalSpec?.fullContent) {
-      inputs.functionalSpec = product.richContent.functionalSpec.fullContent;
+      inputs.functionalSpec = this.sanitizeProductReferences(
+        product.richContent.functionalSpec.fullContent, 
+        product.name
+      );
     }
+
+    // Log sanitization activity for debugging
+    console.log(`🧹 [Product Strategy Compiler] Applied name hygiene check for ${product.name}`);
 
     return inputs;
   }

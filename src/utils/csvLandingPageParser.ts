@@ -381,7 +381,7 @@ export function csvToLandingPageData(csvProduct: CSVProduct): LandingPageData {
   }
 
   // AI Sherpa (AI Consultancy Retainer)
-  if (csvProduct.NAME === 'AI Consultancy Retainer') {
+  if (csvProduct.NAME === 'AI Sherpa') {
     return {
       hero: {
         headline: "AI Sherpa",
@@ -487,8 +487,8 @@ export function csvToLandingPageData(csvProduct: CSVProduct): LandingPageData {
     };
   }
 
-  // AI Innovation Day (AI Acceleration Day)
-  if (csvProduct.NAME === 'AI Innovation Day') {
+  // AI Acceleration Day (AI Innovation Day)
+  if (csvProduct.NAME === 'AI Acceleration Day') {
     return {
       hero: {
         headline: "AI Acceleration Day",
@@ -593,8 +593,8 @@ export function csvToLandingPageData(csvProduct: CSVProduct): LandingPageData {
     };
   }
 
-  // Social Intelligence Dashboard
-  if (csvProduct.NAME === 'Social Intelligence Dashboard') {
+  // AI Market Intelligence Dashboard (Social Intelligence Dashboard)
+  if (csvProduct.NAME === 'AI Market Intelligence Dashboard') {
     return {
       hero: {
         headline: "AI Market Intelligence Dashboard",
@@ -808,8 +808,8 @@ export function csvToLandingPageData(csvProduct: CSVProduct): LandingPageData {
     };
   }
 
-  // For AI-Powered Research and Insight Sprint, use the ai_sprint.md content
-  if (csvProduct.NAME === 'AI-Powered Research and Insight Sprint') {
+  // AI Insight Sprint (AI-Powered Research and Insight Sprint)
+  if (csvProduct.NAME === 'AI Insight Sprint') {
     return {
       hero: {
         headline: "AI Insight Sprint",
