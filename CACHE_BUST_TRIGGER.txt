@@ -1,0 +1,11 @@
+Cache bust trigger - Updated at: 2025-08-27 15:42:00
+This file is updated to trigger a fresh Vercel deployment and clear any cached data.
+Product name updates should now be reflected in production.
+
+Changes applied:
+- AI-Powered Research and Insight Sprint → AI Insight Sprint  
+- AI Consultancy Retainer → AI Sherpa
+- AI Innovation Day → AI Acceleration Day
+- Social Intelligence Dashboard → AI Market Intelligence Dashboard
+
+Build trigger: 20250827-154200
